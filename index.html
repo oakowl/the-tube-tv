@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -189,50 +190,314 @@ canvas.noise{position:absolute;inset:0;width:100%;height:100%}
 <script>
 const shows = [
   // ── 2000s MTV ──
-  { id:1,  ch:'02', time:'8:00 PM', name:'Viva La Bam', emoji:'🛹', cat:'mtv', year:'2003', badges:['PLAYLIST','MTV'], desc:'Bam Margera terrorises his parents across 5 wild seasons.', tickers:["Phil's Hell Day","Don Vito is NOT happy","Castle Bam"], archiveId:'vivalabam', episodeName:'Complete Series S1–S5', playlist:true },
-  { id:2,  ch:'03', time:'8:30 PM', name:'Jackass', emoji:'💀', cat:'mtv', year:'2000', badges:['PLAYLIST','MTV','HOT'], desc:'Johnny Knoxville and crew perform the most dangerously stupid stunts.', tickers:['Do not attempt','Steve-O is not a professional'], archiveId:'jackasscompleteseries', episodeName:'Complete Series', playlist:true },
-  { id:3,  ch:'04', time:'9:00 PM', name:'Wildboyz', emoji:'🐊', cat:'mtv', year:'2003', badges:['PLAYLIST','MTV'], desc:'Steve-O and Chris Pontius get dangerously close with wild animals.', tickers:['Steve-O vs komodo dragon','Amazon adventures'], archiveId:'Wildboyz', episodeName:'Complete Series S1–S4', playlist:true },
+  { id:1,  ch:'02', time:'8:00 PM', name:'Viva La Bam',         emoji:'🛹', cat:'mtv',     year:'2003',
+    badges:['PLAYLIST','MTV'],   bg:'#0a0a20',
+    desc:'Bam Margera terrorises his parents across 5 wild seasons of skateboarding and mayhem.',
+    tickers:["Phil's Hell Day — S1E1","Don Vito is NOT happy","Castle Bam under construction","Bam vs the world"],
+    archiveId:'vivalabam', episodeName:'Complete Series S1–S5 • All Episodes', playlist:true },
+
+  { id:2,  ch:'03', time:'8:30 PM', name:'Jackass',             emoji:'💀', cat:'mtv',     year:'2000',
+    badges:['PLAYLIST','MTV','HOT'],  bg:'#1a0000',
+    desc:'Johnny Knoxville, Bam & Steve-O perform the most dangerously stupid stunts on television.',
+    tickers:['WARNING: Do not attempt these stunts','Johnny Knoxville presents...','Steve-O is not a professional'],
+    archiveId:'jackasscompleteseries', episodeName:'Complete Series • All Volumes', playlist:true },
+
+  { id:3,  ch:'04', time:'9:00 PM', name:'Wildboyz',            emoji:'🐊', cat:'mtv',     year:'2003',
+    badges:['PLAYLIST','MTV'],   bg:'#001500',
+    desc:'Steve-O and Chris Pontius travel the globe getting dangerously close with wild animals.',
+    tickers:['Steve-O vs a komodo dragon','Chris Pontius in the Amazon','Do NOT try this at home'],
+    archiveId:'Wildboyz', episodeName:'Complete Series S1–S4', playlist:true },
 
   // ── BRITISH ──
-  { id:4,  ch:'05', time:'7:00 PM', name:'Steptoe & Son', emoji:'🗑️', cat:'british', year:'1962', badges:['PLAYLIST','BBC'], desc:'The original BBC sitcom about rag-and-bone men.', tickers:['You dirty old man!','BBC sitcom gold'], archiveId:'steptoe-1', episodeName:'Series 1', playlist:true },
-  { id:5,  ch:'06', time:'7:30 PM', name:'Survivors (1975)', emoji:'☣️', cat:'british', year:'1975', badges:['PLAYLIST','BBC','SCI-FI'], desc:'A deadly plague wipes out 99% of humanity.', tickers:['The Death has swept the globe','Post-apocalyptic masterpiece'], archiveId:'survivors-1975', episodeName:'Complete Series 1–3', playlist:true },
+  { id:4,  ch:'05', time:'7:00 PM', name:'Steptoe & Son',       emoji:'🗑️', cat:'british', year:'1962',
+    badges:['PLAYLIST','BBC'],   bg:'#0f0800',
+    desc:'Harold and Albert Steptoe — rag-and-bone men of Oil Drum Lane. The original BBC sitcom classic.',
+    tickers:['Harold: "You dirty old man!"','Albert fakes another illness','BBC sitcom gold'],
+    archiveId:'steptoe-1', episodeName:'Series 1 • Full BBC Episodes', playlist:true },
 
-  // ── HORROR ──
-  { id:6,  ch:'07', time:'9:00 PM', name:'Alfred Hitchcock Presents', emoji:'🎩', cat:'horror', year:'1955', badges:['PLAYLIST','COLOR','CLASSIC'], desc:'The Master of Suspense introduces twisted tales.', tickers:['Good evening...','Time Magazine Top 100'], archiveId:'alfred-hitchcock-presents-s-1e-1-colorized-720p-hd', episodeName:'Season 1 • 39 Episodes', playlist:true },
-  { id:7,  ch:'08', time:'9:30 PM', name:'Alfred Hitchcock S3', emoji:'🔪', cat:'horror', year:'1957', badges:['PLAYLIST','COLOR'], desc:'Season 3 of Hitchcock\'s acclaimed anthology.', tickers:['Another evening of suspense','Restored & colorised'], archiveId:'alfred-hitchcock-presents-s-3e-1-colorized-sd', episodeName:'Season 3 • 39 Episodes', playlist:true },
-  { id:8,  ch:'09', time:'10:00 PM', name:'New Hitchcock Presents (1985)', emoji:'👁️', cat:'horror', year:'1985', badges:['PLAYLIST','HORROR'], desc:'The 1985 revival — rare TV recordings.', tickers:['Extremely rare','VHS recordings of a lost classic'], archiveId:'the-new-alfred-hitchcock-presents-complete', episodeName:'Complete Revival Series', playlist:true },
-  { id:9,  ch:'10', time:'10:30 PM', name:'The Twilight Zone', emoji:'🌀', cat:'horror', year:'1959', badges:['B&W','CLASSIC'], desc:'Rod Serling\'s legendary anthology.', tickers:['Submitted for your approval','Fifth dimension'], archiveId:'Classic_SciFi_TV_--_The_Twilight_Zone_The_Outer_Limits', episodeName:'Twilight Zone + Outer Limits Double Bill' },
-  { id:10, ch:'11', time:'11:00 PM', name:'Perversions of Science', emoji:'🧬', cat:'horror', year:'1997', badges:['PLAYLIST','HBO','SCI-FI'], desc:'HBO\'s Tales from the Crypt spin-off.', tickers:['Twisted sci-fi anthology','10 episodes'], archiveId:'perversions-of-science-complete', episodeName:'Complete Series', playlist:true },
+  { id:5,  ch:'06', time:'7:30 PM', name:'Survivors (1975)',    emoji:'☣️', cat:'british', year:'1975',
+    badges:['PLAYLIST','BBC','SCI-FI'], bg:'#0a1a00',
+    desc:'A deadly plague wipes out 99% of humanity. A small group of survivors must rebuild civilisation.',
+    tickers:['A virus escapes into the atmosphere','Less than 1 in 5000 survive','Terry Nation\'s post-apocalyptic masterpiece'],
+    archiveId:'survivors-1975', episodeName:'Complete Series 1–3 (BBC, 1975–77)', playlist:true },
+
+  // ── HORROR/THRILLER ──
+  { id:6,  ch:'07', time:'9:00 PM', name:'Alfred Hitchcock Presents', emoji:'🎩', cat:'horror', year:'1955',
+    badges:['PLAYLIST','COLOR','CLASSIC'], bg:'#1a0010',
+    desc:'The Master of Suspense introduces twisted tales of murder, greed, and the macabre. Colorised.',
+    tickers:['Good evening...','Tonight: another tale of suspense','Hitchcock: one of the 100 Best Shows ever — Time Magazine'],
+    archiveId:'alfred-hitchcock-presents-s-1e-1-colorized-720p-hd', episodeName:'Season 1 • 39 Episodes (Restored & Colorised)', playlist:true },
+
+  { id:7,  ch:'08', time:'9:30 PM', name:'Alfred Hitchcock S3', emoji:'🔪', cat:'horror', year:'1957',
+    badges:['PLAYLIST','COLOR'], bg:'#1a0018',
+    desc:'Season 3 of Hitchcock\'s acclaimed anthology. More twists, more menace, more of the master.',
+    tickers:['Another evening of suspense...','Hitchcock season 3 — restored & colorised','No one tells a story like Hitchcock'],
+    archiveId:'alfred-hitchcock-presents-s-3e-1-colorized-sd', episodeName:'Season 3 • 39 Episodes (Restored & Colorised)', playlist:true },
+
+  { id:8,  ch:'09', time:'10:00 PM', name:'New Hitchcock Presents (1985)', emoji:'👁️', cat:'horror', year:'1985',
+    badges:['PLAYLIST','HORROR'], bg:'#100010',
+    desc:'The 1985 revival of Hitchcock\'s anthology. Rare TV recordings — hard to find anywhere else.',
+    tickers:['Good evening once more...','The 1985 Hitchcock revival — extremely rare','VHS recordings of a lost TV classic'],
+    archiveId:'the-new-alfred-hitchcock-presents-complete', episodeName:'Complete Revival Series (1985–89)', playlist:true },
+
+  { id:9,  ch:'10', time:'10:30 PM', name:'The Twilight Zone',  emoji:'🌀', cat:'horror', year:'1959',
+    badges:['B&W','CLASSIC'],    bg:'#150820',
+    desc:'Rod Serling\'s legendary anthology. Submitted for your approval — a double bill with The Outer Limits.',
+    tickers:['Submitted for your approval...','There is a fifth dimension...','Tonight — TZ & Outer Limits double bill'],
+    archiveId:'Classic_SciFi_TV_--_The_Twilight_Zone_The_Outer_Limits', episodeName:'Twilight Zone + Outer Limits Double Bill' },
+
+  { id:10, ch:'11', time:'11:00 PM', name:'Perversions of Science', emoji:'🧬', cat:'horror', year:'1997',
+    badges:['PLAYLIST','HBO','SCI-FI'], bg:'#001a1a',
+    desc:'HBO\'s Tales from the Crypt spin-off. Twisted science fiction anthology with wild episode twists.',
+    tickers:['From the creators of Tales from the Crypt','Science fiction has never been this strange','10 episodes of twisted HBO sci-fi'],
+    archiveId:'perversions-of-science-complete', episodeName:'Complete Series (HBO, 1997)', playlist:true },
 
   // ── SCI-FI ──
-  { id:11, ch:'12', time:'8:00 PM', name:'The Outer Limits', emoji:'📡', cat:'scifi', year:'1963', badges:['B&W','CLASSIC'], desc:'Do not attempt to adjust your television.', tickers:['WE ARE CONTROLLING YOUR TV','Do not adjust'], archiveId:'Classic_SciFi_TV_--_The_Twilight_Zone_The_Outer_Limits', episodeName:'Classic Episodes' },
-  { id:12, ch:'13', time:'8:30 PM', name:'Men in Black: The Series', emoji:'🕶️', cat:'scifi', year:'1997', badges:['PLAYLIST','ANIMATED'], desc:'Agents K & J protect Earth from alien threats.', tickers:['The universe is dangerous','MIB animated'], archiveId:'men-in-black-the-series-1997', episodeName:'Complete Animated Series', playlist:true },
-  { id:13, ch:'14', time:'9:00 PM', name:'Survivors — BBC', emoji:'🌍', cat:'scifi', year:'1975', badges:['BBC','POST-APOC'], desc:'Terry Nation\'s vision of a world after plague.', tickers:['The Death has swept the globe','Rebuilding civilisation'], archiveId:'survivors-1975', episodeName:'All 3 Series', playlist:true },
-  { id:14, ch:'15', time:'9:30 PM', name:'Final Space', emoji:'🚀', cat:'scifi', year:'2018', badges:['PLAYLIST','ANIMATED'], desc:'Gary and Mooncake on intergalactic adventures.', tickers:['Mooncake is adorable','Final Space all seasons'], archiveId:'final-space_202209', episodeName:'Complete Series', playlist:true },
+  { id:11, ch:'12', time:'8:00 PM', name:'The Outer Limits',    emoji:'📡', cat:'scifi',  year:'1963',
+    badges:['B&W','CLASSIC'],    bg:'#001510',
+    desc:'Do not attempt to adjust your television. We are controlling the transmission.',
+    tickers:['WE ARE CONTROLLING YOUR TELEVISION SET','Do not attempt to adjust your picture'],
+    archiveId:'Classic_SciFi_TV_--_The_Twilight_Zone_The_Outer_Limits', episodeName:'The Galaxy Being & Classic Episodes' },
+
+  { id:12, ch:'13', time:'8:30 PM', name:'Men in Black: The Series', emoji:'🕶️', cat:'scifi', year:'1997',
+    badges:['PLAYLIST','ANIMATED'], bg:'#050515',
+    desc:'Agents K & J protect Earth from alien threats in this animated spin-off of the hit film.',
+    tickers:['The universe is a dangerous place','K and J on the case','MIB — the animated series — all seasons'],
+    archiveId:'men-in-black-the-series-1997', episodeName:'Complete Animated Series', playlist:true },
+
+  { id:13, ch:'14', time:'9:00 PM', name:'Survivors — BBC',     emoji:'🌍', cat:'scifi',  year:'1975',
+    badges:['BBC','POST-APOC'],  bg:'#0a1500',
+    desc:'Terry Nation\'s chilling vision of a world after plague. Gritty, gripping BBC drama.',
+    tickers:['The Death has swept the globe','Rebuilding civilisation from scratch','BBC 1975 — one of the greatest sci-fi dramas ever made'],
+    archiveId:'survivors-1975', episodeName:'All 3 Series (1975–1977)', playlist:true },
+
+  { id:14, ch:'15', time:'9:30 PM', name:'Final Space',         emoji:'🚀', cat:'scifi',  year:'2018',
+    badges:['PLAYLIST','ANIMATED'], bg:'#020215',
+    desc:'Gary Goodspeed and his alien friend Mooncake embark on wild intergalactic adventures.',
+    tickers:['Gary Goodspeed at your service','Mooncake is adorable and deadly','Final Space — all seasons'],
+    archiveId:'final-space_202209', episodeName:'Complete Series', playlist:true },
 
   // ── CLASSIC TV ──
-  { id:15, ch:'16', time:'7:00 PM', name:'Your Show of Shows', emoji:'🎭', cat:'classic', year:'1953', badges:['B&W','LIVE'], desc:'Sid Caesar\'s legendary live variety spectacular.', tickers:['LIVE from New York 1953','Comedy genius'], archiveId:'YourShowOfShows03211953', episodeName:'March 21, 1953 Broadcast' },
-  { id:16, ch:'17', time:'7:30 PM', name:'Bonanza', emoji:'🤠', cat:'classic', year:'1959', badges:['COLOR','CLASSIC'], desc:'The Cartwright family on the Ponderosa Ranch.', tickers:['Pa and the boys','Hoss\'s cook-off'], archiveId:'Bonanza_pd', episodeName:'Public Domain Episodes' },
-  { id:17, ch:'18', time:'8:00 PM', name:'Classic TV Vault', emoji:'🎞️', cat:'classic', year:'1950s', badges:['ARCHIVE','B&W'], desc:'Burns & Allen, Car 54, and more golden era TV.', tickers:['Burns and Allen','Car 54 Where Are You'], archiveId:'classic-tv-shows-vol.1', episodeName:'Golden Era Collection' },
-  { id:18, ch:'19', time:'8:30 PM', name:'It Takes a Thief', emoji:'🕵️', cat:'classic', year:'1968', badges:['PLAYLIST','60s'], desc:'A reformed master thief becomes a secret agent.', tickers:['Stylish 1960s spy TV','Robert Wagner'], archiveId:'it-takes-a-thief-complete-series-1968', episodeName:'Complete Series', playlist:true },
-  { id:19, ch:'20', time:'9:00 PM', name:'Closing Credits Special', emoji:'🎬', cat:'classic', year:'1950s', badges:['ARCHIVE','NOSTALGIC'], desc:'Classic TV closing credits compilation.', tickers:['And that\'s a wrap','Goodnight from golden age'], archiveId:'Closing_Credits', episodeName:'10 Classics Compilation' },
+  { id:15, ch:'16', time:'7:00 PM', name:'Your Show of Shows',  emoji:'🎭', cat:'classic', year:'1953',
+    badges:['B&W','LIVE'],       bg:'#1a0a08',
+    desc:'Sid Caesar and Imogene Coca in NBC\'s legendary live variety spectacular from March 1953.',
+    tickers:['LIVE from New York — 1953','Sid Caesar: comedy genius','One of the greatest TV shows ever made'],
+    archiveId:'YourShowOfShows03211953', episodeName:'March 21, 1953 — Full Live Broadcast' },
 
-  // ── NEW CLASSIC ACTION & DRAMA (The A-Team, Baywatch, Twin Peaks, The OC) ──
-  { id:101, ch:'26', time:'8:00 PM', name:'The A-Team', emoji:'🚐', cat:'classic', year:'1983', badges:['PLAYLIST','ACTION','HOT'], desc:'Hannibal, Face, Murdock and B.A. Baracus — heroes for hire. I love it when a plan comes together!', tickers:['I love it when a plan comes together','Pity the fool!','Hannibal\'s cigar'], archiveId:'the-a-team-complete', episodeName:'Complete Series (1983–1987)', playlist:true },
-  { id:102, ch:'27', time:'9:00 PM', name:'Baywatch', emoji:'🏖️', cat:'classic', year:'1989', badges:['PLAYLIST','ICONIC'], desc:'The most famous lifeguards in TV history. Action, drama, and slow-motion runs along the California coast.', tickers:['Mitch Buchannon','Pamela Anderson joins','Baywatch Nights'], archiveId:'baywatch-complete', episodeName:'Complete Series + Baywatch Nights', playlist:true },
-  { id:103, ch:'28', time:'10:00 PM', name:'Twin Peaks', emoji:'🪵', cat:'classic', year:'1990', badges:['PLAYLIST','MYSTERY','CRITICAL'], desc:'David Lynch\'s surreal masterpiece. Who killed Laura Palmer?', tickers:['Damn fine cup of coffee','The Black Lodge','Agent Dale Cooper'], archiveId:'twin-peaks-collection', episodeName:'Complete Series + The Return', playlist:true },
-  { id:104, ch:'29', time:'10:30 PM', name:'The OC', emoji:'🌊', cat:'classic', year:'2003', badges:['PLAYLIST','DRAMA','MILLENNIAL'], desc:'Welcome to Orange County. Rich teens, family drama, and the greatest indie soundtrack of the 2000s.', tickers:['California here we come','Seth Cohen & Ryan','Mmmmm whatcha say'], archiveId:'the-oc-complete', episodeName:'Complete Series (Seasons 1–4)', playlist:true },
+  { id:16, ch:'17', time:'7:30 PM', name:'Bonanza',             emoji:'🤠', cat:'classic', year:'1959',
+    badges:['COLOR','CLASSIC'],  bg:'#200800',
+    desc:'The Cartwright family and the Ponderosa Ranch. Public domain episodes from Season 1.',
+    tickers:["Pa and the boys ride again","Hoss's cook-off","Little Joe in trouble on the trail"],
+    archiveId:'Bonanza_pd', episodeName:'Public Domain Episodes • Season 1' },
 
-  // ── ANIMATION (plus new comedy classics) ──
-  { id:20, ch:'21', time:'6:30 PM', name:'Drawn Together', emoji:'🏠', cat:'animation', year:'2004', badges:['PLAYLIST','ADULT','HOT'], desc:'Cartoon characters from different eras live together in a reality TV parody.', tickers:['First animated reality show','Comedy Central chaos'], archiveId:'DrawnTogetherComplete', episodeName:'Complete Series S1–S3', playlist:true },
-  { id:21, ch:'22', time:'7:00 PM', name:'Men in Black Animated', emoji:'👾', cat:'animation', year:'1997', badges:['PLAYLIST','ANIMATED'], desc:'The animated adventures of Agents K and J.', tickers:['Flashy thing time','MIB complete series'], archiveId:'men-in-black-the-series-1997', episodeName:'All Seasons', playlist:true },
-  
-  // NEW ANIMATION / COMEDY
-  { id:105, ch:'23', time:'8:00 PM', name:'Beavis and Butt-Head', emoji:'🎸', cat:'animation', year:'1993', badges:['PLAYLIST','MTV','COMEDY'], desc:'Two teenage couch potatoes who love heavy metal and fire. "Uh huh huh... fire! fire!"', tickers:['I am the Great Cornholio','TP for my bunghole','Uh huh huh huh'], archiveId:'beavis-and-butthead-complete', episodeName:'Complete MTV Series', playlist:true },
-  { id:106, ch:'24', time:'8:30 PM', name:'Daria', emoji:'📚', cat:'animation', year:'1997', badges:['PLAYLIST','MTV','SMART'], desc:'The misadventures of a smart, cynical teenage girl navigating high school in the 90s.', tickers:['Youre standing in my way','Sick sad world','Daria Morgendorffer'], archiveId:'daria-complete', episodeName:'Complete Series + Movies', playlist:true },
-  { id:107, ch:'25', time:'9:00 PM', name:'Family Guy (Early Seasons)', emoji:'🍻', cat:'animation', year:'1999', badges:['PLAYLIST','COMEDY','HOT'], desc:'Peter Griffin and his eccentric family in Quahog, Rhode Island. The classic early seasons.', tickers:['Freakin sweet','Bird is the word','Giggity giggity goo'], archiveId:'family-guy-early-seasons', episodeName:'Seasons 1–3 (The Golden Era)', playlist:true },
+  { id:17, ch:'18', time:'8:00 PM', name:'Classic TV Vault',    emoji:'🎞️', cat:'classic', year:'1950s',
+    badges:['ARCHIVE','B&W'],    bg:'#2e1a0a',
+    desc:'Burns & Allen, Car 54 Where Are You, Life with Elizabeth — a golden era variety pack.',
+    tickers:['Burns and Allen: Kleebob Card Game','Car 54 Where Are You — S1','Life with Elizabeth — Episode 1'],
+    archiveId:'classic-tv-shows-vol.1', episodeName:'Collection: Burns & Allen, Car 54, and more' },
+
+  { id:18, ch:'19', time:'8:30 PM', name:'It Takes a Thief',    emoji:'🕵️', cat:'classic', year:'1968',
+    badges:['PLAYLIST','60s'],   bg:'#15100a',
+    desc:'A reformed master thief goes to work for the government as a secret agent. Stylish 1960s spy TV.',
+    tickers:['A thief working for the government','Robert Wagner in his finest role','Spy TV at its most stylish — the 1960s'],
+    archiveId:'it-takes-a-thief-complete-series-1968', episodeName:'Complete Series (1968–1970)', playlist:true },
+
+  { id:19, ch:'20', time:'9:00 PM', name:'Closing Credits Special', emoji:'🎬', cat:'classic', year:'1950s',
+    badges:['ARCHIVE','NOSTALGIC'], bg:'#050510',
+    desc:'A beautiful compilation of classic TV closing credits. A love letter to the golden age of television.',
+    tickers:['And that\'s a wrap...','Goodnight from the golden age of television','10 classics fade to black'],
+    archiveId:'Closing_Credits', episodeName:'Compilation — 10 Classic Shows' },
+
+  // ── ANIMATION ──
+  { id:20, ch:'21', time:'6:30 PM', name:'Drawn Together',      emoji:'🏠', cat:'animation', year:'2004',
+    badges:['PLAYLIST','ADULT','HOT'], bg:'#200a00',
+    desc:'Eight cartoon characters from different eras live together in an animated reality TV parody on Comedy Central.',
+    tickers:['The first animated reality TV show','Adult comedy at its most chaotic','Drawn Together — all 3 seasons'],
+    archiveId:'DrawnTogetherComplete', episodeName:'Complete Series S1–S3', playlist:true },
+
+  { id:21, ch:'22', time:'7:00 PM', name:'Men in Black Animated', emoji:'👾', cat:'animation', year:'1997',
+    badges:['PLAYLIST','ANIMATED'], bg:'#050515',
+    desc:'The animated adventures of Agents K and J — protecting Earth from intergalactic threats.',
+    tickers:['Flashy thing time...','The universe is a wild place','MIB Animated — complete series'],
+    archiveId:'men-in-black-the-series-1997', episodeName:'All Seasons • Animated Series', playlist:true },
 
   // ── DRAMA ──
-  { id:22, ch:'23', time:'9:00 PM', name:'Survivors (Drama)', emoji:'🏚️', cat:'drama', year:'1975', badges:['BBC','DRAMA'], desc:'After a pandemic, survivors struggle to rebuild society.', tickers:['Post-apocalyptic Britain','Terry Nation masterpiece'], archiveId:'survivors-1975', episodeName:'Complete 3 Series', playlist:true },
-  { id:23, ch:'24', time:'8:00 PM', name:'Bonanza (Drama)', emoji:'⭐', cat:'drama', year:'1959', badges:['COLOR','WESTERN'], desc:'The Ponderosa Ranch and Cartwright family.', tickers:['Lorne Greene','Ponderosa'], archiveId:'Bonanza_pd', episodeName:'Season 1 Episodes' },
-  { id:24, ch:'25', time:'10:00 PM', name:'Final Space (Drama)', emoji:'🌌', cat:'drama', year:'2018', badges:['ANIMATED','SCI-FI','EMOTIONAL'], desc:'Emotional space opera about friendship and sacrifice.', tickers:['Mooncake','The most emotional animated series'], archiveId:'final-space_
+  { id:22, ch:'23', time:'9:00 PM', name:'Survivors (Drama)',   emoji:'🏚️', cat:'drama',  year:'1975',
+    badges:['BBC','DRAMA'],      bg:'#0a1200',
+    desc:'After a global pandemic, survivors struggle to rebuild society with no infrastructure or government.',
+    tickers:['Post-apocalyptic Britain — 1975','Small groups of survivors across the countryside','Terry Nation\'s dark masterpiece'],
+    archiveId:'survivors-1975', episodeName:'BBC Drama — Complete 3 Series', playlist:true },
+
+  { id:23, ch:'24', time:'8:00 PM', name:'Bonanza (Drama)',     emoji:'⭐', cat:'drama',  year:'1959',
+    badges:['COLOR','WESTERN'],  bg:'#1a0800',
+    desc:'The Ponderosa Ranch and the Cartwright family. Classic American Western drama at its finest.',
+    tickers:["Lorne Greene as Pa Cartwright","One of America's longest-running Westerns","Ponderosa — home of the Cartwrights"],
+    archiveId:'Bonanza_pd', episodeName:'Season 1 • Public Domain Episodes' },
+
+  { id:24, ch:'25', time:'10:00 PM', name:'Final Space (Drama)', emoji:'🌌', cat:'drama', year:'2018',
+    badges:['ANIMATED','SCI-FI','EMOTIONAL'], bg:'#020210',
+    desc:'An emotionally charged space opera about friendship, sacrifice and the end of the universe.',
+    tickers:['Gary: "Hello there, beautiful"','Mooncake holds the key to the Final Space','The most emotional animated series ever made'],
+    archiveId:'final-space_202209', episodeName:'Complete Series — All Seasons', playlist:true },
+];
+
+const cats = [
+  {key:'all',    label:'All Channels'},
+  {key:'mtv',    label:'📺 2000s MTV'},
+  {key:'british',label:'🇬🇧 British'},
+  {key:'horror', label:'👁 Horror'},
+  {key:'scifi',  label:'🚀 Sci-Fi'},
+  {key:'classic',label:'🎞 Classic'},
+  {key:'animation',label:'🎨 Animation'},
+  {key:'drama',  label:'🎭 Drama'},
+];
+
+let active=null, tvOn=false, activeCat='all', noiseTimer=null, kAngles={};
+let audioCtx=null;
+
+const ga=()=>{if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;};
+const sndClick=()=>{try{const c=ga(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='square';o.frequency.setValueAtTime(800,c.currentTime);o.frequency.exponentialRampToValueAtTime(200,c.currentTime+.06);g.gain.setValueAtTime(.15,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.07);o.start();o.stop(c.currentTime+.07);}catch(e){}};
+const sndKnob=()=>{try{const c=ga(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.setValueAtTime(300,c.currentTime);o.frequency.exponentialRampToValueAtTime(120,c.currentTime+.05);g.gain.setValueAtTime(.08,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.06);o.start();o.stop(c.currentTime+.06);}catch(e){}};
+const sndPowerOn=()=>{try{const c=ga(),bl=c.sampleRate*1.4,b=c.createBuffer(1,bl,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<bl;i++)d[i]=Math.random()*2-1;const s=c.createBufferSource();s.buffer=b;const f=c.createBiquadFilter();f.type='bandpass';f.frequency.setValueAtTime(2000,c.currentTime);f.frequency.exponentialRampToValueAtTime(200,c.currentTime+1.2);f.Q.value=.8;const g=c.createGain();g.gain.setValueAtTime(0,c.currentTime);g.gain.linearRampToValueAtTime(.35,c.currentTime+.08);g.gain.setValueAtTime(.35,c.currentTime+.8);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+1.4);s.connect(f);f.connect(g);g.connect(c.destination);s.start();s.stop(c.currentTime+1.4);}catch(e){}};
+const sndPowerOff=()=>{try{const c=ga(),bl=c.sampleRate*.5,b=c.createBuffer(1,bl,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<bl;i++)d[i]=Math.random()*2-1;const s=c.createBufferSource();s.buffer=b;const f=c.createBiquadFilter();f.type='bandpass';f.frequency.value=400;f.Q.value=1.5;const g2=c.createGain();g2.gain.setValueAtTime(.3,c.currentTime);g2.gain.exponentialRampToValueAtTime(.001,c.currentTime+.4);const o=c.createOscillator(),og=c.createGain();o.type='sine';o.frequency.setValueAtTime(800,c.currentTime);o.frequency.exponentialRampToValueAtTime(40,c.currentTime+.4);og.gain.setValueAtTime(.2,c.currentTime);og.gain.exponentialRampToValueAtTime(.001,c.currentTime+.4);o.connect(og);og.connect(c.destination);s.connect(f);f.connect(g2);g2.connect(c.destination);s.start();s.stop(c.currentTime+.5);o.start();o.stop(c.currentTime+.5);}catch(e){}};
+const sndTune=()=>{try{const c=ga(),bl=c.sampleRate*.9,b=c.createBuffer(1,bl,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<bl;i++)d[i]=Math.random()*2-1;const s=c.createBufferSource();s.buffer=b;const f=c.createBiquadFilter();f.type='bandpass';f.frequency.setValueAtTime(4000,c.currentTime);f.frequency.exponentialRampToValueAtTime(400,c.currentTime+.7);f.Q.value=1.2;const g=c.createGain();g.gain.setValueAtTime(.28,c.currentTime);g.gain.setValueAtTime(.28,c.currentTime+.6);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.9);s.connect(f);f.connect(g);g.connect(c.destination);s.start();s.stop(c.currentTime+.9);}catch(e){}};
+
+function buildSpeaker(){const g=document.getElementById('spkr');for(let i=0;i<20;i++){const d=document.createElement('div');d.className='sd';g.appendChild(d);}}
+
+function buildCatTabs(){
+  const el=document.getElementById('catTabs');
+  cats.forEach(c=>{
+    const b=document.createElement('button');
+    b.className='cat-btn'+(c.key==='all'?' active':'');
+    b.textContent=c.label;
+    b.dataset.cat=c.key;
+    b.addEventListener('click',()=>{
+      sndClick();
+      document.querySelectorAll('.cat-btn').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');activeCat=c.key;renderList();
+    });
+    el.appendChild(b);
+  });
+}
+
+function renderList(){
+  const el=document.getElementById('showList');
+  el.innerHTML='';
+  const filtered=activeCat==='all'?shows:shows.filter(s=>s.cat===activeCat);
+  filtered.forEach(s=>{
+    const card=document.createElement('div');
+    card.className='show-card'+(active?.id===s.id?' active':'');
+    const bhtml=s.badges.map(b=>{
+      let cls='badge';
+      if(b==='PLAYLIST')cls+=' playlist';
+      else if(b==='HOT')cls+=' hot';
+      else if(['LIVE','ON AIR'].includes(b))cls+=' live';
+      return`<span class="${cls}">${b}</span>`;
+    }).join('');
+    card.innerHTML=`<span class="s-time">${s.time}</span><span class="s-emoji">${s.emoji}</span><div class="s-info"><div class="s-name">${s.name} <span class="s-yr">(${s.year})</span></div><div class="s-desc">${s.desc}</div><div class="s-badges">${bhtml}</div></div><div class="play-dot"></div>`;
+    card.addEventListener('click',()=>{sndClick();tuneShow(s.id);});
+    el.appendChild(card);
+  });
+}
+
+function drawNoise(){
+  const c=document.getElementById('noiseCanvas');
+  const w=c.width=c.offsetWidth||300,h=c.height=c.offsetHeight||225;
+  const ctx=c.getContext('2d'),img=ctx.createImageData(w,h);
+  for(let i=0;i<img.data.length;i+=4){const v=Math.random()*255;img.data[i]=v;img.data[i+1]=v;img.data[i+2]=v;img.data[i+3]=255;}
+  ctx.putImageData(img,0,0);
+}
+function showStatic(cb){
+  const ss=document.getElementById('staticScreen');
+  ss.classList.add('show');sndTune();
+  let f=0;
+  noiseTimer=setInterval(()=>{drawNoise();if(++f>=18){clearInterval(noiseTimer);ss.classList.remove('show');if(cb)cb();}},50);
+}
+
+function tuneShow(id){
+  if(!tvOn){powerToggle(()=>setTimeout(()=>tuneShow(id),400));return;}
+  const s=shows.find(x=>x.id===id);
+  if(!s)return;
+  document.getElementById('videoLayer').classList.remove('show');
+  document.getElementById('videoFrame').src='';
+  document.getElementById('splash').classList.remove('show');
+  document.getElementById('tickerBar').classList.remove('show');
+  document.getElementById('epPill').classList.remove('show');
+  document.getElementById('chDisp').textContent=`CH ${s.ch}`;
+
+  showStatic(()=>{
+    active=s;
+    document.getElementById('idle').style.display='none';
+    document.getElementById('splashEmoji').textContent=s.emoji;
+    document.getElementById('splashTitle').textContent=s.name;
+    document.getElementById('splashYear').textContent=s.year;
+    document.getElementById('splashEp').textContent=s.episodeName;
+    const splash=document.getElementById('splash');
+    splash.classList.add('show');
+
+    const t=s.tickers.join('   ◈   ');
+    const tk=document.getElementById('tickerTxt');
+    tk.textContent=`◈  ${t}  ◈  ${t}  ◈`;
+    tk.style.animation='none';void tk.offsetHeight;tk.style.animation='';
+    document.getElementById('tickerBar').classList.add('show');
+
+    if(s.playlist){
+      document.getElementById('epPill').classList.add('show');
+    }
+
+    document.getElementById('npName').textContent=s.name;
+    document.getElementById('npCh').textContent=`CH ${s.ch}`;
+    document.getElementById('npBar').classList.add('show');
+
+    const embedUrl=`https://archive.org/embed/${s.archiveId}?autoplay=1&playlist=1`;
+
+    splash.onclick=()=>{
+      splash.classList.remove('show');
+      document.getElementById('videoFrame').src=embedUrl;
+      document.getElementById('videoLayer').classList.add('show');
+    };
+    renderList();
+  });
+}
+
+function powerToggle(cb){
+  const btn=document.getElementById('pwrBtn');
+  if(!tvOn){
+    tvOn=true;btn.classList.add('on');sndPowerOn();
+    document.getElementById('idle').style.display='flex';
+    if(cb)cb();
+  }else{
+    sndPowerOff();btn.classList.remove('on');tvOn=false;active=null;
+    clearInterval(noiseTimer);
+    ['staticScreen','videoLayer','splash','tickerBar','epPill','npBar'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el){el.classList.remove('show');}
+    });
+    document.getElementById('videoFrame').src='';
+    document.getElementById('chDisp').textContent='— —';
+    const off=document.getElementById('offScreen');
+    off.innerHTML='<div class="off-line"></div>';
+    off.classList.add('show');
+    setTimeout(()=>{
+      off.classList.remove('show');
+      document.getElementById('idle').style.display='flex';
+    },600);
+    renderList();
+  }
+}
+
+['kVol','kTint','kBrit'].forEach(k=>{
+  kAngles[k]=0;
+  document.getElementById(k).addEventListener('click',function(){
+    sndKnob();kAngles[k]+=45;this.style.transform=`rotate(${kAngles[k]}deg)`;
+  });
+});
+document.getElementById('pwrBtn').addEventListener('click',()=>powerToggle());
+
+const days=['SUN','MON','TUE','WED','THU','FRI','SAT'],months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+const d=new Date();
+document.getElementById('gDate').textContent=`${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]}`;
+buildSpeaker();buildCatTabs();renderList();
+</script>
+</body>
+</html>
