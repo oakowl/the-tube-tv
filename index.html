@@ -40,41 +40,41 @@ canvas.noise{position:absolute;inset:0;width:100%;height:100%}
 .video-layer iframe{width:100%;height:100%;border:none;display:block}
 .splash{position:absolute;inset:0;z-index:4;display:none;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;background:rgba(0,0,0,0.72);padding:10px}
 .splash.show{display:flex}
-.splash-emoji{font-size:3.5rem;filter:drop-shadow(0 2px 12px rgba(0,0,0,0.9))}
-.splash-title{font-family:'VT323',monospace;font-size:1.2rem;color:#f5a623;margin-top:6px;text-align:center;letter-spacing:.04em;line-height:1.2}
-.splash-year{font-family:'VT323',monospace;font-size:.75rem;color:#7a5a28;letter-spacing:.1em;margin-top:2px}
-.splash-ep{font-family:'Special Elite',cursive;font-size:.58rem;color:#999;margin-top:3px;text-align:center;line-height:1.4}
+.splash-emoji{font-size:3.5rem}
+.splash-title{font-family:'VT323',monospace;font-size:1.2rem;color:#f5a623;margin-top:6px}
+.splash-year{font-family:'VT323',monospace;font-size:.75rem;color:#7a5a28}
+.splash-ep{font-family:'Special Elite',cursive;font-size:.58rem;color:#999;margin-top:3px}
 .splash-play{margin-top:12px;width:46px;height:46px;border-radius:50%;background:rgba(245,166,35,0.12);border:2px solid #f5a623;display:flex;align-items:center;justify-content:center}
 .splash-play::after{content:'';width:0;height:0;border-top:10px solid transparent;border-bottom:10px solid transparent;border-left:18px solid #f5a623;margin-left:4px}
-.splash-hint{font-family:'VT323',monospace;font-size:.6rem;color:#4a3015;margin-top:6px;letter-spacing:.1em}
+.splash-hint{font-family:'VT323',monospace;font-size:.6rem;color:#4a3015;margin-top:6px}
 .ticker-bar{position:absolute;bottom:0;left:0;right:0;background:rgba(5,5,0,0.93);border-top:1px solid #1e1600;padding:3px 8px;z-index:5;overflow:hidden;white-space:nowrap;display:none}
 .ticker-bar.show{display:block}
 .ticker-inner{display:inline-block;font-family:'VT323',monospace;font-size:.75rem;color:#f5a623;animation:ticker 30s linear infinite}
-.ep-pill{position:absolute;top:6px;right:6px;font-family:'VT323',monospace;font-size:.65rem;background:rgba(10,10,0,0.82);color:#4a8cff;padding:2px 7px;border:1px solid #2a3860;z-index:6;display:none;letter-spacing:.08em}
+.ep-pill{position:absolute;top:6px;right:6px;font-family:'VT323',monospace;font-size:.65rem;background:rgba(10,10,0,0.82);color:#4a8cff;padding:2px 7px;border:1px solid #2a3860;z-index:6;display:none}
 .ep-pill.show{display:block}
 .tv-controls{display:flex;justify-content:space-between;align-items:center;padding:7px 4px 0}
 .knobs{display:flex;gap:7px;align-items:center}
 .knob-w{display:flex;flex-direction:column;align-items:center;gap:2px}
 .knob{width:24px;height:24px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#5a4020,#1a0e04);border:2px solid #080402;cursor:pointer;position:relative;transition:transform .15s}
 .knob::after{content:'';position:absolute;top:3px;left:50%;transform:translateX(-50%);width:2px;height:6px;background:#d4a850;border-radius:2px}
-.kl{font-family:'VT323',monospace;font-size:.52rem;color:#4a3015;letter-spacing:.1em}
+.kl{font-family:'VT323',monospace;font-size:.52rem;color:#4a3015}
 .pwr{width:15px;height:15px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#cc2200,#550a00);border:1px solid #220500;cursor:pointer;transition:all .2s;flex-shrink:0}
 .pwr.on{background:radial-gradient(circle at 35% 35%,#ff3300,#990000);box-shadow:0 0 10px rgba(255,50,0,0.7)}
 .spkr{display:grid;grid-template-columns:repeat(5,3px);gap:3px}
 .sd{width:3px;height:3px;border-radius:50%;background:#080402}
 .tv-legs{display:flex;justify-content:space-between;padding:0 26px;margin-top:-1px}
 .leg{width:13px;height:16px;background:linear-gradient(to bottom,#5c3a1e,#2a1a08);border-radius:0 0 3px 3px}
-.src-note{font-family:'VT323',monospace;font-size:.6rem;color:#2a1a08;text-align:center;margin-top:4px;letter-spacing:.08em}
+.src-note{font-family:'VT323',monospace;font-size:.6rem;color:#2a1a08;text-align:center;margin-top:4px}
 .guide-hdr{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;border-bottom:1px solid #1e1600;padding-bottom:7px}
-.guide-title{font-family:'VT323',monospace;font-size:1.6rem;color:#f5a623;letter-spacing:.08em}
-.guide-date{font-family:'VT323',monospace;font-size:.75rem;color:#4a3015;letter-spacing:.12em}
+.guide-title{font-family:'VT323',monospace;font-size:1.6rem;color:#f5a623}
+.guide-date{font-family:'VT323',monospace;font-size:.75rem;color:#4a3015}
 .cat-tabs{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:8px}
-.cat-btn{font-family:'VT323',monospace;font-size:.68rem;padding:2px 7px;border:1px solid #2a1e0a;background:transparent;color:#7a5a2a;cursor:pointer;letter-spacing:.06em;border-radius:2px;transition:all .13s;white-space:nowrap}
+.cat-btn{font-family:'VT323',monospace;font-size:.68rem;padding:2px 7px;border:1px solid #2a1e0a;background:transparent;color:#7a5a2a;cursor:pointer;border-radius:2px}
 .cat-btn:hover,.cat-btn.active{background:#120c00;color:#f5a623;border-color:#c47d0e}
 .show-list{display:flex;flex-direction:column;gap:4px;max-height:62vh;overflow-y:auto;padding-right:3px}
 .show-list::-webkit-scrollbar{width:3px}
-.show-list::-webkit-scrollbar-thumb{background:#2a1e00;border-radius:2px}
-.show-card{display:flex;gap:6px;align-items:center;background:#0c0900;border:1px solid #1a1400;border-left:3px solid #1e1600;padding:5px 7px;cursor:pointer;transition:all .13s}
+.show-list::-webkit-scrollbar-thumb{background:#2a1e00}
+.show-card{display:flex;gap:6px;align-items:center;background:#0c0900;border:1px solid #1a1400;border-left:3px solid #1e1600;padding:5px 7px;cursor:pointer}
 .show-card:hover{border-left-color:#f5a623;background:#110d00}
 .show-card.active{border-left-color:#39ff14;background:#060d00}
 .s-time{font-family:'VT323',monospace;font-size:.78rem;color:#4a3015;min-width:40px}
@@ -84,8 +84,8 @@ canvas.noise{position:absolute;inset:0;width:100%;height:100%}
 .s-name{font-family:'Oswald',sans-serif;font-size:.76rem;font-weight:600;color:#d4b483}
 .show-card.active .s-name{color:#39ff14}
 .s-yr{font-size:.55rem;color:#3a2a10;font-family:'VT323',monospace}
-.s-desc{font-family:'Special Elite',cursive;font-size:.58rem;color:#4a3015;margin-top:1px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.s-badges{display:flex;gap:2px;margin-top:2px;flex-wrap:wrap}
+.s-desc{font-family:'Special Elite',cursive;font-size:.58rem;color:#4a3015;margin-top:1px;line-height:1.3}
+.s-badges{display:flex;gap:2px;margin-top:2px}
 .badge{font-family:'VT323',monospace;font-size:.54rem;padding:1px 3px;border:1px solid #1e1600;color:#6a4a20}
 .badge.playlist{border-color:#4a8cff;color:#6aacff}
 .badge.hot{border-color:#ff6a00;color:#ff8c2a}
@@ -93,7 +93,7 @@ canvas.noise{position:absolute;inset:0;width:100%;height:100%}
 .show-card.active .play-dot{opacity:1}
 .np-bar{display:none;gap:7px;align-items:center;margin-top:8px;padding:6px 9px;background:#060800;border:1px solid #1a1400}
 .np-bar.show{display:flex}
-.np-live{font-family:'VT323',monospace;font-size:.65rem;color:#39ff14;letter-spacing:.15em;animation:flk 2s infinite}
+.np-live{font-family:'VT323',monospace;font-size:.65rem;color:#39ff14;animation:flk 2s infinite}
 .np-name{font-family:'Oswald',sans-serif;font-size:.7rem;color:#d4b483;flex:1}
 .np-ch{font-family:'VT323',monospace;font-size:.7rem;color:#f5a623}
 @keyframes flk{0%,90%,100%{opacity:1}95%{opacity:.25}}
@@ -111,7 +111,7 @@ canvas.noise{position:absolute;inset:0;width:100%;height:100%}
     <div class="tv-outer"><div class="tv-body">
       <div class="tv-topbar">
         <span class="tv-brand">NOSTALGIVISION™</span>
-        <div class="ch-display" id="chDisp">— —</div>
+        <div class="ch-display" id="chDisp">--</div>
       </div>
       <div class="screen-bezel"><div class="screen-wrap">
         <div class="scanlines"></div><div class="vignette"></div>
@@ -119,12 +119,6 @@ canvas.noise{position:absolute;inset:0;width:100%;height:100%}
           <div class="idle-icon">📺</div>
           <div class="idle-title">THE TUBE</div>
           <div class="idle-sub">◈ SELECT A PROGRAMME ◈</div>
-          <div class="test-bars">
-            <div class="test-bar" style="background:#fff"></div><div class="test-bar" style="background:#ff0"></div>
-            <div class="test-bar" style="background:#0ff"></div><div class="test-bar" style="background:#0f0"></div>
-            <div class="test-bar" style="background:#f0f"></div><div class="test-bar" style="background:#f00"></div>
-            <div class="test-bar" style="background:#00f"></div><div class="test-bar" style="background:#000"></div>
-          </div>
         </div>
         <div class="off-screen" id="offScreen"><div class="off-line"></div></div>
         <div class="static-screen" id="staticScreen">
@@ -167,8 +161,8 @@ canvas.noise{position:absolute;inset:0;width:100%;height:100%}
     <div class="show-list" id="showList"></div>
     <div class="np-bar" id="npBar">
       <span class="np-live">▶ ON AIR</span>
-      <span class="np-name" id="npName">—</span>
-      <span class="np-ch" id="npCh">CH —</span>
+      <span class="np-name" id="npName">--</span>
+      <span class="np-ch" id="npCh">CH --</span>
     </div>
   </div>
 </div>
@@ -211,174 +205,25 @@ function getAudioContext() {
 }
 
 function sndClick() {
-  try {
-    const ctx = getAudioContext();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.type = 'square';
-    osc.frequency.setValueAtTime(800, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.06);
-    gain.gain.setValueAtTime(0.15, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.07);
-    osc.start();
-    osc.stop(ctx.currentTime + 0.07);
-  } catch(e) { console.log('Audio error:', e); }
+  try { const ctx = getAudioContext(); const osc = ctx.createOscillator(); const gain = ctx.createGain(); osc.connect(gain); gain.connect(ctx.destination); osc.type = 'square'; osc.frequency.setValueAtTime(800, ctx.currentTime); osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.06); gain.gain.setValueAtTime(0.15, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.07); osc.start(); osc.stop(ctx.currentTime + 0.07); } catch(e) {}
 }
-
 function sndKnob() {
-  try {
-    const ctx = getAudioContext();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(300, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(120, ctx.currentTime + 0.05);
-    gain.gain.setValueAtTime(0.08, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
-    osc.start();
-    osc.stop(ctx.currentTime + 0.06);
-  } catch(e) { console.log('Audio error:', e); }
+  try { const ctx = getAudioContext(); const osc = ctx.createOscillator(); const gain = ctx.createGain(); osc.connect(gain); gain.connect(ctx.destination); osc.type = 'sawtooth'; osc.frequency.setValueAtTime(300, ctx.currentTime); osc.frequency.exponentialRampToValueAtTime(120, ctx.currentTime + 0.05); gain.gain.setValueAtTime(0.08, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06); osc.start(); osc.stop(ctx.currentTime + 0.06); } catch(e) {}
 }
-
 function sndPowerOn() {
-  try {
-    const ctx = getAudioContext();
-    const bufferLen = ctx.sampleRate * 1.4;
-    const buffer = ctx.createBuffer(1, bufferLen, ctx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for(let i = 0; i < bufferLen; i++) data[i] = Math.random() * 2 - 1;
-    const source = ctx.createBufferSource();
-    source.buffer = buffer;
-    const filter = ctx.createBiquadFilter();
-    filter.type = 'bandpass';
-    filter.frequency.setValueAtTime(2000, ctx.currentTime);
-    filter.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 1.2);
-    filter.Q.value = 0.8;
-    const gain = ctx.createGain();
-    gain.gain.setValueAtTime(0, ctx.currentTime);
-    gain.gain.linearRampToValueAtTime(0.35, ctx.currentTime + 0.08);
-    gain.gain.setValueAtTime(0.35, ctx.currentTime + 0.8);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.4);
-    source.connect(filter);
-    filter.connect(gain);
-    gain.connect(ctx.destination);
-    source.start();
-    source.stop(ctx.currentTime + 1.4);
-  } catch(e) { console.log('Audio error:', e); }
+  try { const ctx = getAudioContext(); const bufferLen = ctx.sampleRate * 1.4; const buffer = ctx.createBuffer(1, bufferLen, ctx.sampleRate); const data = buffer.getChannelData(0); for(let i = 0; i < bufferLen; i++) data[i] = Math.random() * 2 - 1; const source = ctx.createBufferSource(); source.buffer = buffer; const filter = ctx.createBiquadFilter(); filter.type = 'bandpass'; filter.frequency.setValueAtTime(2000, ctx.currentTime); filter.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 1.2); filter.Q.value = 0.8; const gain = ctx.createGain(); gain.gain.setValueAtTime(0, ctx.currentTime); gain.gain.linearRampToValueAtTime(0.35, ctx.currentTime + 0.08); gain.gain.setValueAtTime(0.35, ctx.currentTime + 0.8); gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.4); source.connect(filter); filter.connect(gain); gain.connect(ctx.destination); source.start(); source.stop(ctx.currentTime + 1.4); } catch(e) {}
 }
-
 function sndPowerOff() {
-  try {
-    const ctx = getAudioContext();
-    const bufferLen = ctx.sampleRate * 0.5;
-    const buffer = ctx.createBuffer(1, bufferLen, ctx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for(let i = 0; i < bufferLen; i++) data[i] = Math.random() * 2 - 1;
-    const source = ctx.createBufferSource();
-    source.buffer = buffer;
-    const filter = ctx.createBiquadFilter();
-    filter.type = 'bandpass';
-    filter.frequency.value = 400;
-    filter.Q.value = 1.5;
-    const gain2 = ctx.createGain();
-    gain2.gain.setValueAtTime(0.3, ctx.currentTime);
-    gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
-    const osc = ctx.createOscillator();
-    const oscGain = ctx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(800, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(40, ctx.currentTime + 0.4);
-    oscGain.gain.setValueAtTime(0.2, ctx.currentTime);
-    oscGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
-    osc.connect(oscGain);
-    oscGain.connect(ctx.destination);
-    source.connect(filter);
-    filter.connect(gain2);
-    gain2.connect(ctx.destination);
-    source.start();
-    source.stop(ctx.currentTime + 0.5);
-    osc.start();
-    osc.stop(ctx.currentTime + 0.5);
-  } catch(e) { console.log('Audio error:', e); }
+  try { const ctx = getAudioContext(); const bufferLen = ctx.sampleRate * 0.5; const buffer = ctx.createBuffer(1, bufferLen, ctx.sampleRate); const data = buffer.getChannelData(0); for(let i = 0; i < bufferLen; i++) data[i] = Math.random() * 2 - 1; const source = ctx.createBufferSource(); source.buffer = buffer; const filter = ctx.createBiquadFilter(); filter.type = 'bandpass'; filter.frequency.value = 400; filter.Q.value = 1.5; const gain2 = ctx.createGain(); gain2.gain.setValueAtTime(0.3, ctx.currentTime); gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4); const osc = ctx.createOscillator(); const oscGain = ctx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(800, ctx.currentTime); osc.frequency.exponentialRampToValueAtTime(40, ctx.currentTime + 0.4); oscGain.gain.setValueAtTime(0.2, ctx.currentTime); oscGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4); osc.connect(oscGain); oscGain.connect(ctx.destination); source.connect(filter); filter.connect(gain2); gain2.connect(ctx.destination); source.start(); source.stop(ctx.currentTime + 0.5); osc.start(); osc.stop(ctx.currentTime + 0.5); } catch(e) {}
 }
-
 function sndTune() {
-  try {
-    const ctx = getAudioContext();
-    const bufferLen = ctx.sampleRate * 0.9;
-    const buffer = ctx.createBuffer(1, bufferLen, ctx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for(let i = 0; i < bufferLen; i++) data[i] = Math.random() * 2 - 1;
-    const source = ctx.createBufferSource();
-    source.buffer = buffer;
-    const filter = ctx.createBiquadFilter();
-    filter.type = 'bandpass';
-    filter.frequency.setValueAtTime(4000, ctx.currentTime);
-    filter.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.7);
-    filter.Q.value = 1.2;
-    const gain = ctx.createGain();
-    gain.gain.setValueAtTime(0.28, ctx.currentTime);
-    gain.gain.setValueAtTime(0.28, ctx.currentTime + 0.6);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.9);
-    source.connect(filter);
-    filter.connect(gain);
-    gain.connect(ctx.destination);
-    source.start();
-    source.stop(ctx.currentTime + 0.9);
-  } catch(e) { console.log('Audio error:', e); }
+  try { const ctx = getAudioContext(); const bufferLen = ctx.sampleRate * 0.9; const buffer = ctx.createBuffer(1, bufferLen, ctx.sampleRate); const data = buffer.getChannelData(0); for(let i = 0; i < bufferLen; i++) data[i] = Math.random() * 2 - 1; const source = ctx.createBufferSource(); source.buffer = buffer; const filter = ctx.createBiquadFilter(); filter.type = 'bandpass'; filter.frequency.setValueAtTime(4000, ctx.currentTime); filter.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.7); filter.Q.value = 1.2; const gain = ctx.createGain(); gain.gain.setValueAtTime(0.28, ctx.currentTime); gain.gain.setValueAtTime(0.28, ctx.currentTime + 0.6); gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.9); source.connect(filter); filter.connect(gain); gain.connect(ctx.destination); source.start(); source.stop(ctx.currentTime + 0.9); } catch(e) {}
 }
 
-function buildSpeaker() {
-  const g = document.getElementById('spkr');
-  g.innerHTML = '';
-  for(let i = 0; i < 20; i++) {
-    const d = document.createElement('div');
-    d.className = 'sd';
-    g.appendChild(d);
-  }
-}
-
-function buildCatTabs() {
-  const el = document.getElementById('catTabs');
-  cats.forEach(c => {
-    const b = document.createElement('button');
-    b.className = 'cat-btn' + (c.key === 'all' ? ' active' : '');
-    b.textContent = c.label;
-    b.dataset.cat = c.key;
-    b.addEventListener('click', () => {
-      sndClick();
-      document.querySelectorAll('.cat-btn').forEach(x => x.classList.remove('active'));
-      b.classList.add('active');
-      activeCat = c.key;
-      renderList();
-    });
-    el.appendChild(b);
-  });
-}
-
-function renderList() {
-  const el = document.getElementById('showList');
-  el.innerHTML = '';
-  const filtered = activeCat === 'all' ? shows : shows.filter(s => s.cat === activeCat);
-  filtered.forEach(s => {
-    const card = document.createElement('div');
-    card.className = 'show-card' + (active && active.id === s.id ? ' active' : '');
-    const bhtml = s.badges.map(b => `<span class="badge ${b === 'PLAYLIST' ? 'playlist' : (b === 'HOT' ? 'hot' : '')}">${b}</span>`).join('');
-    card.innerHTML = `<span class="s-time">${s.time}</span><span class="s-emoji">${s.emoji}</span><div class="s-info"><div class="s-name">${s.name} <span class="s-yr">(${s.year})</span></div><div class="s-desc">${s.desc}</div><div class="s-badges">${bhtml}</div></div><div class="play-dot"></div>`;
-    card.addEventListener('click', () => { sndClick(); tuneShow(s.id); });
-    el.appendChild(card);
-  });
-}
-
-function drawNoise() {
-  const c = document.getElementById('noiseCanvas');
-  if(!c) return;
-  c.width = c.offsetWidth || 300;
-  c.height = c.offsetHeight || 225;
-  const ctx = c.getContext('2d');
-  const img = ctx.createImageData(c.width, c.height);
-  for(let i = 0; i < img.data.length
+function buildSpeaker() { const g = document.getElementById('spkr'); for(let i=0;i<20;i++){ const d=document.createElement('div'); d.className='sd'; g.appendChild(d); } }
+function buildCatTabs() { const el=document.getElementById('catTabs'); cats.forEach(c=>{ const b=document.createElement('button'); b.className='cat-btn'+(c.key==='all'?' active':''); b.textContent=c.label; b.addEventListener('click',()=>{ sndClick(); document.querySelectorAll('.cat-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); activeCat=c.key; renderList(); }); el.appendChild(b); }); }
+function renderList(){ const el=document.getElementById('showList'); el.innerHTML=''; const filtered=activeCat==='all'?shows:shows.filter(s=>s.cat===activeCat); filtered.forEach(s=>{ const card=document.createElement('div'); card.className='show-card'+(active?.id===s.id?' active':''); const bhtml=s.badges.map(b=>`<span class="badge ${b==='PLAYLIST'?'playlist':b==='HOT'?'hot':''}">${b}</span>`).join(''); card.innerHTML=`<span class="s-time">${s.time}</span><span class="s-emoji">${s.emoji}</span><div class="s-info"><div class="s-name">${s.name} <span class="s-yr">(${s.year})</span></div><div class="s-desc">${s.desc}</div><div class="s-badges">${bhtml}</div></div><div class="play-dot"></div>`; card.addEventListener('click',()=>{ sndClick(); tuneShow(s.id); }); el.appendChild(card); }); }
+function drawNoise(){ const c=document.getElementById('noiseCanvas'); if(!c)return; c.width=c.offsetWidth||300; c.height=c.offsetHeight||225; const ctx=c.getContext('2d'),img=ctx.createImageData(c.width,c.height); for(let i=0;i<img.data.length;i+=4){ const v=Math.random()*255; img.data[i]=v; img.data[i+1]=v; img.data[i+2]=v; img.data[i+3]=255; } ctx.putImageData(img,0,0); }
+function showStatic(cb){ const ss=document.getElementById('staticScreen'); ss.classList.add('show'); sndTune(); let f=0; if(noiseTimer)clearInterval(noiseTimer); noiseTimer=setInterval(()=>{ drawNoise(); f++; if(f>=18){ clearInterval(noiseTimer); noiseTimer=null; ss.classList.remove('show'); if(cb)cb(); } },50); }
+function powerToggle(){ const btn=document.getElementById('pwrBtn'); if(!tvOn){ tvOn=true; btn.classList.add('on'); sndPowerOn(); document.getElementById('idle').style.display='flex'; renderList(); }else{ sndPowerOff(); btn.classList.remove('on'); tvOn=false; active=null; if(noiseTimer)clearInterval(noiseTimer); document.getElementById('staticScreen').classList.remove('show'); document.getElementById('videoLayer').classList.remove('show'); document.getElementById('splash').classList.remove('show'); document.getElementById('tickerBar').classList.remove('show'); document.getElementById('epPill').classList.remove('show'); document.getElementById('npBar').classList.remove('show'); document.getElementById('videoFrame').src=''; document.getElementById('chDisp').textContent='--'; const off=document.getElementById('offScreen'); off.classList.add('show'); setTimeout(()=>{ off.classList.remove('show'); document.getElementById('idle').style.display='flex'; },600); renderList(); } }
+function tuneShow(id){ if(!tvOn){ powerToggle(); setTimeout(()=>tuneShow(id),500); return; } const s=shows.find(x=>x.id===id); if(!s)return; document.getElementById('videoLayer').classList.remove('show'); document.getElementById('videoFrame').src=''; document.getElementById('splash').classList.remove('show'); document.getElementById('tickerBar').classList.remove('show'); document.getElementById('epPill').classList.remove('show'); document.getElementById('chDisp').textContent=`CH ${s.ch}`; showStatic(()=>{ active=s; document.getElementById('idle').style.display='none'; document.getElementById('splashEmoji').textContent=s.emoji; document.getElementById('splashTitle').textContent=s.name; document.getElementById('splashYear').textContent=s.year; document.getElementById('
