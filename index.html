@@ -13,87 +13,135 @@ body{background:radial-gradient(ellipse at center,#1a1408 0%,#080602 100%);font-
 .header-actions{display:flex;justify-content:center;gap:10px;margin-top:10px;flex-wrap:wrap}
 .hbtn{font-family:'VT323',monospace;font-size:.82rem;padding:5px 14px;border-radius:3px;cursor:pointer;letter-spacing:.1em;transition:all .15s;border:none;display:flex;align-items:center;gap:5px}
 .hbtn:active{transform:scale(.96)}
-.btn-share{background:#1a1200;color:#f5a623;border:1px solid #3a2800}
-.btn-share:hover{background:#2a1e00;box-shadow:0 0 8px rgba(245,166,35,.2)}
-.btn-donate{background:#0d1a0d;color:#39ff14;border:1px solid #1a3a1a}
-.btn-donate:hover{background:#122012;box-shadow:0 0 8px rgba(57,255,20,.2)}
-.btn-surprise{background:#1a001a;color:#ff80ff;border:1px solid #3a1a3a}
-.btn-surprise:hover{background:#250025;box-shadow:0 0 8px rgba(255,100,255,.2)}
-.layout{display:grid;grid-template-columns:1fr 310px;gap:18px;max-width:1100px;margin:0 auto;padding:10px 6px 0;align-items:start}
-@media(max-width:740px){.layout{grid-template-columns:1fr}}
-.tv-shell{background:linear-gradient(160deg,#c8c8c0 0%,#b0b0a8 30%,#989890 60%,#888880 100%);border-radius:12px 12px 16px 16px;padding:16px 16px 14px;box-shadow:4px 4px 0 #707068,8px 8px 0 #606058,0 20px 60px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.5),inset -2px -2px 0 rgba(0,0,0,.2);position:relative}
-.tv-shell::before{content:'';position:absolute;inset:8px;border-radius:8px;box-shadow:inset 0 2px 4px rgba(0,0,0,.3),inset 0 -1px 2px rgba(255,255,255,.2);pointer-events:none}
-.tv-top-strip{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding:0 2px}
-.tv-brand-90s{font-family:'VT323',monospace;font-size:.9rem;color:#3a3a32;letter-spacing:.3em;text-transform:uppercase;text-shadow:0 1px 0 rgba(255,255,255,.4)}
-.ch-display{font-family:'VT323',monospace;font-size:1.2rem;color:#ff4400;background:#0a0200;padding:2px 8px;border-radius:3px;border:2px solid #333;min-width:54px;text-align:center;box-shadow:inset 0 2px 4px rgba(0,0,0,.8)}
-.screen-housing{background:#2a2a28;border-radius:8px;padding:10px 10px 14px;box-shadow:inset 0 4px 8px rgba(0,0,0,.8),inset 0 -2px 4px rgba(255,255,255,.05);margin-bottom:12px}
-.screen-bezel-90s{background:#1a1a18;border-radius:5px;padding:6px;box-shadow:inset 0 0 20px rgba(0,0,0,.9),0 0 0 1px #111}
+.btn-share{background:#1a1200;color:#f5a623;border:1px solid #3a2800}.btn-share:hover{background:#2a1e00}
+.btn-donate{background:#0d1a0d;color:#39ff14;border:1px solid #1a3a1a}.btn-donate:hover{background:#122012}
+.btn-surprise{background:#1a001a;color:#ff80ff;border:1px solid #3a1a3a}.btn-surprise:hover{background:#250025}
+
+/* ── MAIN LAYOUT: ep-list | tv | guide ── */
+.layout{display:grid;grid-template-columns:200px 1fr 290px;gap:14px;max-width:1200px;margin:0 auto;padding:10px 6px 0;align-items:start}
+@media(max-width:900px){.layout{grid-template-columns:1fr 260px}}
+@media(max-width:640px){.layout{grid-template-columns:1fr}}
+
+/* ── EPISODE SIDEBAR ── */
+.ep-sidebar{background:#0a0800;border:1px solid #1e1600;border-radius:4px;padding:8px 0;min-height:200px}
+.ep-sidebar-hdr{font-family:'VT323',monospace;font-size:.85rem;color:#f5a623;letter-spacing:.1em;padding:4px 10px 6px;border-bottom:1px solid #1e1600;margin-bottom:4px}
+.ep-sidebar-show{font-family:'VT323',monospace;font-size:.7rem;color:#7a5a28;padding:3px 10px 6px;letter-spacing:.06em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ep-list{display:flex;flex-direction:column;gap:1px;max-height:62vh;overflow-y:auto;padding:0 4px}
+.ep-list::-webkit-scrollbar{width:8px}
+.ep-list::-webkit-scrollbar-track{background:#0a0800}
+.ep-list::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#5a3a10,#3a2008);border-radius:3px}
+.ep-item{font-family:'VT323',monospace;font-size:.72rem;color:#6a4a20;padding:4px 8px;cursor:pointer;transition:all .12s;letter-spacing:.04em;border-left:2px solid transparent;line-height:1.3}
+.ep-item:hover{color:#f5a623;background:#120c00;border-left-color:#f5a623}
+.ep-item.active{color:#39ff14;background:#060d00;border-left-color:#39ff14}
+.ep-item .ep-num{color:#3a2a10;font-size:.62rem;margin-right:3px}
+.ep-sidebar-empty{font-family:'VT323',monospace;font-size:.7rem;color:#2a1e08;padding:12px 10px;text-align:center;line-height:1.6;letter-spacing:.06em}
+@media(max-width:900px){.ep-sidebar{display:none}}
+
+/* ── TV SHELL ── */
+.tv-shell{background:linear-gradient(160deg,#c8c8c0 0%,#b0b0a8 30%,#989890 60%,#888880 100%);border-radius:12px 12px 16px 16px;padding:14px 14px 12px;box-shadow:4px 4px 0 #707068,8px 8px 0 #606058,0 20px 60px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.5),inset -2px -2px 0 rgba(0,0,0,.2);position:relative}
+.tv-shell::before{content:'';position:absolute;inset:7px;border-radius:7px;box-shadow:inset 0 2px 4px rgba(0,0,0,.3),inset 0 -1px 2px rgba(255,255,255,.2);pointer-events:none}
+.tv-top-strip{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.tv-brand-90s{font-family:'VT323',monospace;font-size:.85rem;color:#3a3a32;letter-spacing:.3em;text-shadow:0 1px 0 rgba(255,255,255,.4)}
+.ch-display{font-family:'VT323',monospace;font-size:1.1rem;color:#ff4400;background:#0a0200;padding:2px 7px;border-radius:3px;border:2px solid #333;min-width:50px;text-align:center;box-shadow:inset 0 2px 4px rgba(0,0,0,.8)}
+.screen-housing{background:#2a2a28;border-radius:8px;padding:8px 8px 12px;box-shadow:inset 0 4px 8px rgba(0,0,0,.8);margin-bottom:10px}
+.screen-bezel-90s{background:#1a1a18;border-radius:5px;padding:5px;box-shadow:inset 0 0 20px rgba(0,0,0,.9)}
 .screen-wrap{position:relative;border-radius:4px;overflow:hidden;aspect-ratio:4/3;background:#050500}
 .scanlines{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.22) 2px,rgba(0,0,0,.22) 4px);z-index:15;pointer-events:none}
 .vignette{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,transparent 48%,rgba(0,0,0,.65) 100%);z-index:16;pointer-events:none}
 .phosphor-glow{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,rgba(100,200,50,.03) 0%,transparent 70%);z-index:14;pointer-events:none}
-.controls-panel{display:flex;align-items:center;justify-content:space-between;gap:8px;background:linear-gradient(180deg,#a8a8a0,#989890);margin:-4px -4px -4px;padding:8px 12px 6px;border-radius:0 0 6px 6px;box-shadow:inset 0 2px 3px rgba(0,0,0,.2)}
-.knob-group{display:flex;gap:10px;align-items:center}
-.knob-unit{display:flex;flex-direction:column;align-items:center;gap:2px}
-.knob90{width:32px;height:32px;border-radius:50%;cursor:pointer;position:relative;transition:transform .12s;box-shadow:2px 2px 4px rgba(0,0,0,.5),-1px -1px 2px rgba(255,255,255,.3),inset 0 2px 3px rgba(255,255,255,.2),inset 0 -2px 3px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center}
-.knob90.k-vol{background:radial-gradient(circle at 38% 35%,#888,#444)}
-.knob90.k-static{background:radial-gradient(circle at 38% 35%,#666,#333)}
-.knob90.k-bright{background:radial-gradient(circle at 38% 35%,#777,#3a3a3a)}
-.knob90:active{box-shadow:1px 1px 2px rgba(0,0,0,.5),inset 0 2px 4px rgba(0,0,0,.5)}
-.knob90::after{content:'';position:absolute;width:3px;height:10px;background:rgba(255,255,255,.7);border-radius:2px;top:4px;left:50%;transform:translateX(-50%);transform-origin:50% 12px}
-.kl90{font-family:'VT323',monospace;font-size:.58rem;color:#4a4a40;letter-spacing:.08em;text-align:center}
-.static-bar-wrap{display:flex;flex-direction:column;align-items:center;gap:2px}
-.static-bar{width:60px;height:5px;background:#555;border-radius:3px;overflow:hidden;border:1px solid #333}
-.static-bar-fill{height:100%;background:linear-gradient(90deg,#39ff14,#f5a623);border-radius:3px;transition:width .1s}
-.pwr-area{display:flex;flex-direction:column;align-items:center;gap:4px}
-.pwr90{width:28px;height:28px;border-radius:4px;background:linear-gradient(160deg,#cc3300,#881100);border:2px solid #551100;cursor:pointer;transition:all .15s;box-shadow:2px 2px 4px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,100,50,.3);display:flex;align-items:center;justify-content:center}
-.pwr90::after{content:'⏻';font-size:.9rem;color:rgba(255,255,255,.6)}
-.pwr90.on{background:linear-gradient(160deg,#ff4400,#cc2200);box-shadow:2px 2px 4px rgba(0,0,0,.4),0 0 12px rgba(255,60,0,.6),inset 0 1px 0 rgba(255,150,100,.4)}
-.pwr90.on::after{color:#fff}
-.pwr-lbl{font-family:'VT323',monospace;font-size:.52rem;color:#4a4a40;letter-spacing:.08em}
-.spkr90{display:flex;flex-direction:column;gap:3px;width:40px}
-.spkr-slot{height:3px;background:#555;border-radius:1px;box-shadow:0 1px 0 rgba(255,255,255,.1)}
-.tv-base{width:70%;margin:0 auto;height:12px;background:linear-gradient(160deg,#b0b0a8,#888880);border-radius:0 0 8px 8px;box-shadow:0 4px 8px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.2)}
-.src-note{font-family:'VT323',monospace;font-size:.58rem;color:#2a1a08;text-align:center;margin-top:5px;letter-spacing:.08em}
+
+/* Screen states */
 .idle{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;background:#060600;position:absolute;inset:0;z-index:2}
-.idle-icon{font-size:2.6rem}
-.idle-title{font-family:'VT323',monospace;font-size:1.9rem;color:#f5a623;margin-top:3px}
-.idle-sub{font-family:'VT323',monospace;font-size:.72rem;color:#4a3a20;letter-spacing:.2em;margin-top:3px}
-.test-bars{display:flex;width:100%;height:16px;margin-top:14px}
-.test-bar{flex:1}
+.idle-icon{font-size:2.4rem}.idle-title{font-family:'VT323',monospace;font-size:1.8rem;color:#f5a623;margin-top:3px}
+.idle-sub{font-family:'VT323',monospace;font-size:.68rem;color:#4a3a20;letter-spacing:.2em;margin-top:3px}
+.test-bars{display:flex;width:100%;height:14px;margin-top:12px}.test-bar{flex:1}
 .static-screen{position:absolute;inset:0;z-index:10;display:none;align-items:center;justify-content:center;background:#111}
 .static-screen.show{display:flex}
-.static-txt{font-family:'VT323',monospace;font-size:1rem;color:rgba(255,255,255,.8);z-index:2;letter-spacing:.2em;animation:flk .12s infinite}
+.static-txt{font-family:'VT323',monospace;font-size:.9rem;color:rgba(255,255,255,.8);z-index:2;letter-spacing:.2em;animation:flk .12s infinite}
 canvas.noise{position:absolute;inset:0;width:100%;height:100%}
 .off-screen{position:absolute;inset:0;background:#000;z-index:12;display:none;align-items:center;justify-content:center}
 .off-screen.show{display:flex}
 .off-line{width:100%;height:2px;background:#fff;animation:offAnim .5s ease-out forwards}
 @keyframes offAnim{0%{opacity:1;transform:scaleX(1) scaleY(8)}60%{opacity:1;transform:scaleX(.5) scaleY(1)}100%{opacity:0;transform:scaleX(0) scaleY(0)}}
+
+/* VHS transport overlay — FF/REW shimmer */
+.vhs-fx{position:absolute;inset:0;z-index:8;display:none;background:#000;overflow:hidden}
+.vhs-fx.show{display:block}
+.vhs-stripe{position:absolute;width:100%;height:3px;background:rgba(255,255,255,.7);left:0;animation:vhsScan .08s linear infinite}
+@keyframes vhsScan{0%{top:-5%}100%{top:105%}}
+.vhs-noise-line{position:absolute;width:100%;height:18px;background:rgba(255,255,255,.12);animation:vhsNoise .12s steps(1) infinite}
+@keyframes vhsNoise{0%{top:10%}25%{top:55%}50%{top:30%}75%{top:70%}100%{top:20%}}
+.vhs-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'VT323',monospace;font-size:1.4rem;color:#fff;z-index:2;letter-spacing:.2em;animation:flk .15s infinite}
+
 .video-layer{position:absolute;inset:0;z-index:3;display:none}
 .video-layer.show{display:block}
 .video-layer iframe{width:100%;height:100%;border:none;display:block}
-.splash{position:absolute;inset:0;z-index:4;display:none;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;background:rgba(0,0,0,.74);padding:10px}
-.splash.show{display:flex}
-.splash-emoji{font-size:3.2rem}
-.splash-title{font-family:'VT323',monospace;font-size:1.1rem;color:#f5a623;margin-top:6px;text-align:center;letter-spacing:.04em;line-height:1.2}
-.splash-year{font-family:'VT323',monospace;font-size:.72rem;color:#7a5a28;letter-spacing:.1em;margin-top:2px}
-.splash-ep{font-family:'Special Elite',cursive;font-size:.56rem;color:#aaa;margin-top:3px;text-align:center;line-height:1.4}
-.splash-play{margin-top:10px;width:42px;height:42px;border-radius:50%;background:rgba(245,166,35,.12);border:2px solid #f5a623;display:flex;align-items:center;justify-content:center}
-.splash-play::after{content:'';width:0;height:0;border-top:9px solid transparent;border-bottom:9px solid transparent;border-left:16px solid #f5a623;margin-left:4px}
-.splash-hint{font-family:'VT323',monospace;font-size:.58rem;color:#4a3015;margin-top:5px;letter-spacing:.1em}
+
+/* Now-playing overlay on screen (replaces splash) */
+.now-screen{position:absolute;inset:0;z-index:4;display:none;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,.78);cursor:pointer;padding:10px}
+.now-screen.show{display:flex}
+.ns-emoji{font-size:3rem}
+.ns-title{font-family:'VT323',monospace;font-size:1.1rem;color:#f5a623;margin-top:5px;text-align:center;line-height:1.2}
+.ns-year{font-family:'VT323',monospace;font-size:.7rem;color:#7a5a28;margin-top:2px}
+.ns-ep{font-family:'Special Elite',cursive;font-size:.55rem;color:#aaa;margin-top:3px;text-align:center}
+.ns-play{margin-top:10px;width:40px;height:40px;border-radius:50%;background:rgba(245,166,35,.12);border:2px solid #f5a623;display:flex;align-items:center;justify-content:center}
+.ns-play::after{content:'';width:0;height:0;border-top:8px solid transparent;border-bottom:8px solid transparent;border-left:15px solid #f5a623;margin-left:4px}
+.ns-hint{font-family:'VT323',monospace;font-size:.56rem;color:#4a3015;margin-top:5px;letter-spacing:.1em}
+
 .ticker-bar{position:absolute;bottom:0;left:0;right:0;background:rgba(5,5,0,.93);border-top:1px solid #1e1600;padding:3px 8px;z-index:5;overflow:hidden;white-space:nowrap;display:none}
 .ticker-bar.show{display:block}
-.ticker-inner{display:inline-block;font-family:'VT323',monospace;font-size:.75rem;color:#f5a623;animation:ticker 30s linear infinite}
-.ep-pill{position:absolute;top:5px;right:5px;font-family:'VT323',monospace;font-size:.6rem;background:rgba(10,10,0,.85);color:#4a8cff;padding:2px 6px;border:1px solid #2a3860;z-index:6;display:none;letter-spacing:.07em}
-.ep-pill.show{display:block}
+.ticker-inner{display:inline-block;font-family:'VT323',monospace;font-size:.72rem;color:#f5a623;animation:ticker 30s linear infinite}
+
+/* ── VHS DECK below screen ── */
+.vhs-deck{background:linear-gradient(180deg,#888880,#787870);border-radius:0 0 4px 4px;padding:6px 12px;display:flex;align-items:center;gap:8px;box-shadow:inset 0 2px 3px rgba(0,0,0,.3)}
+/* VHS slot */
+.vhs-slot-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px}
+.vhs-slot{width:100%;height:18px;background:#1a1a18;border-radius:2px;border:2px solid #2a2a28;box-shadow:inset 0 2px 6px rgba(0,0,0,.9);position:relative;overflow:hidden;cursor:pointer}
+.vhs-slot-inner{position:absolute;inset:2px;background:linear-gradient(90deg,#050505,#0a0a08,#050505);border-radius:1px}
+.vhs-tape{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:0;height:12px;background:linear-gradient(90deg,#1a1008,#2a2018,#1a1008);border-radius:1px;transition:width .4s ease;box-shadow:0 0 4px rgba(245,166,35,.3)}
+.vhs-tape.loaded{width:calc(100% - 8px)}
+.vhs-label-txt{font-family:'VT323',monospace;font-size:.5rem;color:#f5a623;letter-spacing:.08em;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%}
+/* Transport buttons */
+.transport-btns{display:flex;gap:4px;align-items:center}
+.tbtn{width:26px;height:20px;border-radius:3px;background:linear-gradient(180deg,#666,#3a3a3a);border:1px solid #222;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.65rem;color:#ccc;transition:all .12s;box-shadow:0 2px 3px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.15);user-select:none}
+.tbtn:hover{background:linear-gradient(180deg,#777,#484848);color:#fff}
+.tbtn:active{box-shadow:0 1px 1px rgba(0,0,0,.4),inset 0 2px 3px rgba(0,0,0,.4);transform:translateY(1px)}
+.tbtn.active-btn{background:linear-gradient(180deg,#aa4400,#662200);color:#ffaa44;box-shadow:0 0 6px rgba(255,100,0,.3),inset 0 1px 0 rgba(255,150,50,.2)}
+
+/* ── CONTROLS PANEL ── */
+.controls-panel{display:flex;align-items:center;justify-content:space-between;gap:6px;background:linear-gradient(180deg,#a8a8a0,#989890);padding:7px 10px 6px;border-radius:0 0 6px 6px;box-shadow:inset 0 2px 3px rgba(0,0,0,.2)}
+.knob-group{display:flex;gap:8px;align-items:center}
+.knob-unit{display:flex;flex-direction:column;align-items:center;gap:2px}
+.knob90{width:28px;height:28px;border-radius:50%;cursor:pointer;position:relative;transition:transform .12s;box-shadow:2px 2px 4px rgba(0,0,0,.5),-1px -1px 2px rgba(255,255,255,.3),inset 0 2px 3px rgba(255,255,255,.2),inset 0 -2px 3px rgba(0,0,0,.4)}
+.knob90.k-vol{background:radial-gradient(circle at 38% 35%,#888,#444)}
+.knob90.k-static{background:radial-gradient(circle at 38% 35%,#666,#333)}
+.knob90.k-bright{background:radial-gradient(circle at 38% 35%,#777,#3a3a3a)}
+.knob90:active{box-shadow:1px 1px 2px rgba(0,0,0,.5),inset 0 2px 4px rgba(0,0,0,.5)}
+.knob90::after{content:'';position:absolute;width:3px;height:9px;background:rgba(255,255,255,.7);border-radius:2px;top:3px;left:50%;transform:translateX(-50%);transform-origin:50% 11px}
+.kl90{font-family:'VT323',monospace;font-size:.54rem;color:#4a4a40;letter-spacing:.07em;text-align:center}
+.static-bar{width:52px;height:4px;background:#555;border-radius:3px;overflow:hidden;border:1px solid #333;margin-top:1px}
+.static-bar-fill{height:100%;background:linear-gradient(90deg,#39ff14,#f5a623);border-radius:3px;transition:width .1s}
+.pwr-area{display:flex;flex-direction:column;align-items:center;gap:3px}
+.pwr90{width:26px;height:26px;border-radius:4px;background:linear-gradient(160deg,#cc3300,#881100);border:2px solid #551100;cursor:pointer;transition:all .15s;box-shadow:2px 2px 4px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,100,50,.3);display:flex;align-items:center;justify-content:center}
+.pwr90::after{content:'⏻';font-size:.85rem;color:rgba(255,255,255,.6)}
+.pwr90.on{background:linear-gradient(160deg,#ff4400,#cc2200);box-shadow:2px 2px 4px rgba(0,0,0,.4),0 0 12px rgba(255,60,0,.6)}
+.pwr90.on::after{color:#fff}
+.pwr-lbl{font-family:'VT323',monospace;font-size:.5rem;color:#4a4a40;letter-spacing:.07em}
+.spkr90{display:flex;flex-direction:column;gap:3px;width:36px}
+.spkr-slot{height:3px;background:#555;border-radius:1px;box-shadow:0 1px 0 rgba(255,255,255,.1)}
+.tv-base{width:70%;margin:0 auto;height:10px;background:linear-gradient(160deg,#b0b0a8,#888880);border-radius:0 0 8px 8px;box-shadow:0 4px 8px rgba(0,0,0,.5)}
+.src-note{font-family:'VT323',monospace;font-size:.56rem;color:#2a1a08;text-align:center;margin-top:4px;letter-spacing:.07em}
+
+/* ── GUIDE PANEL ── */
+.guide-panel{}
 .guide-hdr{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;border-bottom:1px solid #1e1600;padding-bottom:7px}
-.guide-title{font-family:'VT323',monospace;font-size:1.6rem;color:#f5a623;letter-spacing:.08em}
-.guide-date{font-family:'VT323',monospace;font-size:.75rem;color:#4a3015;letter-spacing:.12em}
+.guide-title{font-family:'VT323',monospace;font-size:1.5rem;color:#f5a623;letter-spacing:.08em}
+.guide-date{font-family:'VT323',monospace;font-size:.72rem;color:#4a3015;letter-spacing:.1em}
 .cat-tabs{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:8px}
-.cat-btn{font-family:'VT323',monospace;font-size:.68rem;padding:2px 7px;border:1px solid #2a1e0a;background:transparent;color:#7a5a2a;cursor:pointer;letter-spacing:.06em;border-radius:2px;transition:all .13s;white-space:nowrap}
+.cat-btn{font-family:'VT323',monospace;font-size:.65rem;padding:2px 6px;border:1px solid #2a1e0a;background:transparent;color:#7a5a2a;cursor:pointer;letter-spacing:.05em;border-radius:2px;transition:all .13s;white-space:nowrap}
 .cat-btn:hover,.cat-btn.active{background:#120c00;color:#f5a623;border-color:#c47d0e}
 .cat-btn:active{transform:scale(.95)}
-.show-list{display:flex;flex-direction:column;gap:4px;max-height:60vh;overflow-y:auto;padding-right:4px}
+.show-list{display:flex;flex-direction:column;gap:4px;max-height:60vh;overflow-y:auto;padding-right:3px}
 .show-list::-webkit-scrollbar{width:10px}
 .show-list::-webkit-scrollbar-track{background:#0a0800;border-radius:4px;border:1px solid #1a1200}
 .show-list::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#5a3a10,#3a2008);border-radius:4px;border:1px solid #7a5020}
@@ -102,44 +150,43 @@ canvas.noise{position:absolute;inset:0;width:100%;height:100%}
 .show-card:hover{border-left-color:#f5a623;background:#110d00}
 .show-card:active{transform:scale(.98)}
 .show-card.active{border-left-color:#39ff14;background:#060d00}
-.s-time{font-family:'VT323',monospace;font-size:.78rem;color:#4a3015;min-width:40px;flex-shrink:0}
+.s-time{font-family:'VT323',monospace;font-size:.76rem;color:#4a3015;min-width:38px;flex-shrink:0}
 .show-card.active .s-time{color:#39ff14}
-.s-emoji{font-size:1.2rem;width:26px;text-align:center;flex-shrink:0}
+.s-emoji{font-size:1.15rem;width:24px;text-align:center;flex-shrink:0}
 .s-info{flex:1;min-width:0}
-.s-name{font-family:'Oswald',sans-serif;font-size:.76rem;font-weight:600;color:#d4b483;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.s-name{font-family:'Oswald',sans-serif;font-size:.74rem;font-weight:600;color:#d4b483;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .show-card.active .s-name{color:#39ff14}
-.s-yr{font-size:.55rem;color:#3a2a10;font-family:'VT323',monospace}
-.s-desc{font-family:'Special Elite',cursive;font-size:.58rem;color:#4a3015;margin-top:1px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.s-yr{font-size:.52rem;color:#3a2a10;font-family:'VT323',monospace}
+.s-desc{font-family:'Special Elite',cursive;font-size:.56rem;color:#4a3015;margin-top:1px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .s-badges{display:flex;gap:2px;margin-top:2px;flex-wrap:wrap}
-.badge{font-family:'VT323',monospace;font-size:.54rem;padding:1px 3px;border:1px solid #1e1600;color:#6a4a20;letter-spacing:.05em}
+.badge{font-family:'VT323',monospace;font-size:.52rem;padding:1px 3px;border:1px solid #1e1600;color:#6a4a20;letter-spacing:.04em}
 .badge.live{border-color:#39ff14;color:#39ff14;animation:flk 2s infinite}
 .badge.playlist{border-color:#4a8cff;color:#6aacff}
 .badge.hot{border-color:#ff6a00;color:#ff8c2a}
-.play-dot{width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:7px solid #39ff14;flex-shrink:0;opacity:0;transition:opacity .2s}
+.play-dot{width:0;height:0;border-top:4px solid transparent;border-bottom:4px solid transparent;border-left:7px solid #39ff14;flex-shrink:0;opacity:0;transition:opacity .2s}
 .show-card:hover .play-dot{opacity:.35}
 .show-card.active .play-dot{opacity:1}
-.np-bar{display:none;gap:7px;align-items:center;margin-top:8px;padding:6px 9px;background:#060800;border:1px solid #1a1400}
+.np-bar{display:none;gap:7px;align-items:center;margin-top:8px;padding:5px 8px;background:#060800;border:1px solid #1a1400}
 .np-bar.show{display:flex}
-.np-live{font-family:'VT323',monospace;font-size:.65rem;color:#39ff14;letter-spacing:.15em;flex-shrink:0;animation:flk 2s infinite}
-.np-name{font-family:'Oswald',sans-serif;font-size:.7rem;color:#d4b483;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.np-ch{font-family:'VT323',monospace;font-size:.7rem;color:#f5a623;flex-shrink:0}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:#1a1200;border:1px solid #f5a623;color:#f5a623;font-family:'VT323',monospace;font-size:.9rem;padding:8px 20px;border-radius:3px;z-index:999;opacity:0;transition:all .3s;letter-spacing:.1em;pointer-events:none;white-space:nowrap}
+.np-live{font-family:'VT323',monospace;font-size:.62rem;color:#39ff14;letter-spacing:.15em;flex-shrink:0;animation:flk 2s infinite}
+.np-name{font-family:'Oswald',sans-serif;font-size:.68rem;color:#d4b483;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.np-ch{font-family:'VT323',monospace;font-size:.68rem;color:#f5a623;flex-shrink:0}
+
+/* Toast */
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:#1a1200;border:1px solid #f5a623;color:#f5a623;font-family:'VT323',monospace;font-size:.88rem;padding:7px 18px;border-radius:3px;z-index:999;opacity:0;transition:all .3s;letter-spacing:.1em;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* Donate modal overlay */
+/* Donate modal */
 .donate-modal{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;display:none;align-items:center;justify-content:center}
 .donate-modal.show{display:flex}
-.donate-box{background:linear-gradient(160deg,#0f0c04,#1a1408);border:1px solid #3a2800;border-radius:6px;padding:28px 32px;max-width:340px;width:90%;text-align:center;box-shadow:0 0 40px rgba(245,166,35,.15)}
-.donate-box h2{font-family:'VT323',monospace;font-size:1.8rem;color:#f5a623;letter-spacing:.1em;margin-bottom:6px}
-.donate-box p{font-family:'Special Elite',cursive;font-size:.78rem;color:#9a7a45;line-height:1.5;margin-bottom:20px}
+.donate-box{background:linear-gradient(160deg,#0f0c04,#1a1408);border:1px solid #3a2800;border-radius:6px;padding:26px 28px;max-width:320px;width:90%;text-align:center;box-shadow:0 0 40px rgba(245,166,35,.15)}
+.donate-box h2{font-family:'VT323',monospace;font-size:1.7rem;color:#f5a623;letter-spacing:.1em;margin-bottom:5px}
+.donate-box p{font-family:'Special Elite',cursive;font-size:.76rem;color:#9a7a45;line-height:1.5;margin-bottom:18px}
 .donate-options{display:flex;flex-direction:column;gap:8px}
-.donate-link{display:block;font-family:'VT323',monospace;font-size:.9rem;padding:10px 16px;border-radius:3px;cursor:pointer;letter-spacing:.1em;text-decoration:none;transition:all .15s;border:none;width:100%;text-align:center}
-.donate-paypal{background:#0a1a0a;color:#39ff14;border:1px solid #1a3a1a}
-.donate-paypal:hover{background:#112211;box-shadow:0 0 10px rgba(57,255,20,.2)}
-.donate-email{background:#1a1200;color:#f5a623;border:1px solid #3a2800;font-size:.75rem}
-.donate-email:hover{background:#251a00}
-.donate-close{margin-top:14px;font-family:'VT323',monospace;font-size:.78rem;color:#4a3015;background:transparent;border:none;cursor:pointer;letter-spacing:.1em}
-.donate-close:hover{color:#f5a623}
+.donate-link{display:block;font-family:'VT323',monospace;font-size:.88rem;padding:10px 16px;border-radius:3px;cursor:pointer;letter-spacing:.1em;text-decoration:none;transition:all .15s;border:none;width:100%;text-align:center}
+.donate-bmc{background:#0a1a0a;color:#39ff14;border:1px solid #1a3a1a}.donate-bmc:hover{background:#112211;box-shadow:0 0 10px rgba(57,255,20,.2)}
+.donate-email{background:#1a1200;color:#f5a623;border:1px solid #3a2800;font-size:.72rem}.donate-email:hover{background:#251a00}
+.donate-close{margin-top:12px;font-family:'VT323',monospace;font-size:.76rem;color:#4a3015;background:transparent;border:none;cursor:pointer;letter-spacing:.1em}.donate-close:hover{color:#f5a623}
 
 @keyframes flk{0%,90%,100%{opacity:1}95%{opacity:.25}}
 @keyframes ticker{0%{transform:translateX(60%)}100%{transform:translateX(-100%)}}
@@ -153,18 +200,30 @@ canvas.noise{position:absolute;inset:0;width:100%;height:100%}
   <div class="divider"></div>
   <div class="header-actions">
     <button class="hbtn btn-share" id="shareBtn">📤 SHARE</button>
-    <button class="hbtn btn-donate" id="donateBtn">💚 DONATE</button>
+    <button class="hbtn btn-donate" id="donateBtn">☕ DONATE</button>
     <button class="hbtn btn-surprise" id="surpriseBtn">🎲 SURPRISE ME</button>
   </div>
 </div>
 
 <div class="layout">
+
+  <!-- EPISODE SIDEBAR (left) -->
+  <div class="ep-sidebar" id="epSidebar">
+    <div class="ep-sidebar-hdr">📼 EPISODES</div>
+    <div class="ep-sidebar-show" id="epSidebarShow">— SELECT A SHOW —</div>
+    <div class="ep-list" id="epList">
+      <div class="ep-sidebar-empty">Turn on the TV<br>and select a show<br>to see episodes</div>
+    </div>
+  </div>
+
+  <!-- TV -->
   <div>
     <div class="tv-shell">
       <div class="tv-top-strip">
         <span class="tv-brand-90s">NOSTALGIVISION™</span>
         <div class="ch-display" id="chDisp">— —</div>
       </div>
+
       <div class="screen-housing">
         <div class="screen-bezel-90s">
           <div class="screen-wrap" id="screenWrap">
@@ -176,57 +235,73 @@ canvas.noise{position:absolute;inset:0;width:100%;height:100%}
               <div class="idle-title">THE TUBE</div>
               <div class="idle-sub">◈ SELECT A PROGRAMME ◈</div>
               <div class="test-bars">
-                <div class="test-bar" style="background:#fff"></div>
-                <div class="test-bar" style="background:#ff0"></div>
-                <div class="test-bar" style="background:#0ff"></div>
-                <div class="test-bar" style="background:#0f0"></div>
-                <div class="test-bar" style="background:#f0f"></div>
-                <div class="test-bar" style="background:#f00"></div>
-                <div class="test-bar" style="background:#00f"></div>
-                <div class="test-bar" style="background:#000"></div>
+                <div class="test-bar" style="background:#fff"></div><div class="test-bar" style="background:#ff0"></div>
+                <div class="test-bar" style="background:#0ff"></div><div class="test-bar" style="background:#0f0"></div>
+                <div class="test-bar" style="background:#f0f"></div><div class="test-bar" style="background:#f00"></div>
+                <div class="test-bar" style="background:#00f"></div><div class="test-bar" style="background:#000"></div>
               </div>
             </div>
             <div class="off-screen" id="offScreen"><div class="off-line"></div></div>
             <div class="static-screen" id="staticScreen">
               <canvas class="noise" id="noiseCanvas"></canvas>
-              <div class="static-txt">TUNING...</div>
+              <div class="static-txt" id="staticTxt">TUNING...</div>
+            </div>
+            <!-- VHS FF/REW shimmer -->
+            <div class="vhs-fx" id="vhsFx">
+              <div class="vhs-stripe"></div>
+              <div class="vhs-noise-line"></div>
+              <div class="vhs-label" id="vhsLabel">⏩ FF</div>
             </div>
             <div class="video-layer" id="videoLayer">
               <iframe id="videoFrame" allowfullscreen allow="autoplay; fullscreen"></iframe>
             </div>
-            <div class="splash" id="splash">
-              <div class="splash-emoji" id="splashEmoji"></div>
-              <div class="splash-title" id="splashTitle"></div>
-              <div class="splash-year" id="splashYear"></div>
-              <div class="splash-ep" id="splashEp"></div>
-              <div class="splash-play"></div>
-              <div class="splash-hint">▶ CLICK TO WATCH</div>
+            <div class="now-screen" id="nowScreen">
+              <div class="ns-emoji" id="nsEmoji"></div>
+              <div class="ns-title" id="nsTitle"></div>
+              <div class="ns-year" id="nsYear"></div>
+              <div class="ns-ep" id="nsEp"></div>
+              <div class="ns-play"></div>
+              <div class="ns-hint">▶ CLICK TO WATCH</div>
             </div>
             <div class="ticker-bar" id="tickerBar"><span class="ticker-inner" id="tickerTxt"></span></div>
-            <div class="ep-pill" id="epPill">▶ PLAYLIST</div>
           </div>
         </div>
       </div>
+
+      <!-- VHS DECK -->
+      <div class="vhs-deck">
+        <div class="vhs-slot-wrap">
+          <div class="vhs-slot" id="vhsSlot" title="Tape Deck">
+            <div class="vhs-slot-inner"></div>
+            <div class="vhs-tape" id="vhsTape"></div>
+          </div>
+          <div class="vhs-label-txt" id="vhsLabelTxt">◈ NO TAPE LOADED ◈</div>
+        </div>
+        <div class="transport-btns">
+          <div class="tbtn" id="tRew" title="Rewind">⏮</div>
+          <div class="tbtn" id="tPlay" title="Play">▶</div>
+          <div class="tbtn" id="tFF" title="Fast Forward">⏭</div>
+        </div>
+      </div>
+
       <div class="controls-panel">
         <div class="knob-group">
           <div class="knob-unit">
-            <div class="knob90 k-vol" id="kVol" title="Volume"></div>
+            <div class="knob90 k-vol" id="kVol"></div>
             <span class="kl90">VOL</span>
           </div>
           <div class="knob-unit">
-            <div class="knob90 k-static" id="kStatic" title="Static Intensity"></div>
+            <div class="knob90 k-static" id="kStatic"></div>
             <span class="kl90">STATIC</span>
-            <div class="static-bar-wrap">
-              <div class="static-bar"><div class="static-bar-fill" id="staticBarFill" style="width:40%"></div></div>
-            </div>
+            <div class="static-bar"><div class="static-bar-fill" id="staticBarFill" style="width:40%"></div></div>
           </div>
           <div class="knob-unit">
-            <div class="knob90 k-bright" id="kBright" title="Brightness"></div>
+            <div class="knob90 k-bright" id="kBright"></div>
             <span class="kl90">BRIGHT</span>
           </div>
         </div>
         <div class="pwr-area">
-          <div class="pwr90" id="pwrBtn" title="Power"></div>
+          <div class="pwr90" id="pwrBtn"></div>
           <span class="pwr-lbl">POWER</span>
         </div>
         <div class="spkr90">
@@ -240,7 +315,8 @@ canvas.noise{position:absolute;inset:0;width:100%;height:100%}
     <div class="src-note">◈ STREAMING VIA INTERNET ARCHIVE ◈</div>
   </div>
 
-  <div>
+  <!-- GUIDE -->
+  <div class="guide-panel">
     <div class="guide-hdr">
       <span class="guide-title">📋 PROGRAMME GUIDE</span>
       <span class="guide-date" id="gDate"></span>
@@ -258,15 +334,11 @@ canvas.noise{position:absolute;inset:0;width:100%;height:100%}
 <!-- Donate modal -->
 <div class="donate-modal" id="donateModal">
   <div class="donate-box">
-    <h2>💚 SUPPORT THE TUBE</h2>
-    <p>If you enjoy The Tube, consider buying us a coffee! Every contribution helps keep the archive running.</p>
+    <h2>☕ BUY ME A COFFEE</h2>
+    <p>Enjoying The Tube? Help keep the archive running! Every contribution is hugely appreciated.</p>
     <div class="donate-options">
-      <a class="donate-link donate-paypal" href="https://paypal.me/oakowlrecords" target="_blank" id="paypalMeLink">
-        💳 SEND VIA PAYPAL.ME
-      </a>
-      <a class="donate-link donate-email" href="mailto:oakowlrecords@gmail.com?subject=Donation%20%E2%80%94%20The%20Tube&body=Hi%2C%20I%27d%20like%20to%20support%20The%20Tube!" target="_blank">
-        ✉ CONTACT: oakowlrecords@gmail.com
-      </a>
+      <a class="donate-link donate-bmc" href="https://buymeacoffee.com/oakowltv" target="_blank" id="bmcLink">☕ BUYMEACOFFEE.COM/OAKOWLTV</a>
+      <a class="donate-link donate-email" href="mailto:oakowlrecords@gmail.com" target="_blank">✉ oakowlrecords@gmail.com</a>
     </div>
     <button class="donate-close" id="donateClose">✕ CLOSE</button>
   </div>
@@ -275,40 +347,68 @@ canvas.noise{position:absolute;inset:0;width:100%;height:100%}
 <div class="toast" id="toast"></div>
 
 <script>
+/* ─────────────────────────────────────────
+   SHOW DATA  (all episodes with ep arrays)
+───────────────────────────────────────── */
 const shows=[
-  {id:1,ch:'02',time:'8:00 PM',name:'Viva La Bam',emoji:'🛹',cat:'mtv',year:'2003',badges:['PLAYLIST','MTV'],bg:'#0a0a20',desc:'Bam Margera terrorises his parents across 5 wild seasons of skateboarding and mayhem.',tickers:["Phil's Hell Day — S1E1","Don Vito is NOT happy","Castle Bam under construction","Bam vs the world"],archiveId:'vivalabam',episodeName:'Complete Series S1–S5',playlist:true},
-  {id:2,ch:'03',time:'8:30 PM',name:'Jackass',emoji:'💀',cat:'mtv',year:'2000',badges:['PLAYLIST','MTV','HOT'],bg:'#1a0000',desc:'Johnny Knoxville, Bam & Steve-O perform the most dangerously stupid stunts on television.',tickers:['WARNING: Do not attempt these stunts','Johnny Knoxville presents...','Steve-O is not a professional'],archiveId:'jackasscompleteseries',episodeName:'Complete Series • All Volumes',playlist:true},
-  {id:3,ch:'04',time:'9:00 PM',name:'Wildboyz',emoji:'🐊',cat:'mtv',year:'2003',badges:['PLAYLIST','MTV'],bg:'#001500',desc:'Steve-O and Chris Pontius travel the globe getting dangerously close with wild animals.',tickers:['Steve-O vs a komodo dragon','Chris Pontius in the Amazon','Do NOT try this at home'],archiveId:'Wildboyz',episodeName:'Complete Series S1–S4',playlist:true},
-  {id:110,ch:'35',time:'9:00 PM',name:'90s MTV Block',emoji:'🎤',cat:'mtv',year:'1990s',badges:['PLAYLIST','MTV','VHS'],bg:'#100010',desc:'Authentic VHS recording of 90s MTV programming — music videos and classic shows.',tickers:['Total Request Live','MTV Jams','Original 90s commercials'],archiveId:'1-5-2025-mtv-block-part-2',episodeName:'MTV 90s VHS Rip',playlist:true},
-  {id:105,ch:'30',time:'6:30 PM',name:'Beavis and Butt-Head',emoji:'🎸',cat:'animation',year:'1993',badges:['PLAYLIST','MTV'],bg:'#150500',desc:'Two teenage couch potatoes who love heavy metal and hate everything else.',tickers:['Uh huh huh huh','I am the Great Cornholio!','TP for my bunghole'],archiveId:'beavis-and-butthead-complete',episodeName:'Complete Series',playlist:true},
-  {id:4,ch:'05',time:'7:00 PM',name:'Steptoe & Son',emoji:'🗑️',cat:'british',year:'1962',badges:['PLAYLIST','BBC'],bg:'#0f0800',desc:'Harold and Albert Steptoe — rag-and-bone men of Oil Drum Lane. The original BBC sitcom.',tickers:['Harold: "You dirty old man!"','Albert fakes another illness','BBC sitcom gold'],archiveId:'steptoe-1',episodeName:'Series 1 • Full BBC Episodes',playlist:true},
-  {id:5,ch:'06',time:'7:30 PM',name:'Survivors (1975)',emoji:'☣️',cat:'british',year:'1975',badges:['PLAYLIST','BBC'],bg:'#0a1a00',desc:'A deadly plague wipes out 99% of humanity. Survivors must rebuild civilisation from scratch.',tickers:["A virus escapes into the atmosphere","Terry Nation's post-apocalyptic masterpiece"],archiveId:'survivors-1975',episodeName:'Complete Series 1–3 (BBC 1975–77)',playlist:true},
-  {id:6,ch:'07',time:'9:00 PM',name:'Alfred Hitchcock Presents',emoji:'🎩',cat:'horror',year:'1955',badges:['PLAYLIST','COLOR'],bg:'#1a0010',desc:'The Master of Suspense introduces twisted tales of murder, greed and the macabre. Restored & colorised.',tickers:['Good evening...','Tonight: another tale of suspense','Named one of the 100 Best Shows ever — Time Magazine'],archiveId:'alfred-hitchcock-presents-s-1e-1-colorized-720p-hd',episodeName:'Season 1 • 39 Episodes (Colorised)',playlist:true},
-  {id:7,ch:'08',time:'9:30 PM',name:'Hitchcock Season 3',emoji:'🔪',cat:'horror',year:'1957',badges:['PLAYLIST','COLOR'],bg:'#1a0018',desc:'Season 3 of Hitchcock\'s acclaimed anthology. More twists, more menace.',tickers:['Another evening of suspense...','Hitchcock S3 — restored & colorised'],archiveId:'alfred-hitchcock-presents-s-3e-1-colorized-sd',episodeName:'Season 3 • 39 Episodes (Restored)',playlist:true},
-  {id:8,ch:'09',time:'10:00 PM',name:'New Hitchcock (1985)',emoji:'👁️',cat:'horror',year:'1985',badges:['PLAYLIST','HORROR'],bg:'#100010',desc:'The rare 1985 revival of Hitchcock\'s anthology. VHS recordings — hard to find anywhere.',tickers:['Good evening once more...','The 1985 Hitchcock revival — very rare'],archiveId:'the-new-alfred-hitchcock-presents-complete',episodeName:'Complete Revival Series (1985–89)',playlist:true},
-  {id:9,ch:'10',time:'10:30 PM',name:'The Twilight Zone',emoji:'🌀',cat:'horror',year:'1959',badges:['B&W','CLASSIC'],bg:'#150820',desc:'Rod Serling\'s legendary anthology. The greatest anthology series ever made.',tickers:['Submitted for your approval...','There is a fifth dimension...'],archiveId:'Classic_SciFi_TV_--_The_Twilight_Zone_The_Outer_Limits',episodeName:'Twilight Zone + Outer Limits Double Bill'},
-  {id:10,ch:'11',time:'11:00 PM',name:'Perversions of Science',emoji:'🧬',cat:'horror',year:'1997',badges:['PLAYLIST','HBO'],bg:'#001a1a',desc:'HBO sci-fi horror anthology spin-off from Tales from the Crypt.',tickers:['From the creators of Tales from the Crypt','Science fiction has never been this strange'],archiveId:'perversions-of-science-complete',episodeName:'Complete Series (HBO 1997)',playlist:true},
-  {id:11,ch:'12',time:'8:00 PM',name:'The Outer Limits',emoji:'📡',cat:'scifi',year:'1963',badges:['B&W','CLASSIC'],bg:'#001510',desc:'Do not attempt to adjust your television. We are controlling the transmission.',tickers:['WE ARE CONTROLLING YOUR TELEVISION SET'],archiveId:'Classic_SciFi_TV_--_The_Twilight_Zone_The_Outer_Limits',episodeName:'Classic Episodes'},
-  {id:12,ch:'13',time:'8:30 PM',name:'Men in Black: The Series',emoji:'🕶️',cat:'scifi',year:'1997',badges:['PLAYLIST','ANIMATED'],bg:'#050515',desc:'Agents K & J protect Earth from alien threats in this animated spin-off.',tickers:['The universe is a dangerous place','MIB — the animated series'],archiveId:'men-in-black-the-series-1997',episodeName:'Complete Animated Series',playlist:true},
-  {id:14,ch:'15',time:'9:30 PM',name:'Final Space',emoji:'🚀',cat:'scifi',year:'2018',badges:['PLAYLIST','ANIMATED'],bg:'#020215',desc:'Gary Goodspeed and his alien friend Mooncake on wild intergalactic adventures.',tickers:['Gary Goodspeed at your service','Final Space — all seasons'],archiveId:'final-space_202209',episodeName:'Complete Series',playlist:true},
-  {id:15,ch:'16',time:'7:00 PM',name:'Your Show of Shows',emoji:'🎭',cat:'classic',year:'1953',badges:['B&W','LIVE'],bg:'#1a0a08',desc:'Sid Caesar and Imogene Coca in NBC\'s legendary live variety spectacular from 1953.',tickers:['LIVE from New York — 1953','Sid Caesar: comedy genius'],archiveId:'YourShowOfShows03211953',episodeName:'March 21, 1953 — Full Broadcast'},
-  {id:16,ch:'17',time:'7:30 PM',name:'Bonanza',emoji:'🤠',cat:'classic',year:'1959',badges:['COLOR','CLASSIC'],bg:'#200800',desc:'The Cartwright family and the Ponderosa Ranch.',tickers:["Pa and the boys ride again","Hoss's cook-off"],archiveId:'Bonanza_pd',episodeName:'Public Domain Episodes • Season 1'},
-  {id:17,ch:'18',time:'8:00 PM',name:'Classic TV Vault',emoji:'🎞️',cat:'classic',year:'1950s',badges:['ARCHIVE','B&W'],bg:'#2e1a0a',desc:'Burns & Allen, Car 54 Where Are You, Life with Elizabeth — golden era classics.',tickers:['Burns and Allen: Kleebob Card Game','Car 54 Where Are You'],archiveId:'classic-tv-shows-vol.1',episodeName:'Collection: Burns & Allen, Car 54 & more'},
-  {id:18,ch:'19',time:'8:30 PM',name:'It Takes a Thief',emoji:'🕵️',cat:'classic',year:'1968',badges:['PLAYLIST','60s'],bg:'#15100a',desc:'A reformed master thief goes to work for the government as a secret agent.',tickers:['A thief working for the government','Stylish 60s spy TV'],archiveId:'it-takes-a-thief-complete-series-1968',episodeName:'Complete Series (1968–1970)',playlist:true},
-  {id:20,ch:'21',time:'6:30 PM',name:'Drawn Together',emoji:'🏠',cat:'animation',year:'2004',badges:['PLAYLIST','ADULT','HOT'],bg:'#200a00',desc:'Eight cartoon characters live in an animated reality TV parody. Comedy Central adult comedy.',tickers:['The first animated reality TV show','Drawn Together — all 3 seasons'],archiveId:'DrawnTogetherComplete',episodeName:'Complete Series S1–S3',playlist:true},
-  {id:107,ch:'32',time:'4:00 PM',name:'Popeye Collection',emoji:'💪',cat:'animation',year:'1930s',badges:['PLAYLIST','CLASSIC'],bg:'#0a1500',desc:'Classic Popeye the Sailor cartoons from the golden age of animation.',tickers:["I eats me spinach!","Popeye vs Bluto"],archiveId:'popeye-collection',episodeName:'Classic Cartoon Collection',playlist:true},
-  {id:108,ch:'33',time:'5:00 PM',name:'Mickey & Donald Collection',emoji:'🐭',cat:'animation',year:'1930s',badges:['PLAYLIST','CLASSIC'],bg:'#150800',desc:'Classic Disney cartoons — Mickey, Donald, Goofy and Pluto.',tickers:['Mickey brings the house down','Donald loses his temper'],archiveId:'69as_20210705',episodeName:'Volume 1 — Laserdisc Collection',playlist:true},
-  {id:109,ch:'34',time:'3:00 PM',name:'90s Nickelodeon VHS',emoji:'📼',cat:'animation',year:'1990s',badges:['PLAYLIST','NICK','VHS'],bg:'#001520',desc:'Authentic VHS recording of 90s Nickelodeon cartoons and commercials.',tickers:['Nicktoons block','Original commercials','Snick at Night'],archiveId:'1-3-2025-90s-nickelodeon-tape-2',episodeName:'Nickelodeon VHS Rip',playlist:true},
-  {id:121,ch:'46',time:'6:00 PM',name:'90s Moomin',emoji:'🦛',cat:'animation',year:'1992',badges:['PLAYLIST','CLASSIC','FAMILY'],bg:'#001020',desc:'Peaceful adventures in Moominvalley. English-dubbed episodes from the beloved 90s series.',tickers:['Snorkmaiden is worried','Little My causes mischief','The Groke is coming'],archiveId:'Moomins-39-78',episodeName:'Episodes 40–78 (English Dubbed)',playlist:true},
-  {id:122,ch:'47',time:'4:00 PM',name:'Arthur — Season 1',emoji:'🐻',cat:'animation',year:'1996',badges:['PLAYLIST','PBS'],bg:'#100800',desc:'The complete first season of the beloved PBS series about Arthur Read and friends.',tickers:['Having fun isnt hard','A-A-R-D-V-A-R-K','DW blows the whistle'],archiveId:'arthurs01iso',episodeName:'Season 1 (All 30 Episodes)',playlist:true},
-  {id:123,ch:'48',time:'4:30 PM',name:'Arthur — Season 2',emoji:'🐻',cat:'animation',year:'1997',badges:['PLAYLIST','PBS'],bg:'#100800',desc:'Arthur meets Mister Rogers, DW becomes a picky eater, and Buster saves a cat!',tickers:['Arthur Meets Mister Rogers','DW the Picky Eater'],archiveId:'ArthurSeason2',episodeName:'Season 2 (20 Episodes)',playlist:true},
-  {id:124,ch:'49',time:'5:00 PM',name:'Arthur — Season 3',emoji:'🐻',cat:'animation',year:'1998',badges:['PLAYLIST','PBS'],bg:'#100800',desc:'Buster returns, Arthur goes Crosswire, the gang puts on a talent show.',tickers:["Buster's Back","Arthur Goes Crosswire"],archiveId:'Arthur_Season3',episodeName:'Season 3 (15 Episodes)',playlist:true},
-  {id:125,ch:'50',time:'5:30 PM',name:'Arthur — Season 4',emoji:'🐻',cat:'animation',year:'1999',badges:['PLAYLIST','PBS'],bg:'#100800',desc:'Francine gets glasses, the gang bowls, and a puppet show chaos ensues.',tickers:['Francine Gets Glasses','The Puppet Show'],archiveId:'Arthur_Season4',episodeName:'Season 4 (10 Episodes)',playlist:true},
-  {id:22,ch:'23',time:'9:00 PM',name:'Survivors — BBC',emoji:'🏚️',cat:'drama',year:'1975',badges:['BBC','DRAMA'],bg:'#0a1200',desc:'After a global pandemic, survivors rebuild society with no infrastructure.',tickers:["Post-apocalyptic Britain — 1975","Terry Nation's dark masterpiece"],archiveId:'survivors-1975',episodeName:'BBC Drama — Complete 3 Series',playlist:true},
-  {id:23,ch:'24',time:'8:00 PM',name:'Bonanza Western',emoji:'⭐',cat:'drama',year:'1959',badges:['COLOR','WESTERN'],bg:'#1a0800',desc:'The Ponderosa Ranch and the Cartwright family. Classic American Western drama.',tickers:["Lorne Greene as Pa Cartwright","One of America's longest-running Westerns"],archiveId:'Bonanza_pd',episodeName:'Season 1 • Public Domain Episodes'},
-    { id: 24, ch: '25', time: '10:00 PM', name: 'Final Space Drama', emoji: '🌌', cat: 'drama', year: '2018', badges: ['ANIMATED', 'EMOTIONAL'], bg: '#020210', desc: 'A space opera about friendship, sacrifice and the end of the universe.', tickers: ['Gary: "Hello there, beautiful"', 'The most emotional animated series ever made'], archiveId: 'final-space_202209', episodeName: 'Complete Series — All Seasons', playlist: true },
-    { id: 131, ch: '56', time: '9:00 PM', name: 'Sherlock Holmes (Granada 1984)', emoji: '🔍', cat: 'classic', year: '1984', badges: ['PLAYLIST', 'DRAMA', 'MASTERPIECE'], desc: 'Jeremy Brett stars as the definitive Sherlock Holmes in this acclaimed Granada Television series. Often cited as the most faithful adaptation of Arthur Conan Doyles original stories.', tickers: ['The game is afoot', 'Jeremy Brett is Holmes', 'Elementary, my dear Watson', 'Masterpiece Theatre'], archiveId: 'the-adventures-of-sherlock-holmes-1984_202303', episodeName: 'The Adventures of Sherlock Holmes (Complete Series)', playlist: true },
-
+  {id:1,ch:'02',time:'8:00 PM',name:'Viva La Bam',emoji:'🛹',cat:'mtv',year:'2003',badges:['PLAYLIST','MTV'],bg:'#0a0a20',desc:'Bam Margera terrorises his parents across 5 wild seasons.',tickers:["Phil's Hell Day","Don Vito is NOT happy","Castle Bam under construction"],archiveId:'vivalabam',episodeName:'Complete Series S1–S5',playlist:true,
+    episodes:["S1E1 — Phil's Hell","S1E2 — Don Vito vs Europe","S1E3 — Bam's Skate Park","S1E4 — Castle Bam","S1E5 — Medieval Times","S2E1 — Bam's World Domination","S2E2 — Flaming Bam","S2E3 — Don Vito's Day","S2E4 — Viva Finland","S3E1 — Europe Invasion","S3E2 — Bam's Wrecking Ball","S4E1 — Bam Margera Presents","S5E1 — Season Finale"]},
+  {id:2,ch:'03',time:'8:30 PM',name:'Jackass',emoji:'💀',cat:'mtv',year:'2000',badges:['PLAYLIST','MTV','HOT'],bg:'#1a0000',desc:'Johnny Knoxville, Bam & Steve-O stunt their way to legend status.',tickers:['WARNING: Do not attempt','Johnny Knoxville presents...','Steve-O is not a professional'],archiveId:'jackasscompleteseries',episodeName:'Complete Series',playlist:true,
+    episodes:["S1E1 — The Pilot","S1E2 — Golf Cart Mayhem","S1E3 — The Medicine Ball","S1E4 — Paper Cuts","S1E5 — Butt Chug","S2E1 — The Rocky","S2E2 — Poo Cocktail","S2E3 — Golf Course Antics","S3E1 — The Swan Dive","S3E2 — The Electric Avenue","S3E3 — Riot Control"]},
+  {id:3,ch:'04',time:'9:00 PM',name:'Wildboyz',emoji:'🐊',cat:'mtv',year:'2003',badges:['PLAYLIST','MTV'],bg:'#001500',desc:'Steve-O and Pontius get dangerously close with wild animals worldwide.',tickers:['Steve-O vs a komodo dragon','Pontius in the Amazon','Do NOT try this at home'],archiveId:'Wildboyz',episodeName:'Complete Series S1–S4',playlist:true,
+    episodes:["S1E1 — Africa","S1E2 — Australia","S1E3 — Amazon","S1E4 — India","S2E1 — Japan","S2E2 — The Arctic","S2E3 — South Africa","S3E1 — Costa Rica","S3E2 — New Zealand","S4E1 — The Final Season"]},
+  {id:110,ch:'35',time:'9:30 PM',name:'90s MTV Block',emoji:'🎤',cat:'mtv',year:'1990s',badges:['PLAYLIST','MTV','VHS'],bg:'#100010',desc:'Authentic VHS recording of 90s MTV — music videos and classic shows.',tickers:['Total Request Live','MTV Jams','Original 90s commercials'],archiveId:'1-5-2025-mtv-block-part-2',episodeName:'MTV 90s VHS Rip',playlist:true,
+    episodes:["Part 1 — Music Block","Part 2 — TRL Era","Part 3 — Late Night MTV","Part 4 — Weekend Block"]},
+  {id:105,ch:'30',time:'6:30 PM',name:'Beavis and Butt-Head',emoji:'🎸',cat:'animation',year:'1993',badges:['PLAYLIST','MTV'],bg:'#150500',desc:'Two couch potatoes who love metal and hate everything else.',tickers:['Uh huh huh huh','I am the Great Cornholio!'],archiveId:'beavis-and-butthead-complete',episodeName:'Complete Series',playlist:true,
+    episodes:["S1E1 — Frog Baseball","S2E1 — Sign Here","S2E2 — Blackout!","S3E1 — Comedians","S4E1 — Butt-head's Big Score","S5E1 — Beavis, Can You Hear Me?","S6E1 — Held Back","S7E1 — Crying","S8E1 — Werewolves of Highland"]},
+  {id:4,ch:'05',time:'7:00 PM',name:'Steptoe & Son',emoji:'🗑️',cat:'british',year:'1962',badges:['PLAYLIST','BBC'],bg:'#0f0800',desc:'Harold and Albert Steptoe — rag-and-bone men of Oil Drum Lane.',tickers:['Harold: "You dirty old man!"','Albert fakes another illness'],archiveId:'steptoe-1',episodeName:'Series 1 • BBC',playlist:true,
+    episodes:["S1E1 — The Bird","S1E2 — The Piano","S1E3 — The Holiday","S1E4 — Steptoe à la Cart","S1E5 — A Quiet Christmas","S2E1 — Wallah Wallah Catsmeat","S2E2 — The Bath","S2E3 — The Diploma","S2E4 — Sunday for Seven Days"]},
+  {id:5,ch:'06',time:'7:30 PM',name:'Survivors (1975)',emoji:'☣️',cat:'british',year:'1975',badges:['PLAYLIST','BBC'],bg:'#0a1a00',desc:'A deadly plague wipes out 99% of humanity. Survivors rebuild.',tickers:["A virus escapes","Terry Nation's masterpiece"],archiveId:'survivors-1975',episodeName:'Complete 3 Series BBC',playlist:true,
+    episodes:["S1E1 — The Fourth Horseman","S1E2 — Genesis","S1E3 — Gone to the Angels","S1E4 — Corn Dolly","S1E5 — Gone Away","S1E6 — Garland's War","S2E1 — Manhunt","S2E2 — The Chosen","S3E1 — Law and Order","S3E2 — New World"]},
+  {id:131,ch:'56',time:'9:00 PM',name:'Sherlock Holmes (Granada)',emoji:'🔍',cat:'classic',year:'1984',badges:['PLAYLIST','DRAMA','MASTERPIECE'],bg:'#100a00',desc:'Jeremy Brett as the definitive Sherlock Holmes. The most faithful adaptation ever.',tickers:['The game is afoot','Jeremy Brett IS Holmes','Elementary, my dear Watson'],archiveId:'the-adventures-of-sherlock-holmes-1984_202303',episodeName:'Complete Adventures Series',playlist:true,
+    episodes:["E01 — A Scandal in Bohemia","E02 — The Dancing Men","E03 — The Naval Treaty","E04 — The Solitary Cyclist","E05 — The Crooked Man","E06 — The Speckled Band","E07 — The Blue Carbuncle","E08 — The Second Stain","E09 — The Abbey Grange","E10 — The Greek Interpreter","E11 — The Final Problem","E12 — The Empty House"]},
+  {id:6,ch:'07',time:'9:00 PM',name:'Alfred Hitchcock Presents',emoji:'🎩',cat:'horror',year:'1955',badges:['PLAYLIST','COLOR'],bg:'#1a0010',desc:'The Master of Suspense. Restored & colorised. Named one of the 100 Best Shows ever.',tickers:['Good evening...','Tonight: a tale of suspense'],archiveId:'alfred-hitchcock-presents-s-1e-1-colorized-720p-hd',episodeName:'Season 1 — 39 Episodes (Colorised)',playlist:true,
+    episodes:["S1E1 — Revenge","S1E2 — Trigger","S1E3 — Gratitude","S1E4 — The Long Shot","S1E5 — The Big Switch","S1E6 — Our Cook's a Treasure","S1E7 — The Derelicts","S1E8 — Our Cook's a Treasure","S1E9 — The Case of Mr Pelham","S1E10 — Back for Christmas","S1E11 — Wet Saturday","S1E12 — Mr Blanchard's Secret"]},
+  {id:7,ch:'08',time:'9:30 PM',name:'Hitchcock Season 3',emoji:'🔪',cat:'horror',year:'1957',badges:['PLAYLIST','COLOR'],bg:'#1a0018',desc:'Season 3 of the acclaimed Hitchcock anthology. More twists, more menace.',tickers:['Another evening of suspense...'],archiveId:'alfred-hitchcock-presents-s-3e-1-colorized-sd',episodeName:'Season 3 — 39 Episodes',playlist:true,
+    episodes:["S3E1 — The Glass Eye","S3E2 — Mail Order Prophet","S3E3 — Enough Rope","S3E4 — Crack of Doom","S3E5 — The Deadly","S3E6 — Heart of Gold","S3E7 — The Young One","S3E8 — The Perfect Crime","S3E9 — Nightmare in 4-D","S3E10 — Miss Paisley's Cat"]},
+  {id:8,ch:'09',time:'10:00 PM',name:'New Hitchcock (1985)',emoji:'👁️',cat:'horror',year:'1985',badges:['PLAYLIST','HORROR'],bg:'#100010',desc:'Rare 1985 revival of Hitchcock\'s anthology. VHS recordings.',tickers:['Good evening once more...','Very rare recordings'],archiveId:'the-new-alfred-hitchcock-presents-complete',episodeName:'Complete Revival Series 1985–89',playlist:true,
+    episodes:["S1E1 — Method Actor","S1E2 — Prisoners","S1E3 — The Creeper","S1E4 — The Man from the South","S1E5 — Bang! You're Dead","S1E6 — Night Caller","S2E1 — A Very Happy Ending","S2E2 — The Jar"]},
+  {id:9,ch:'10',time:'10:30 PM',name:'The Twilight Zone',emoji:'🌀',cat:'horror',year:'1959',badges:['B&W','CLASSIC'],bg:'#150820',desc:'Rod Serling\'s legendary anthology. The greatest ever made.',tickers:['Submitted for your approval...','There is a fifth dimension...'],archiveId:'Classic_SciFi_TV_--_The_Twilight_Zone_The_Outer_Limits',episodeName:'TZ + Outer Limits Double Bill',
+    episodes:["TZ — Where Is Everybody?","TZ — One for the Angels","TZ — Mr. Denton on Doomsday","TZ — The Sixteen-Millimeter Shrine","TZ — Walking Distance","OL — The Galaxy Being","OL — The Hundred Days of the Dragon","OL — The Architects of Fear"]},
+  {id:10,ch:'11',time:'11:00 PM',name:'Perversions of Science',emoji:'🧬',cat:'horror',year:'1997',badges:['PLAYLIST','HBO'],bg:'#001a1a',desc:'HBO sci-fi horror anthology from the creators of Tales from the Crypt.',tickers:['From the creators of Tales from the Crypt'],archiveId:'perversions-of-science-complete',episodeName:'Complete Series HBO 1997',playlist:true,
+    episodes:["E01 — Panic","E02 — Boxed In","E03 — The Exile","E04 — 50,000 B.C.E.","E05 — Trauma","E06 — The Record","E07 — The People vs. Paul Spectre","E08 — Till Death Do Us Part","E09 — Age of Invention","E10 — Moist"]},
+  {id:11,ch:'12',time:'8:00 PM',name:'The Outer Limits',emoji:'📡',cat:'scifi',year:'1963',badges:['B&W','CLASSIC'],bg:'#001510',desc:'Do not attempt to adjust your television.',tickers:['WE ARE CONTROLLING YOUR TELEVISION SET'],archiveId:'Classic_SciFi_TV_--_The_Twilight_Zone_The_Outer_Limits',episodeName:'Classic Episodes',
+    episodes:["S1E1 — The Galaxy Being","S1E2 — The Hundred Days of the Dragon","S1E3 — The Architects of Fear","S1E4 — The Man with the Power","S1E5 — The Sixth Finger","S1E6 — The Man Who Was Never Born"]},
+  {id:12,ch:'13',time:'8:30 PM',name:'Men in Black: The Series',emoji:'🕶️',cat:'scifi',year:'1997',badges:['PLAYLIST','ANIMATED'],bg:'#050515',desc:'Agents K & J protect Earth from alien threats. Animated spin-off.',tickers:['The universe is a dangerous place'],archiveId:'men-in-black-the-series-1997',episodeName:'Complete Animated Series',playlist:true,
+    episodes:["S1E1 — The Long Goodbye Syndrome","S1E2 — The Vicious Circle Syndrome","S1E3 — The Star System Syndrome","S1E4 — The Head Trip Syndrome","S2E1 — The Neuralyzer Syndrome","S2E2 — The Psychic Link Syndrome","S3E1 — The Inanimate Syndrome"]},
+  {id:14,ch:'15',time:'9:30 PM',name:'Final Space',emoji:'🚀',cat:'scifi',year:'2018',badges:['PLAYLIST','ANIMATED'],bg:'#020215',desc:'Gary Goodspeed and Mooncake on wild intergalactic adventures.',tickers:['Gary Goodspeed at your service','Final Space — all seasons'],archiveId:'final-space_202209',episodeName:'Complete Series',playlist:true,
+    episodes:["S1E1 — Chapter One","S1E2 — Chapter Two","S1E3 — Chapter Three","S1E4 — Chapter Four","S1E5 — Chapter Five","S2E1 — Episode One","S2E2 — The Happy Place","S3E1 — The Calm Before"]},
+  {id:15,ch:'16',time:'7:00 PM',name:'Your Show of Shows',emoji:'🎭',cat:'classic',year:'1953',badges:['B&W','LIVE'],bg:'#1a0a08',desc:'Sid Caesar and Imogene Coca. NBC live variety spectacular.',tickers:['LIVE from New York — 1953','Sid Caesar: genius'],archiveId:'YourShowOfShows03211953',episodeName:'March 21 1953 — Full Broadcast',
+    episodes:["March 21 1953 — Full Episode"]},
+  {id:16,ch:'17',time:'7:30 PM',name:'Bonanza',emoji:'🤠',cat:'classic',year:'1959',badges:['COLOR','CLASSIC'],bg:'#200800',desc:'The Cartwright family and the Ponderosa Ranch.',tickers:["Pa and the boys ride again"],archiveId:'Bonanza_pd',episodeName:'Public Domain — Season 1',
+    episodes:["S1E1 — A Rose for Lotta","S1E2 — Death on Sun Mountain","S1E3 — The Newcomers","S1E4 — The Paiute War","S1E5 — Enter Mark Twain","S1E6 — The Julia Bulette Story","S1E7 — The Saga of Annie O'Toole"]},
+  {id:17,ch:'18',time:'8:00 PM',name:'Classic TV Vault',emoji:'🎞️',cat:'classic',year:'1950s',badges:['ARCHIVE','B&W'],bg:'#2e1a0a',desc:'Burns & Allen, Car 54, Life with Elizabeth — golden era gems.',tickers:['Burns and Allen: Kleebob','Car 54 Where Are You'],archiveId:'classic-tv-shows-vol.1',episodeName:'Collection — Burns & Allen and more',
+    episodes:["Burns & Allen — Kleebob Card Game","Burns & Allen — The Benefit Show","Car 54 Where Are You — S1E1","Car 54 Where Are You — S1E2","Life with Elizabeth — Episode 1","Life with Elizabeth — Episode 2"]},
+  {id:18,ch:'19',time:'8:30 PM',name:'It Takes a Thief',emoji:'🕵️',cat:'classic',year:'1968',badges:['PLAYLIST','60s'],bg:'#15100a',desc:'A reformed master thief becomes a government secret agent.',tickers:['Stylish 60s spy TV'],archiveId:'it-takes-a-thief-complete-series-1968',episodeName:'Complete Series 1968–70',playlist:true,
+    episodes:["S1E1 — A Thief is a Thief","S1E2 — When Boy Meets Girl","S1E3 — Birds of a Feather","S1E4 — The Ballad of Isobel Wynn","S2E1 — A Sour Note","S2E2 — Payoff in the Promised Land","S3E1 — To Steal a Battleship"]},
+  {id:20,ch:'21',time:'6:30 PM',name:'Drawn Together',emoji:'🏠',cat:'animation',year:'2004',badges:['PLAYLIST','ADULT','HOT'],bg:'#200a00',desc:'Eight cartoon characters in an animated reality TV parody.',tickers:['The first animated reality show','All 3 seasons'],archiveId:'DrawnTogetherComplete',episodeName:'Complete Series S1–S3',playlist:true,
+    episodes:["S1E1 — Hot Tub","S1E2 — Clara's Dirty Little Secret","S1E3 — Gay Bash","S1E4 — Super Nanny","S1E5 — The Other Cousin","S2E1 — The One Wherein...","S2E2 — Foxxy vs. the Board of Education","S3E1 — Freaks & Greeks"]},
+  {id:107,ch:'32',time:'4:00 PM',name:'Popeye Collection',emoji:'💪',cat:'animation',year:'1930s',badges:['PLAYLIST','CLASSIC'],bg:'#0a1500',desc:'Classic Popeye cartoons from the golden age of animation.',tickers:["I eats me spinach!"],archiveId:'popeye-collection',episodeName:'Classic Cartoon Collection',playlist:true,
+    episodes:["Popeye the Sailor (1933)","I Yam What I Yam","Blow Me Down!","I Eats My Spinach","Seasin's Greetinks!","We Aim to Please","Axe Me Another","Can You Take It","Shiver Me Timbers!","Blow Me Down (1934)"]},
+  {id:108,ch:'33',time:'5:00 PM',name:'Mickey & Donald',emoji:'🐭',cat:'animation',year:'1930s',badges:['PLAYLIST','CLASSIC'],bg:'#150800',desc:'Classic Disney cartoons — Mickey, Donald, Goofy and Pluto.',tickers:['Mickey brings the house down','Donald loses his temper'],archiveId:'69as_20210705',episodeName:'Volume 1 — Laserdisc',playlist:true,
+    episodes:["Mickey's Trailer (1938)","Brave Little Tailor (1938)","Donald's Golf Game (1938)","Donald's Nephews (1938)","Goofy and Wilbur (1939)","The Pointer (1939)","Mr. Duck Steps Out (1940)","Put-Put Troubles (1940)"]},
+  {id:109,ch:'34',time:'3:00 PM',name:'90s Nickelodeon VHS',emoji:'📼',cat:'animation',year:'1990s',badges:['PLAYLIST','NICK','VHS'],bg:'#001520',desc:'Authentic VHS recording of 90s Nickelodeon cartoons.',tickers:['Nicktoons block','Original commercials'],archiveId:'1-3-2025-90s-nickelodeon-tape-2',episodeName:'Nickelodeon VHS Rip',playlist:true,
+    episodes:["Part 1 — Saturday Morning Block","Part 2 — Afternoon Toons","Part 3 — SNICK at Night","Part 4 — Weekend Cartoons"]},
+  {id:121,ch:'46',time:'6:00 PM',name:'90s Moomin',emoji:'🦛',cat:'animation',year:'1992',badges:['PLAYLIST','FAMILY'],bg:'#001020',desc:'Adventures in Moominvalley. English-dubbed 90s episodes.',tickers:['Snorkmaiden is worried','Little My causes mischief'],archiveId:'Moomins-39-78',episodeName:'Episodes 40–78 English Dubbed',playlist:true,
+    episodes:["E40 — Snorkmaiden's Party","E41 — The Invisible Child","E42 — Who Will Comfort Toffle?","E43 — The Secret of the Hattifatteners","E44 — The Groke","E45 — Midsummer Madness","E46 — Comet in Moominland","E47 — The Last Dragon","E48 — Spring Tune"]},
+  {id:122,ch:'47',time:'4:00 PM',name:'Arthur — Season 1',emoji:'🐻',cat:'animation',year:'1996',badges:['PLAYLIST','PBS'],bg:'#100800',desc:'The beloved PBS series about Arthur Read in Elwood City.',tickers:['Having fun isnt hard','A-A-R-D-V-A-R-K'],archiveId:'arthurs01iso',episodeName:'Season 1 — 30 Episodes',playlist:true,
+    episodes:["E01 — Arthur's Eyes / Arthur's Nose","E02 — Arthur and the Real Mr. Rogers","E03 — Arthur's Teacher Trouble","E04 — D.W. All Wet","E05 — Buster's Dino Dilemma","E06 — D.W. the Copycat","E07 — Arthur's Lost Dog","E08 — So Long, Spanky","E09 — Arthur's Birthday","E10 — D.W.'s Imaginary Friend"]},
+  {id:22,ch:'23',time:'9:00 PM',name:'Survivors — BBC',emoji:'🏚️',cat:'drama',year:'1975',badges:['BBC','DRAMA'],bg:'#0a1200',desc:'After a global pandemic, survivors rebuild society.',tickers:["Post-apocalyptic Britain","Terry Nation's dark masterpiece"],archiveId:'survivors-1975',episodeName:'BBC Drama — 3 Complete Series',playlist:true,
+    episodes:["S1E1 — The Fourth Horseman","S1E2 — Genesis","S1E3 — Gone to the Angels","S1E4 — Corn Dolly","S1E5 — Gone Away","S2E1 — Manhunt","S2E2 — Greater Love","S3E1 — Law and Order"]},
+  {id:23,ch:'24',time:'8:00 PM',name:'Bonanza Western',emoji:'⭐',cat:'drama',year:'1959',badges:['COLOR','WESTERN'],bg:'#1a0800',desc:'The Ponderosa Ranch. Classic American Western drama.',tickers:["Lorne Greene as Pa Cartwright"],archiveId:'Bonanza_pd',episodeName:'Season 1 • Public Domain',
+    episodes:["S1E1 — A Rose for Lotta","S1E2 — Death on Sun Mountain","S1E3 — The Newcomers","S1E4 — The Paiute War","S1E5 — Enter Mark Twain"]},
+  {id:24,ch:'25',time:'10:00 PM',name:'Final Space Drama',emoji:'🌌',cat:'drama',year:'2018',badges:['ANIMATED','EMOTIONAL'],bg:'#020210',desc:'A space opera about friendship and the end of the universe.',tickers:['The most emotional animated series ever'],archiveId:'final-space_202209',episodeName:'Complete Series',playlist:true,
+    episodes:["S1E1 — Chapter One","S1E2 — Chapter Two","S1E3 — Chapter Three","S2E1 — Episode One","S2E2 — The Happy Place","S3E1 — The Calm Before"]},
 ];
 
 const cats=[
@@ -322,11 +422,13 @@ const cats=[
   {key:'drama',label:'🎭 Drama'},
 ];
 
-let active=null,tvOn=false,activeCat='all',noiseTimer=null;
+let active=null, activeEpIdx=0, tvOn=false, activeCat='all', noiseTimer=null;
 let kRotations={kVol:0,kStatic:0,kBright:0};
-let staticIntensity=0.4,brightnessMod=1.0;
+let staticIntensity=0.4, brightnessMod=1.0;
 let audioCtx=null;
+let vhsFxTimer=null;
 
+/* ── AUDIO ── */
 const ga=()=>{if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;};
 
 function sndClick(){
@@ -336,33 +438,28 @@ function sndClick(){
     o1.connect(g1);g1.connect(c.destination);
     o1.type='sine';o1.frequency.setValueAtTime(180,c.currentTime);
     o1.frequency.exponentialRampToValueAtTime(60,c.currentTime+0.08);
-    g1.gain.setValueAtTime(0.22,c.currentTime);g1.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.1);
+    g1.gain.setValueAtTime(0.2,c.currentTime);g1.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.1);
     o1.start();o1.stop(c.currentTime+0.1);
     const bufLen=c.sampleRate*0.015,buf=c.createBuffer(1,bufLen,c.sampleRate),d=buf.getChannelData(0);
     for(let i=0;i<bufLen;i++)d[i]=(Math.random()*2-1)*Math.exp(-i/(bufLen*0.3));
     const src=c.createBufferSource();src.buffer=buf;
     const f=c.createBiquadFilter();f.type='highpass';f.frequency.value=2000;
-    const g2=c.createGain();g2.gain.value=0.12;
-    src.connect(f);f.connect(g2);g2.connect(c.destination);
-    src.start();src.stop(c.currentTime+0.02);
+    const g2=c.createGain();g2.gain.value=0.1;
+    src.connect(f);f.connect(g2);g2.connect(c.destination);src.start();src.stop(c.currentTime+0.02);
   }catch(e){}
 }
-
 function sndKnob(){
   try{
-    const c=ga();
-    const o=c.createOscillator(),g=c.createGain();
-    o.connect(g);g.connect(c.destination);
-    o.type='sine';o.frequency.setValueAtTime(240,c.currentTime);
-    o.frequency.exponentialRampToValueAtTime(100,c.currentTime+0.04);
+    const c=ga(),o=c.createOscillator(),g=c.createGain();
+    o.connect(g);g.connect(c.destination);o.type='sine';
+    o.frequency.setValueAtTime(240,c.currentTime);o.frequency.exponentialRampToValueAtTime(100,c.currentTime+0.04);
     g.gain.setValueAtTime(0.1,c.currentTime);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.06);
     o.start();o.stop(c.currentTime+0.06);
   }catch(e){}
 }
-
 function sndPowerOn(){
   try{
-    const c=ga(),bl=c.sampleRate*1.4,b=c.createBuffer(1,bl,c.sampleRate),d=b.getChannelData(0);
+    const c=ga(),bl=Math.floor(c.sampleRate*1.4),b=c.createBuffer(1,bl,c.sampleRate),d=b.getChannelData(0);
     for(let i=0;i<bl;i++)d[i]=Math.random()*2-1;
     const s=c.createBufferSource();s.buffer=b;
     const f=c.createBiquadFilter();f.type='bandpass';f.frequency.setValueAtTime(2000,c.currentTime);f.frequency.exponentialRampToValueAtTime(200,c.currentTime+1.2);f.Q.value=0.8;
@@ -370,10 +467,9 @@ function sndPowerOn(){
     s.connect(f);f.connect(g);g.connect(c.destination);s.start();s.stop(c.currentTime+1.4);
   }catch(e){}
 }
-
 function sndPowerOff(){
   try{
-    const c=ga(),bl=c.sampleRate*0.5,b=c.createBuffer(1,bl,c.sampleRate),d=b.getChannelData(0);
+    const c=ga(),bl=Math.floor(c.sampleRate*0.5),b=c.createBuffer(1,bl,c.sampleRate),d=b.getChannelData(0);
     for(let i=0;i<bl;i++)d[i]=Math.random()*2-1;
     const s=c.createBufferSource();s.buffer=b;
     const f=c.createBiquadFilter();f.type='bandpass';f.frequency.value=400;f.Q.value=1.5;
@@ -385,104 +481,187 @@ function sndPowerOff(){
     s.start();s.stop(c.currentTime+0.5);o.start();o.stop(c.currentTime+0.5);
   }catch(e){}
 }
-
 function sndTune(){
   try{
-    const c=ga(),bl=c.sampleRate*0.9,b=c.createBuffer(1,bl,c.sampleRate),d=b.getChannelData(0);
+    const c=ga(),bl=Math.floor(c.sampleRate*0.9),b=c.createBuffer(1,bl,c.sampleRate),d=b.getChannelData(0);
     for(let i=0;i<bl;i++)d[i]=Math.random()*2-1;
     const s=c.createBufferSource();s.buffer=b;
     const f=c.createBiquadFilter();f.type='bandpass';
     f.frequency.setValueAtTime(4000,c.currentTime);f.frequency.exponentialRampToValueAtTime(400,c.currentTime+0.7);f.Q.value=1.2;
-    const g=c.createGain();g.gain.setValueAtTime(0.28*staticIntensity*2.5,c.currentTime);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.9);
+    const g=c.createGain();g.gain.setValueAtTime(0.28*(staticIntensity*2+0.5),c.currentTime);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.9);
     s.connect(f);f.connect(g);g.connect(c.destination);s.start();s.stop(c.currentTime+0.9);
   }catch(e){}
 }
+function sndVHSTransport(isFF){
+  try{
+    const c=ga(),bl=Math.floor(c.sampleRate*1.2),b=c.createBuffer(1,bl,c.sampleRate),d=b.getChannelData(0);
+    for(let i=0;i<bl;i++)d[i]=(Math.random()*2-1)*0.8;
+    const s=c.createBufferSource();s.buffer=b;
+    // Pitch shift illusion via playback rate
+    s.playbackRate.value=isFF?2.2:0.5;
+    const f=c.createBiquadFilter();f.type='bandpass';
+    f.frequency.value=isFF?3000:800;f.Q.value=1.5;
+    const g=c.createGain();g.gain.setValueAtTime(0.25,c.currentTime);g.gain.setValueAtTime(0.25,c.currentTime+0.8);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+1.2);
+    // mechanical squeak overtone
+    const o=c.createOscillator(),og=c.createGain();
+    o.type='sawtooth';o.frequency.value=isFF?180:60;
+    og.gain.setValueAtTime(0.04,c.currentTime);og.gain.exponentialRampToValueAtTime(0.001,c.currentTime+1.0);
+    o.connect(og);og.connect(c.destination);
+    s.connect(f);f.connect(g);g.connect(c.destination);
+    s.start();s.stop(c.currentTime+1.2);o.start();o.stop(c.currentTime+1.0);
+  }catch(e){}
+}
 
+/* ── KNOB ROTATIONS ── */
 function rotateKnob(id,delta){
   kRotations[id]=(kRotations[id]||0)+delta;
   const el=document.getElementById(id);
   if(el) el.style.transform=`rotate(${kRotations[id]}deg)`;
 }
-
-// Static knob
 let staticClicks=0;
 document.getElementById('kStatic').addEventListener('click',()=>{
-  sndKnob();
-  staticClicks=(staticClicks+1)%8;
-  staticIntensity=staticClicks/7;
+  sndKnob();staticClicks=(staticClicks+1)%8;staticIntensity=staticClicks/7;
   rotateKnob('kStatic',45);
   document.getElementById('staticBarFill').style.width=`${Math.round(staticIntensity*100)}%`;
-  const sl=document.querySelector('.scanlines');
-  if(sl) sl.style.opacity=0.4+staticIntensity*0.6;
-  const pg=document.querySelector('.phosphor-glow');
-  if(pg) pg.style.opacity=staticIntensity;
+  document.querySelector('.scanlines').style.opacity=0.4+staticIntensity*0.6;
+  document.querySelector('.phosphor-glow').style.opacity=staticIntensity;
 });
-
-// Brightness knob
-let brightClicks=4; // start at midpoint
+let brightClicks=4;
 document.getElementById('kBright').addEventListener('click',()=>{
-  sndKnob();
-  brightClicks=(brightClicks+1)%8;
-  brightnessMod=0.4+brightClicks*(0.8/7);
+  sndKnob();brightClicks=(brightClicks+1)%8;brightnessMod=0.4+brightClicks*(0.8/7);
   rotateKnob('kBright',45);
   document.getElementById('screenWrap').style.filter=`brightness(${brightnessMod})`;
 });
+document.getElementById('kVol').addEventListener('click',()=>{sndKnob();rotateKnob('kVol',45);});
 
-// Vol knob — just rotate + sound
-document.getElementById('kVol').addEventListener('click',()=>{
-  sndKnob();rotateKnob('kVol',45);
-});
-
+/* ── NOISE CANVAS ── */
 function drawNoise(){
   const c=document.getElementById('noiseCanvas');
   const w=c.width=c.offsetWidth||300,h=c.height=c.offsetHeight||225;
   const ctx=c.getContext('2d'),img=ctx.createImageData(w,h);
   const intensity=0.3+staticIntensity*0.7;
-  for(let i=0;i<img.data.length;i+=4){
-    const v=Math.random()*255*intensity;
-    img.data[i]=v;img.data[i+1]=v;img.data[i+2]=v;img.data[i+3]=255;
-  }
+  for(let i=0;i<img.data.length;i+=4){const v=Math.random()*255*intensity;img.data[i]=v;img.data[i+1]=v;img.data[i+2]=v;img.data[i+3]=255;}
   ctx.putImageData(img,0,0);
 }
-
-function showStatic(cb){
+function showStatic(txt,cb){
   const ss=document.getElementById('staticScreen');
+  document.getElementById('staticTxt').textContent=txt||'TUNING...';
   ss.classList.add('show');sndTune();
-  let f=0;
-  const frames=Math.max(8,Math.round(8+staticIntensity*20));
+  let f=0;const frames=Math.max(8,Math.round(8+staticIntensity*20));
   noiseTimer=setInterval(()=>{drawNoise();if(++f>=frames){clearInterval(noiseTimer);ss.classList.remove('show');if(cb)cb();}},50);
 }
 
-function tuneShow(id){
-  if(!tvOn){powerToggle(()=>setTimeout(()=>tuneShow(id),400));return;}
+/* ── VHS TRANSPORT FX ── */
+function doVHSFx(isFF, cb){
+  const fx=document.getElementById('vhsFx');
+  document.getElementById('vhsLabel').textContent=isFF?'⏩ FF':'⏮ REW';
+  fx.classList.add('show');
+  sndVHSTransport(isFF);
+  // shimmer noise on canvas behind
+  let frames=0;const maxF=20;
+  vhsFxTimer=setInterval(()=>{
+    drawNoise();
+    frames++;
+    if(frames>=maxF){
+      clearInterval(vhsFxTimer);
+      fx.classList.remove('show');
+      if(cb)cb();
+    }
+  },55);
+}
+
+/* ── EPISODE SIDEBAR ── */
+function buildEpSidebar(show, epIdx){
+  if(!show||!show.episodes||!show.episodes.length){
+    document.getElementById('epList').innerHTML='<div class="ep-sidebar-empty">No episode list<br>available for this show</div>';
+    document.getElementById('epSidebarShow').textContent='— NO DATA —';
+    return;
+  }
+  document.getElementById('epSidebarShow').textContent=show.name.toUpperCase();
+  const el=document.getElementById('epList');
+  el.innerHTML='';
+  show.episodes.forEach((ep,i)=>{
+    const item=document.createElement('div');
+    item.className='ep-item'+(i===epIdx?' active':'');
+    item.innerHTML=`<span class="ep-num">${String(i+1).padStart(2,'0')}.</span>${ep}`;
+    item.addEventListener('click',()=>{
+      sndClick();
+      // VHS fx then load at this episode
+      doVHSFx(i>epIdx, ()=>{
+        activeEpIdx=i;
+        buildEpSidebar(show,i);
+        loadVideoAt(show,i);
+      });
+    });
+    el.appendChild(item);
+  });
+  // scroll active into view
+  const active=el.querySelector('.ep-item.active');
+  if(active) setTimeout(()=>active.scrollIntoView({block:'nearest'}),100);
+}
+
+function loadVideoAt(show, epIdx){
+  // archive.org embed supports ?start= for playlist index
+  const embedUrl=`https://archive.org/embed/${show.archiveId}?autoplay=1&playlist=1&playlist_index=${epIdx}`;
+  document.getElementById('nowScreen').classList.remove('show');
+  document.getElementById('videoFrame').src=embedUrl;
+  document.getElementById('videoLayer').classList.add('show');
+  buildEpSidebar(show,epIdx);
+}
+
+/* ── TUNE SHOW ── */
+function tuneShow(id, skipToRandomEp){
+  if(!tvOn){powerToggle(()=>setTimeout(()=>tuneShow(id,skipToRandomEp),400));return;}
   const s=shows.find(x=>x.id===id);if(!s)return;
+
+  // Pick episode index
+  let epIdx=0;
+  if(skipToRandomEp && s.episodes && s.episodes.length>1){
+    epIdx=Math.floor(Math.random()*s.episodes.length);
+  }
+  activeEpIdx=epIdx;
+
+  // Reset screen layers
   document.getElementById('videoLayer').classList.remove('show');
   document.getElementById('videoFrame').src='';
-  document.getElementById('splash').classList.remove('show');
+  document.getElementById('nowScreen').classList.remove('show');
   document.getElementById('tickerBar').classList.remove('show');
-  document.getElementById('epPill').classList.remove('show');
   document.getElementById('chDisp').textContent=`CH ${s.ch}`;
-  showStatic(()=>{
+
+  // Load tape into VHS slot
+  document.getElementById('vhsTape').classList.add('loaded');
+  document.getElementById('vhsLabelTxt').textContent=s.name.toUpperCase();
+
+  showStatic('TUNING...', ()=>{
     active=s;
     document.getElementById('idle').style.display='none';
-    document.getElementById('splashEmoji').textContent=s.emoji;
-    document.getElementById('splashTitle').textContent=s.name;
-    document.getElementById('splashYear').textContent=s.year;
-    document.getElementById('splashEp').textContent=s.episodeName;
-    const splash=document.getElementById('splash');
-    splash.classList.add('show');
+
+    // Show now-screen overlay
+    document.getElementById('nsEmoji').textContent=s.emoji;
+    document.getElementById('nsTitle').textContent=s.name;
+    document.getElementById('nsYear').textContent=s.year;
+    const epName=s.episodes&&s.episodes[epIdx]?s.episodes[epIdx]:s.episodeName;
+    document.getElementById('nsEp').textContent=epName;
+    const ns=document.getElementById('nowScreen');
+    ns.classList.add('show');
+
+    // Ticker
     const t=s.tickers.join('   ◈   ');
     const tk=document.getElementById('tickerTxt');
     tk.textContent=`◈  ${t}  ◈  ${t}  ◈`;
     tk.style.animation='none';void tk.offsetHeight;tk.style.animation='';
     document.getElementById('tickerBar').classList.add('show');
-    if(s.playlist) document.getElementById('epPill').classList.add('show');
+
     document.getElementById('npName').textContent=s.name;
     document.getElementById('npCh').textContent=`CH ${s.ch}`;
     document.getElementById('npBar').classList.add('show');
-    const embedUrl=`https://archive.org/embed/${s.archiveId}?autoplay=1&playlist=1`;
-    splash.onclick=()=>{
-      splash.classList.remove('show');
+
+    // Build episode sidebar
+    buildEpSidebar(s, epIdx);
+
+    const embedUrl=`https://archive.org/embed/${s.archiveId}?autoplay=1&playlist=1&playlist_index=${epIdx}`;
+    ns.onclick=()=>{
+      ns.classList.remove('show');
       document.getElementById('videoFrame').src=embedUrl;
       document.getElementById('videoLayer').classList.add('show');
     };
@@ -490,20 +669,75 @@ function tuneShow(id){
   });
 }
 
+/* ── TRANSPORT BUTTONS ── */
+document.getElementById('tPlay').addEventListener('click',()=>{
+  sndClick();
+  if(!active){showToast('◈ SELECT A SHOW FIRST ◈');return;}
+  document.getElementById('nowScreen').classList.remove('show');
+  document.getElementById('videoFrame').src=`https://archive.org/embed/${active.archiveId}?autoplay=1&playlist=1&playlist_index=${activeEpIdx}`;
+  document.getElementById('videoLayer').classList.add('show');
+  document.getElementById('tPlay').classList.add('active-btn');
+  setTimeout(()=>document.getElementById('tPlay').classList.remove('active-btn'),400);
+});
+document.getElementById('tFF').addEventListener('click',()=>{
+  sndClick();
+  if(!active){showToast('◈ NO TAPE LOADED ◈');return;}
+  const maxEp=active.episodes?active.episodes.length-1:0;
+  if(activeEpIdx>=maxEp){showToast('◈ END OF TAPE ◈');return;}
+  document.getElementById('tFF').classList.add('active-btn');
+  document.getElementById('videoLayer').classList.remove('show');
+  const nextIdx=Math.min(activeEpIdx+1,maxEp);
+  doVHSFx(true,()=>{
+    activeEpIdx=nextIdx;
+    loadVideoAt(active,activeEpIdx);
+    document.getElementById('tFF').classList.remove('active-btn');
+    // Update now-screen ep name
+    if(active.episodes&&active.episodes[activeEpIdx]){
+      document.getElementById('nsEp').textContent=active.episodes[activeEpIdx];
+    }
+    showToast(`◈ EP ${activeEpIdx+1}: ${active.episodes&&active.episodes[activeEpIdx]?active.episodes[activeEpIdx]:'NEXT EPISODE'} ◈`);
+  });
+});
+document.getElementById('tRew').addEventListener('click',()=>{
+  sndClick();
+  if(!active){showToast('◈ NO TAPE LOADED ◈');return;}
+  if(activeEpIdx<=0){showToast('◈ ALREADY AT START ◈');return;}
+  document.getElementById('tRew').classList.add('active-btn');
+  document.getElementById('videoLayer').classList.remove('show');
+  const prevIdx=Math.max(activeEpIdx-1,0);
+  doVHSFx(false,()=>{
+    activeEpIdx=prevIdx;
+    loadVideoAt(active,activeEpIdx);
+    document.getElementById('tRew').classList.remove('active-btn');
+    showToast(`◈ EP ${activeEpIdx+1}: ${active.episodes&&active.episodes[activeEpIdx]?active.episodes[activeEpIdx]:'PREVIOUS'} ◈`);
+  });
+});
+
+/* ── POWER — auto-tune random ep on first power-on ── */
 function powerToggle(cb){
   const btn=document.getElementById('pwrBtn');
   if(!tvOn){
     tvOn=true;btn.classList.add('on');sndPowerOn();
-    document.getElementById('idle').style.display='flex';
+    // Pick a random show from any playlist and a random episode (not ep 1)
+    const playlistShows=shows.filter(s=>s.playlist&&s.episodes&&s.episodes.length>2);
+    const randShow=playlistShows[Math.floor(Math.random()*playlistShows.length)];
+    setTimeout(()=>{
+      if(randShow) tuneShow(randShow.id, true);
+      else { document.getElementById('idle').style.display='flex'; }
+    },600);
     if(cb)cb();
   }else{
     sndPowerOff();btn.classList.remove('on');tvOn=false;active=null;
-    clearInterval(noiseTimer);
-    ['staticScreen','videoLayer','splash','tickerBar','epPill','npBar'].forEach(id=>{
+    clearInterval(noiseTimer);clearInterval(vhsFxTimer);
+    ['staticScreen','videoLayer','nowScreen','tickerBar','vhsFx','npBar'].forEach(id=>{
       const el=document.getElementById(id);if(el)el.classList.remove('show');
     });
     document.getElementById('videoFrame').src='';
     document.getElementById('chDisp').textContent='— —';
+    document.getElementById('vhsTape').classList.remove('loaded');
+    document.getElementById('vhsLabelTxt').textContent='◈ NO TAPE LOADED ◈';
+    document.getElementById('epList').innerHTML='<div class="ep-sidebar-empty">Turn on the TV<br>and select a show<br>to see episodes</div>';
+    document.getElementById('epSidebarShow').textContent='— SELECT A SHOW —';
     const off=document.getElementById('offScreen');
     off.innerHTML='<div class="off-line"></div>';off.classList.add('show');
     setTimeout(()=>{off.classList.remove('show');document.getElementById('idle').style.display='flex';},600);
@@ -511,60 +745,35 @@ function powerToggle(cb){
   }
 }
 
+/* ── SHARE / DONATE / SURPRISE ── */
 function showToast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),3000);
 }
-
-// Share
 document.getElementById('shareBtn').addEventListener('click',()=>{
   sndClick();
-  const url=window.location.href;
-  if(navigator.share){
-    navigator.share({title:'The Tube — Retro TV Archive',text:'Watch classic TV on a vintage CRT!',url}).catch(()=>{});
-  } else if(navigator.clipboard){
-    navigator.clipboard.writeText(url).then(()=>showToast('◈ LINK COPIED TO CLIPBOARD ◈'));
-  } else {
-    showToast('◈ SHARE: THE TUBE — RETRO TV ARCHIVE ◈');
-  }
+  if(navigator.share){navigator.share({title:'The Tube',text:'Watch classic TV on a vintage CRT!',url:window.location.href}).catch(()=>{});}
+  else if(navigator.clipboard){navigator.clipboard.writeText(window.location.href).then(()=>showToast('◈ LINK COPIED TO CLIPBOARD ◈'));}
+  else showToast('◈ THE TUBE — RETRO TV ARCHIVE ◈');
 });
-
-// Donate — open modal
-document.getElementById('donateBtn').addEventListener('click',()=>{
-  sndClick();
-  document.getElementById('donateModal').classList.add('show');
-});
-document.getElementById('donateClose').addEventListener('click',()=>{
-  sndClick();
+document.getElementById('donateBtn').addEventListener('click',()=>{sndClick();document.getElementById('donateModal').classList.add('show');});
+document.getElementById('donateClose').addEventListener('click',()=>{sndClick();document.getElementById('donateModal').classList.remove('show');});
+document.getElementById('donateModal').addEventListener('click',(e)=>{if(e.target.id==='donateModal')document.getElementById('donateModal').classList.remove('show');});
+document.getElementById('bmcLink').addEventListener('click',(e)=>{
+  e.preventDefault();sndClick();
+  showToast('◈ THANK YOU SO MUCH! ◈');
+  setTimeout(()=>window.open('https://buymeacoffee.com/oakowltv','_blank'),300);
   document.getElementById('donateModal').classList.remove('show');
 });
-document.getElementById('donateModal').addEventListener('click',(e)=>{
-  if(e.target===document.getElementById('donateModal')){
-    document.getElementById('donateModal').classList.remove('show');
-  }
-});
-// PayPal.me link — works worldwide, just opens send money to the handle
-document.getElementById('paypalMeLink').addEventListener('click',(e)=>{
-  e.preventDefault();
-  sndClick();
-  showToast('◈ THANK YOU FOR YOUR SUPPORT ◈');
-  setTimeout(()=>window.open('https://paypal.me/oakowlrecords','_blank'),400);
-  document.getElementById('donateModal').classList.remove('show');
-});
-
-// Surprise Me
 document.getElementById('surpriseBtn').addEventListener('click',()=>{
   sndClick();
   const pick=shows[Math.floor(Math.random()*shows.length)];
-  showToast(`◈ TUNING TO: ${pick.name.toUpperCase()} ◈`);
-  setTimeout(()=>tuneShow(pick.id),600);
+  showToast(`◈ SURPRISE: ${pick.name.toUpperCase()} ◈`);
+  setTimeout(()=>tuneShow(pick.id,true),600);
 });
-
-// Power
 document.getElementById('pwrBtn').addEventListener('click',()=>powerToggle());
 
-// Cat tabs
+/* ── CAT TABS + RENDER ── */
 function buildCatTabs(){
   const el=document.getElementById('catTabs');
   cats.forEach(c=>{
@@ -579,7 +788,6 @@ function buildCatTabs(){
     el.appendChild(b);
   });
 }
-
 function renderList(){
   const el=document.getElementById('showList');el.innerHTML='';
   const filtered=activeCat==='all'?shows:shows.filter(s=>s.cat===activeCat);
@@ -594,7 +802,7 @@ function renderList(){
       return`<span class="${cls}">${b}</span>`;
     }).join('');
     card.innerHTML=`<span class="s-time">${s.time}</span><span class="s-emoji">${s.emoji}</span><div class="s-info"><div class="s-name">${s.name} <span class="s-yr">(${s.year})</span></div><div class="s-desc">${s.desc}</div><div class="s-badges">${bhtml}</div></div><div class="play-dot"></div>`;
-    card.addEventListener('click',()=>{sndClick();tuneShow(s.id);});
+    card.addEventListener('click',()=>{sndClick();tuneShow(s.id,false);});
     el.appendChild(card);
   });
 }
