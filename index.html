@@ -713,13 +713,22 @@ $('kVol').addEventListener('click',()=>{
   kAngle.kVol+=36;$('kVol').style.transform=`rotate(${kAngle.kVol}deg)`;
   $('volFill').style.width=`${vClicks*10}%`;showToast(`◈ VOLUME: ${vClicks*10}% ◈`);
 });
-let sClicks=0;
-$('kStatic').addEventListener('click',()=>{
-  sndKnob();sClicks=(sClicks+1)%8;staticIntensity=sClicks/7;
-  kAngle.kStatic+=45;$('kStatic').style.transform=`rotate(${kAngle.kStatic}deg)`;
-  $('sbarFill').style.width=`${Math.round(staticIntensity*100)}%`;
-  $('lScan').style.opacity=0.4+staticIntensity*0.6;$('lPhos').style.opacity=staticIntensity;
-});
+    let sClicks = 0;
+    $('kStatic').addEventListener('click', () => {
+        sndKnob();
+        sClicks = (sClicks + 1) % 8;
+        staticIntensity = sClicks / 7;  // 0, 0.14, 0.28, 0.42, 0.57, 0.71, 0.85, 1.0
+        kAngle.kStatic += 45;
+        $('kStatic').style.transform = `rotate(${kAngle.kStatic}deg)`;
+        $('sbarFill').style.width = `${Math.round(staticIntensity * 100)}%`;
+
+        // When staticIntensity is 0, opacity becomes 0 (completely invisible)
+        $('lScan').style.opacity = staticIntensity * 0.8;  // Max 0.8 when fully turned up
+        $('lPhos').style.opacity = staticIntensity * 0.5;  // Max 0.5 when fully turned up
+
+        // Also adjust the static noise during tuning
+        // The static screen noise will now scale with the dial too
+    });
 let bClicks=4;
 $('kBright').addEventListener('click',()=>{
   sndKnob();bClicks=(bClicks+1)%8;brightnessVal=0.4+bClicks*(0.85/7);
