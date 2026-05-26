@@ -357,17 +357,18 @@ canvas.noisecanvas{position:absolute;inset:0;width:100%;height:100%}
   </div>
 
   <div>
-    <div class="guide-hdr">
-      <span class="guide-title">📋 PROGRAMME GUIDE</span>
-      <span class="guide-date" id="gDate"></span>
-    </div>
-    <div class="cat-tabs" id="catTabs"></div>
-    <div class="show-list" id="showList"></div>
-    <div class="np-bar" id="npBar">
-      <span class="np-live">▶ ON AIR</span>
-      <span class="np-name" id="npName">—</span>
-      <span class="np-ch" id="npCh">CH —</span>
-    </div>
+      <div class="guide-hdr">
+          <span class="guide-title">📋 PROGRAMME GUIDE</span>
+          <span class="guide-date" id="gDate"></span>
+      </div>
+      <div id="whatsOnWidget"></div>
+      <div class="cat-tabs" id="catTabs"></div>
+      <div class="show-list" id="showList"></div>
+      <div class="np-bar" id="npBar">
+          <span class="np-live">▶ ON AIR</span>
+          <span class="np-name" id="npName">—</span>
+          <span class="np-ch" id="npCh">CH —</span>
+      </div>
   </div>
 </div>
 
@@ -745,7 +746,34 @@ function renderList(){
 }
 const days=['SUN','MON','TUE','WED','THU','FRI','SAT'],months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
 const nd=new Date();$('gDate').textContent=`${days[nd.getDay()]} ${nd.getDate()} ${months[nd.getMonth()]}`;
-buildCatTabs();renderList();screen('idle');
+    buildCatTabs(); renderList(); screen('idle');// WHAT'S ON NOW WIDGET
+    function getCurrentShow() {
+        const n = new Date(), m = (n.getHours() * 60) + n.getMinutes(); const s = [
+            { startTime: 14 * 60, endTime: 14 * 60 + 30, channel: "CH 28", name: "Reading Rainbow", emoji: "🌈", id: 27 },
+            { startTime: 14 * 60 + 30, endTime: 15 * 60, channel: "CH 34", name: "90s Nickelodeon VHS", emoji: "📼", id: 33 },
+            { startTime: 15 * 60, endTime: 15 * 60 + 30, channel: "CH 36", name: "Popeye", emoji: "💪", id: 31 },
+            { startTime: 15 * 60 + 30, endTime: 16 * 60, channel: "CH 40", name: "Arthur", emoji: "🐻", id: 39 },
+            { startTime: 16 * 60, endTime: 16 * 60 + 30, channel: "CH 33", name: "Mickey & Donald", emoji: "🐭", id: 32 },
+            { startTime: 16 * 60 + 30, endTime: 17 * 60, channel: "CH 46", name: "Moomin", emoji: "🦛", id: 38 },
+            { startTime: 17 * 60, endTime: 17 * 60 + 30, channel: "CH 22", name: "Even Stevens", emoji: "🍞", id: 21 },
+            { startTime: 18 * 60, endTime: 18 * 60 + 30, channel: "CH 21", name: "Drawn Together", emoji: "🏠", id: 20 },
+            { startTime: 18 * 60 + 30, endTime: 19 * 60, channel: "CH 30", name: "Beavis & Butt-Head", emoji: "🎸", id: 29 },
+            { startTime: 19 * 60, endTime: 19 * 60 + 30, channel: "CH 31", name: "Saved by the Bell", emoji: "📣", id: 30 },
+            { startTime: 19 * 60 + 30, endTime: 20 * 60, channel: "CH 38", name: "Batman TAS", emoji: "🦇", id: 37 },
+            { startTime: 20 * 60, endTime: 20 * 60 + 30, channel: "CH 27", name: "Buffy", emoji: "🧛", id: 26 },
+            { startTime: 20 * 60 + 30, endTime: 21 * 60, channel: "CH 19", name: "Sherlock Holmes", emoji: "🔍", id: 18 },
+            { startTime: 21 * 60, endTime: 21 * 60 + 30, channel: "CH 26", name: "Ally McBeal", emoji: "👗", id: 25 },
+            { startTime: 22 * 60, endTime: 22 * 60 + 30, channel: "CH 20", name: "Murder, She Wrote", emoji: "✍️", id: 19 },
+            { startTime: 22 * 60 + 30, endTime: 23 * 60, channel: "CH 10", name: "Twilight Zone", emoji: "🌀", id: 9 },
+            { startTime: 23 * 60, endTime: 23 * 60 + 30, channel: "CH 03", name: "Jackass", emoji: "💀", id: 2 },
+            { startTime: 23 * 60 + 30, endTime: 24 * 60, channel: "CH 36", name: "Jerry Springer", emoji: "🎙️", id: 35 },
+            { startTime: 0, endTime: 0 * 60 + 30, channel: "CH 04", name: "Wildboyz", emoji: "🐊", id: 3 },
+            { startTime: 0 * 60 + 30, endTime: 1 * 60, channel: "CH 02", name: "Viva La Bam", emoji: "🛹", id: 1 },
+            { startTime: 1 * 60, endTime: 2 * 60, channel: "CH 35", name: "90s MTV Block", emoji: "🎤", id: 34 }
+        ]; for (const sh of s) { if (m >= sh.startTime && m < sh.endTime) return sh; } return { name: "The Tube", emoji: "📺", message: "Nothing scheduled" };
+    }
+    function updateWidget() { const w = document.getElementById('whatsOnWidget'); if (!w) return; const c = getCurrentShow(); if (c.message) { w.innerHTML = '<div style="background:#060800;border:1px solid #f5a623;border-radius:6px;padding:10px;margin-bottom:15px;"><div style="font-family:VT323;font-size:.7rem;color:#4a3015;">🔴 NOW PLAYING</div><div style="display:flex;align-items:center;gap:10px;"><div style="font-size:2rem;">📺</div><div><div style="font-family:Oswald;color:#f5a623;">Off Air</div><div style="font-family:VT323;font-size:.7rem;">Select a show from the guide</div></div></div></div>'; } else { w.innerHTML = '<div style="background:#060800;border:1px solid #39ff14;border-radius:6px;padding:10px;margin-bottom:15px;cursor:pointer;" onclick="tuneShow(' + c.id + ')"><div style="display:flex;justify-content:space-between;"><div style="font-family:VT323;font-size:.65rem;color:#39ff14;">🔴 LIVE NOW</div><div style="font-family:VT323;font-size:.6rem;color:#4a3015;">' + c.channel + '</div></div><div style="display:flex;align-items:center;gap:10px;margin-top:5px;"><div style="font-size:2rem;">' + c.emoji + '</div><div><div style="font-family:Oswald;font-size:1rem;font-weight:600;color:#d4b483;">' + c.name + '</div><div style="font-family:VT323;font-size:.65rem;color:#7a5a28;">▶ Click to watch</div></div></div></div>'; } }
+    updateWidget(); setInterval(updateWidget, 60000);
 </script>
 </body>
 </html>
