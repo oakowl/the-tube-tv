@@ -1,225 +1,728 @@
-/**
- * ====================================================================
- * 1. DATA MODEL: The Single Source of Truth (AppState)
- *    All application state is encapsulated here.
- * ====================================================================
- */
-let AppState = {
-    // Simulation State
-    currentChannel: 1,
-    isPlaying: false,
-    currentTime: 0, // Time in seconds (resets on new segment)
-    
-    // Content State
-    contentType: 'INFO', // Possible values: 'INFO', 'PROGRAM', 'AD', 'BREAK'
-    
-    // Master data array (Simulated data structure)
-    contentData: [
-        // Example content segment structure
-        { id: 1, type: 'INFO', title: 'Welcome Message', duration: 10, programName: 'Local Broadcast', adContent: 'Welcome!', nextContentId: 2 },
-        { id: 2, type: 'PROGRAM', title: 'The History Show', duration: 30, programName: 'History Tonight', adContent: null, nextContentId: 3 },
-        { id: 3, type: 'AD', title: 'XYZ Corp Commercial', duration: 15, programName: null, adContent: 'Buy XYZ!', nextContentId: 4 },
-        { id: 4, type: 'BREAK', title: 'Network Break', duration: 5, programName: null, adContent: '...', nextContentId: 5 },
-        { id: 5, type: 'PROGRAM', title: 'Local News Report', duration: 60, programName: 'Evening News', adContent: null, nextContentId: null }
-    ],
-    
-    // Tracks the currently active segment ID
-    currentSegmentId: 1 
-};
+<!DOCTYPE html>
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=Oswald:wght@400;600&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:radial-gradient(ellipse at center,#1a1408 0%,#080602 100%);font-family:'Special Elite',cursive;color:#d4b483;padding:10px 8px 28px;min-height:100vh}
+.site-header{text-align:center;padding:10px 0 8px}
+.logo{font-family:'VT323',monospace;font-size:clamp(2rem,7vw,4.2rem);color:#f5a623;letter-spacing:.15em;line-height:1}
+.logo span{color:#fff}
+.tagline{font-family:'VT323',monospace;font-size:.85rem;color:#6a5030;letter-spacing:.3em;margin-top:3px}
+.divider{width:50%;height:1px;background:linear-gradient(90deg,transparent,#c47d0e,transparent);margin:7px auto 0}
+.header-actions{display:flex;justify-content:center;gap:10px;margin-top:10px;flex-wrap:wrap}
+.hbtn{font-family:'VT323',monospace;font-size:.82rem;padding:5px 14px;border-radius:3px;cursor:pointer;letter-spacing:.1em;transition:all .15s;border:none;display:flex;align-items:center;gap:5px}
+.hbtn:active{transform:scale(.96)}
+.btn-share{background:#1a1200;color:#f5a623;border:1px solid #3a2800}.btn-share:hover{background:#2a1e00}
+.btn-donate{background:#0d1a0d;color:#39ff14;border:1px solid #1a3a1a}.btn-donate:hover{background:#122012}
+.btn-surprise{background:#1a001a;color:#ff80ff;border:1px solid #3a1a3a}.btn-surprise:hover{background:#250025}
+.layout{display:grid;grid-template-columns:190px 1fr 280px;gap:14px;max-width:1180px;margin:0 auto;padding:10px 6px 0;align-items:start}
+@media(max-width:860px){.layout{grid-template-columns:1fr 260px}}
+@media(max-width:580px){.layout{grid-template-columns:1fr}}
+/* EP SIDEBAR */
+.ep-sidebar{background:#080700;border:1px solid #1e1500;border-radius:4px;overflow:hidden}
+.ep-sidebar-hdr{font-family:'VT323',monospace;font-size:.88rem;color:#f5a623;letter-spacing:.1em;padding:6px 10px;background:#0d0a00;border-bottom:1px solid #1e1500}
+.ep-show-name{font-family:'VT323',monospace;font-size:.68rem;color:#5a4020;padding:4px 10px 5px;border-bottom:1px solid #140f00;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.05em}
+.ep-list{max-height:65vh;overflow-y:auto;padding:3px 0}
+.ep-list::-webkit-scrollbar{width:6px}
+.ep-list::-webkit-scrollbar-track{background:#080700}
+.ep-list::-webkit-scrollbar-thumb{background:#3a2008;border-radius:3px}
+.ep-item{font-family:'VT323',monospace;font-size:.7rem;color:#5a4020;padding:4px 10px;cursor:pointer;transition:all .1s;border-left:2px solid transparent;line-height:1.35;display:flex;gap:5px}
+.ep-item:hover{color:#f5a623;background:#120c00;border-left-color:#f5a623}
+.ep-item.ep-active{color:#39ff14;background:#060d00;border-left-color:#39ff14}
+.ep-num{color:#2a1e08;flex-shrink:0;font-size:.62rem;padding-top:1px}
+.ep-empty{font-family:'VT323',monospace;font-size:.68rem;color:#2a1e08;padding:16px 10px;text-align:center;line-height:1.7}
+.ep-loading{font-family:'VT323',monospace;font-size:.68rem;color:#5a4020;padding:12px 10px;text-align:center;animation:flk .8s infinite}
+@media(max-width:860px){.ep-sidebar{display:none}}
+/* TV */
+.tv-shell{background:linear-gradient(160deg,#c8c8c0,#b0b0a8 30%,#989890 60%,#888880);border-radius:12px 12px 16px 16px;padding:14px 14px 12px;box-shadow:4px 4px 0 #707068,8px 8px 0 #606058,0 20px 60px rgba(0,0,0,.88),inset 0 1px 0 rgba(255,255,255,.5),inset -2px -2px 0 rgba(0,0,0,.2);position:relative}
+.tv-shell::before{content:'';position:absolute;inset:7px;border-radius:7px;box-shadow:inset 0 2px 4px rgba(0,0,0,.3),inset 0 -1px 2px rgba(255,255,255,.2);pointer-events:none}
+.tv-top-strip{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.tv-brand-90s{font-family:'VT323',monospace;font-size:.85rem;color:#3a3a32;letter-spacing:.3em;text-shadow:0 1px 0 rgba(255,255,255,.4)}
+.ch-display{font-family:'VT323',monospace;font-size:1.1rem;color:#ff4400;background:#0a0200;padding:2px 7px;border-radius:3px;border:2px solid #333;min-width:50px;text-align:center;box-shadow:inset 0 2px 4px rgba(0,0,0,.8)}
+.screen-housing{background:#2a2a28;border-radius:8px;padding:8px 8px 12px;box-shadow:inset 0 4px 8px rgba(0,0,0,.8)}
+.screen-bezel-90s{background:#1a1a18;border-radius:5px;padding:5px;box-shadow:inset 0 0 20px rgba(0,0,0,.9)}
+.screen-wrap{position:relative;border-radius:4px;overflow:hidden;aspect-ratio:4/3;background:#000}
+/* SCREEN LAYERS */
+.l-idle{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#060600}
+.l-video{position:absolute;inset:0;z-index:2;display:none}
+.l-video video{width:100%;height:100%;object-fit:contain;background:#000;display:block}
+.l-video.show{display:block}
+.l-vhsfx{position:absolute;inset:0;z-index:3;display:none;overflow:hidden;background:#030303}
+.l-vhsfx.show{display:block}
+.l-static{position:absolute;inset:0;z-index:4;display:none;align-items:center;justify-content:center;background:#111}
+.l-static.show{display:flex}
+.static-lbl{font-family:'VT323',monospace;font-size:.9rem;color:rgba(255,255,255,.8);z-index:2;letter-spacing:.2em;animation:flk .12s infinite;pointer-events:none}
+canvas.noisecanvas{position:absolute;inset:0;width:100%;height:100%}
+.l-off{position:absolute;inset:0;z-index:5;background:#000;display:none;align-items:center;justify-content:center}
+.l-off.show{display:flex}
+.off-line{width:100%;height:2px;background:#fff;animation:offAnim .5s ease-out forwards}
+.l-splash{position:absolute;inset:0;z-index:6;display:none;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,.8);padding:10px}
+.l-splash.show{display:flex}
+.sp-emoji{font-size:3rem}
+.sp-title{font-family:'VT323',monospace;font-size:1.05rem;color:#f5a623;margin-top:6px;text-align:center;line-height:1.2}
+.sp-year{font-family:'VT323',monospace;font-size:.68rem;color:#7a5a28;margin-top:2px}
+.sp-ep{font-family:'Special Elite',cursive;font-size:.54rem;color:#bbb;margin-top:4px;text-align:center;padding:0 8px;line-height:1.4}
+.sp-btn{margin-top:10px;width:42px;height:42px;border-radius:50%;background:rgba(245,166,35,.12);border:2px solid #f5a623;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sp-btn::after{content:'';width:0;height:0;border-top:8px solid transparent;border-bottom:8px solid transparent;border-left:15px solid #f5a623;margin-left:4px}
+.sp-hint{font-family:'VT323',monospace;font-size:.55rem;color:#4a3015;margin-top:5px;letter-spacing:.1em}
+.sp-loading{font-family:'VT323',monospace;font-size:.6rem;color:#5a4020;margin-top:4px;letter-spacing:.1em;animation:flk .8s infinite}
+.l-scan{position:absolute;inset:0;z-index:7;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.2) 2px,rgba(0,0,0,.2) 4px);pointer-events:none}
+.l-vig{position:absolute;inset:0;z-index:8;background:radial-gradient(ellipse at 50% 50%,transparent 48%,rgba(0,0,0,.65) 100%);pointer-events:none}
+.l-phos{position:absolute;inset:0;z-index:9;background:radial-gradient(ellipse at 50% 40%,rgba(100,200,50,.03),transparent 70%);pointer-events:none}
+.l-ticker{position:absolute;bottom:0;left:0;right:0;z-index:10;background:rgba(5,5,0,.93);border-top:1px solid #1e1600;padding:3px 8px;overflow:hidden;white-space:nowrap;pointer-events:none;display:none}
+.l-ticker.show{display:block}
+.ticker-inner{display:inline-block;font-family:'VT323',monospace;font-size:.72rem;color:#f5a623;animation:ticker 28s linear infinite}
+/* fullscreen btn overlay on screen */
+.fs-btn{position:absolute;top:6px;right:6px;z-index:11;width:22px;height:22px;background:rgba(0,0,0,.5);border:1px solid rgba(245,166,35,.3);border-radius:2px;cursor:pointer;display:none;align-items:center;justify-content:center;font-size:.7rem;color:rgba(245,166,35,.7);transition:all .15s}
+.fs-btn:hover{background:rgba(0,0,0,.8);border-color:#f5a623;color:#f5a623}
+.l-video.show~.fs-btn,.fs-btn.show{display:flex}
+.vhs-stripe{position:absolute;width:100%;height:2px;background:rgba(255,255,255,.75);animation:vhsScan .07s linear infinite}
+.vhs-band{position:absolute;width:100%;height:22px;background:rgba(255,255,255,.07);animation:vhsBand .13s steps(1) infinite}
+.vhs-lbl{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'VT323',monospace;font-size:1.3rem;color:#fff;letter-spacing:.2em;animation:flk .15s infinite;z-index:2}
+.idle-icon{font-size:2.4rem}.idle-title{font-family:'VT323',monospace;font-size:1.8rem;color:#f5a623;margin-top:3px}
+.idle-sub{font-family:'VT323',monospace;font-size:.68rem;color:#4a3a20;letter-spacing:.2em;margin-top:3px}
+.test-bars{display:flex;width:100%;height:14px;margin-top:12px}.test-bar{flex:1}
 
-/**
- * ====================================================================
- * 2. THE MANAGER (Controller): Handles all state transitions and logic.
- * ====================================================================
- */
-class TVManager {
-    constructor() {
-        this.setupInitialState();
-        this.bindEventListeners();
-        this.startSimulationLoop();
+/* ── WIDE VHS DECK ── */
+.vhs-deck{
+  background:linear-gradient(180deg,#6a6a62,#585850);
+  padding:8px 14px 8px;
+  border-radius:0 0 4px 4px;
+  display:flex;align-items:center;gap:10px;
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.4),0 2px 4px rgba(0,0,0,.3);
+}
+/* Wide cassette housing */
+.vhs-cassette-housing{
+  flex:1;
+  background:linear-gradient(160deg,#222220,#111110,#1a1a18);
+  border-radius:4px;
+  padding:6px 10px 5px;
+  border:2px solid #0a0a08;
+  box-shadow:inset 0 2px 6px rgba(0,0,0,.9),0 1px 0 rgba(255,255,255,.08);
+  position:relative;
+}
+/* Label strip at top of cassette */
+.vhs-label-strip{
+  background:linear-gradient(90deg,#1a0e04,#2a1a08,#1a0e04);
+  border-radius:2px 2px 0 0;
+  padding:2px 6px;
+  margin-bottom:5px;
+  display:flex;justify-content:space-between;align-items:center;
+  border-bottom:1px solid #0a0800;
+}
+.vhs-show-name{font-family:'VT323',monospace;font-size:.62rem;color:#f5a623;letter-spacing:.08em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:70%}
+.vhs-ep-name{font-family:'VT323',monospace;font-size:.52rem;color:#5a3a18;letter-spacing:.05em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:28%;text-align:right}
+/* Tape window — wide like a real VHS */
+.vhs-window{
+  display:flex;align-items:center;gap:6px;
+  background:#050504;border-radius:2px;
+  padding:4px 8px;
+  border:1px solid #1a1a18;
+}
+.vhs-reel{
+  width:22px;height:22px;border-radius:50%;
+  background:radial-gradient(circle at 40% 40%,#2a2a28,#0a0a08);
+  border:2px solid #222;
+  position:relative;flex-shrink:0;
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.8);
+}
+.vhs-reel::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:6px;height:6px;border-radius:50%;background:#3a3a38;border:1px solid #0a0a08}
+.vhs-reel.spinning{animation:reelSpin 1.5s linear infinite}
+.vhs-tape-stretch{flex:1;height:6px;background:linear-gradient(90deg,#0a0806,#1a1208 30%,#0e0a06 60%,#1a1208 80%,#0a0806);border-radius:1px;box-shadow:0 0 3px rgba(245,166,35,.15)}
+.vhs-time{font-family:'VT323',monospace;font-size:.58rem;color:#3a2808;letter-spacing:.05em;white-space:nowrap;flex-shrink:0}
+/* Transport buttons */
+.transport{display:flex;gap:4px;align-items:center;flex-shrink:0}
+.tbtn{
+  width:36px;height:28px;
+  background:linear-gradient(180deg,#5a5a52,#383830);
+  border:1px solid #1a1a12;
+  border-radius:3px;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;
+  box-shadow:0 2px 4px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.12);
+  user-select:none;transition:all .1s;
+}
+.tbtn:hover{background:linear-gradient(180deg,#686860,#484840)}
+.tbtn:active,.tbtn.lit{background:linear-gradient(180deg,#8a3300,#4a1500);box-shadow:0 0 6px rgba(255,80,0,.4),inset 0 1px 0 rgba(255,150,50,.2)}
+.tbtn-icon{font-size:.85rem;line-height:1;color:#bbb}
+.tbtn.lit .tbtn-icon,.tbtn:active .tbtn-icon{color:#ffaa44}
+.tbtn-lbl{font-family:'VT323',monospace;font-size:.4rem;color:rgba(200,200,180,.4);letter-spacing:.04em;line-height:1;margin-top:1px}
+
+/* CONTROLS */
+.controls-panel{display:flex;align-items:center;justify-content:space-between;gap:6px;background:linear-gradient(180deg,#a8a8a0,#989890);padding:7px 10px 6px;border-radius:0 0 6px 6px;box-shadow:inset 0 2px 3px rgba(0,0,0,.2);margin-top:-2px}
+.knob-group{display:flex;gap:8px;align-items:flex-start}
+.knob-unit{display:flex;flex-direction:column;align-items:center;gap:2px}
+.knob90{width:28px;height:28px;border-radius:50%;cursor:pointer;position:relative;transition:transform .12s;box-shadow:2px 2px 4px rgba(0,0,0,.5),-1px -1px 2px rgba(255,255,255,.3),inset 0 2px 3px rgba(255,255,255,.2),inset 0 -2px 3px rgba(0,0,0,.4)}
+.k-vol{background:radial-gradient(circle at 38% 35%,#888,#444)}
+.k-static{background:radial-gradient(circle at 38% 35%,#666,#333)}
+.k-bright{background:radial-gradient(circle at 38% 35%,#777,#3a3a3a)}
+.knob90:active{box-shadow:1px 1px 2px rgba(0,0,0,.5),inset 0 2px 4px rgba(0,0,0,.5)}
+.knob90::after{content:'';position:absolute;width:3px;height:9px;background:rgba(255,255,255,.7);border-radius:2px;top:3px;left:50%;transform:translateX(-50%);transform-origin:50% 11px}
+.kl90{font-family:'VT323',monospace;font-size:.52rem;color:#4a4a40;letter-spacing:.07em}
+.sbar{width:50px;height:4px;background:#444;border-radius:2px;overflow:hidden;border:1px solid #2a2a2a;margin-top:1px}
+.sbar-fill{height:100%;background:linear-gradient(90deg,#39ff14,#f5a623);width:40%;transition:width .1s}
+.vol-ring{width:50px;height:4px;background:#444;border-radius:2px;overflow:hidden;border:1px solid #2a2a2a;margin-top:1px}
+.vol-ring-fill{height:100%;background:linear-gradient(90deg,#4af,#f5a623);width:70%;transition:width .15s}
+.pwr-area{display:flex;flex-direction:column;align-items:center;gap:3px}
+.pwr90{width:26px;height:26px;border-radius:4px;background:linear-gradient(160deg,#cc3300,#881100);border:2px solid #551100;cursor:pointer;transition:all .15s;box-shadow:2px 2px 4px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center}
+.pwr90::after{content:'⏻';font-size:.85rem;color:rgba(255,255,255,.5)}
+.pwr90.on{background:linear-gradient(160deg,#ff4400,#cc2200);box-shadow:0 0 12px rgba(255,60,0,.6)}.pwr90.on::after{color:#fff}
+.pwr-lbl{font-family:'VT323',monospace;font-size:.5rem;color:#4a4a40;letter-spacing:.07em}
+.spkr90{display:flex;flex-direction:column;gap:3px;width:34px}
+.spkr-slot{height:3px;background:#555;border-radius:1px}
+.tv-base{width:70%;margin:0 auto;height:10px;background:linear-gradient(160deg,#b0b0a8,#888880);border-radius:0 0 8px 8px;box-shadow:0 4px 8px rgba(0,0,0,.5)}
+.src-note{font-family:'VT323',monospace;font-size:.56rem;color:#2a1a08;text-align:center;margin-top:4px;letter-spacing:.07em}
+/* GUIDE */
+.guide-hdr{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;border-bottom:1px solid #1e1600;padding-bottom:7px}
+.guide-title{font-family:'VT323',monospace;font-size:1.5rem;color:#f5a623;letter-spacing:.08em}
+.guide-date{font-family:'VT323',monospace;font-size:.72rem;color:#4a3015;letter-spacing:.1em}
+.cat-tabs{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:8px}
+.cat-btn{font-family:'VT323',monospace;font-size:.65rem;padding:2px 6px;border:1px solid #2a1e0a;background:transparent;color:#7a5a2a;cursor:pointer;letter-spacing:.05em;border-radius:2px;transition:all .12s;white-space:nowrap}
+.cat-btn:hover,.cat-btn.active{background:#120c00;color:#f5a623;border-color:#c47d0e}
+.show-list{display:flex;flex-direction:column;gap:4px;max-height:62vh;overflow-y:auto;padding-right:3px}
+.show-list::-webkit-scrollbar{width:10px}
+.show-list::-webkit-scrollbar-track{background:#0a0800;border-radius:4px;border:1px solid #1a1200}
+.show-list::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#5a3a10,#3a2008);border-radius:4px;border:1px solid #7a5020}
+.show-list::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#8a5a20,#5a3a10)}
+.show-card{display:flex;gap:6px;align-items:center;background:#0c0900;border:1px solid #1a1400;border-left:3px solid #1e1600;padding:5px 7px;cursor:pointer;transition:all .12s;user-select:none}
+.show-card:hover{border-left-color:#f5a623;background:#110d00}
+.show-card:active{transform:scale(.98)}
+.show-card.active{border-left-color:#39ff14;background:#060d00}
+.s-time{font-family:'VT323',monospace;font-size:.76rem;color:#4a3015;min-width:38px;flex-shrink:0}
+.show-card.active .s-time{color:#39ff14}
+.s-emoji{font-size:1.15rem;width:24px;text-align:center;flex-shrink:0}
+.s-info{flex:1;min-width:0}
+.s-name{font-family:'Oswald',sans-serif;font-size:.74rem;font-weight:600;color:#d4b483;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.show-card.active .s-name{color:#39ff14}
+.s-yr{font-size:.52rem;color:#3a2a10;font-family:'VT323',monospace}
+.s-desc{font-family:'Special Elite',cursive;font-size:.56rem;color:#4a3015;margin-top:1px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.s-badges{display:flex;gap:2px;margin-top:2px;flex-wrap:wrap}
+.badge{font-family:'VT323',monospace;font-size:.52rem;padding:1px 3px;border:1px solid #1e1600;color:#6a4a20;letter-spacing:.04em}
+.badge.live{border-color:#39ff14;color:#39ff14;animation:flk 2s infinite}
+.badge.playlist{border-color:#4a8cff;color:#6aacff}
+.badge.hot{border-color:#ff6a00;color:#ff8c2a}
+.play-dot{width:0;height:0;border-top:4px solid transparent;border-bottom:4px solid transparent;border-left:7px solid #39ff14;flex-shrink:0;opacity:0;transition:opacity .2s}
+.show-card:hover .play-dot{opacity:.35}
+.show-card.active .play-dot{opacity:1}
+.np-bar{display:none;gap:7px;align-items:center;margin-top:8px;padding:5px 8px;background:#060800;border:1px solid #1a1400}
+.np-bar.show{display:flex}
+.np-live{font-family:'VT323',monospace;font-size:.62rem;color:#39ff14;letter-spacing:.15em;flex-shrink:0;animation:flk 2s infinite}
+.np-name{font-family:'Oswald',sans-serif;font-size:.68rem;color:#d4b483;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.np-ch{font-family:'VT323',monospace;font-size:.68rem;color:#f5a623;flex-shrink:0}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:#1a1200;border:1px solid #f5a623;color:#f5a623;font-family:'VT323',monospace;font-size:.88rem;padding:7px 18px;border-radius:3px;z-index:9999;opacity:0;transition:all .3s;letter-spacing:.1em;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:10000;display:none;align-items:center;justify-content:center}
+.modal-bg.show{display:flex}
+.modal-box{background:linear-gradient(160deg,#0f0c04,#1a1408);border:1px solid #3a2800;border-radius:6px;padding:24px 28px;max-width:310px;width:90%;text-align:center}
+.modal-box h2{font-family:'VT323',monospace;font-size:1.6rem;color:#f5a623;letter-spacing:.1em;margin-bottom:5px}
+.modal-box p{font-family:'Special Elite',cursive;font-size:.74rem;color:#9a7a45;line-height:1.5;margin-bottom:16px}
+.modal-opts{display:flex;flex-direction:column;gap:8px}
+.dl{display:block;font-family:'VT323',monospace;font-size:.85rem;padding:9px 14px;border-radius:3px;cursor:pointer;letter-spacing:.1em;text-decoration:none;transition:all .14s;border:none;width:100%;text-align:center}
+.dl-bmc{background:#0a1a0a;color:#39ff14;border:1px solid #1a3a1a}.dl-bmc:hover{background:#112211}
+.dl-em{background:#1a1200;color:#f5a623;border:1px solid #3a2800;font-size:.7rem}.dl-em:hover{background:#251a00}
+.modal-close{margin-top:12px;font-family:'VT323',monospace;font-size:.74rem;color:#4a3015;background:transparent;border:none;cursor:pointer;letter-spacing:.1em}.modal-close:hover{color:#f5a623}
+@keyframes flk{0%,90%,100%{opacity:1}95%{opacity:.2}}
+@keyframes ticker{0%{transform:translateX(60%)}100%{transform:translateX(-100%)}}
+@keyframes vhsScan{0%{top:-4%}100%{top:104%}}
+@keyframes vhsBand{0%{top:5%}33%{top:60%}66%{top:25%}100%{top:75%}}
+@keyframes offAnim{0%{opacity:1;transform:scaleX(1) scaleY(8)}60%{opacity:1;transform:scaleX(.5) scaleY(1)}100%{opacity:0;transform:scaleX(0) scaleY(0)}}
+@keyframes reelSpin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="site-header">
+  <div class="logo">THE <span>TUBE</span></div>
+  <div class="tagline">◈ Classic Television Archive ◈</div>
+  <div class="divider"></div>
+  <div class="header-actions">
+    <button class="hbtn btn-share" id="btnShare">📤 SHARE</button>
+    <button class="hbtn btn-donate" id="btnDonate">☕ DONATE</button>
+    <button class="hbtn btn-surprise" id="btnSurprise">🎲 SURPRISE ME</button>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="ep-sidebar">
+    <div class="ep-sidebar-hdr">📼 EPISODES</div>
+    <div class="ep-show-name" id="epShowName">— SELECT A SHOW —</div>
+    <div class="ep-list" id="epList"><div class="ep-empty">Power on &amp; select<br>a show to see<br>episodes here</div></div>
+  </div>
+
+  <div>
+    <div class="tv-shell">
+      <div class="tv-top-strip">
+        <span class="tv-brand-90s">NOSTALGIVISION™</span>
+        <div class="ch-display" id="chDisp">— —</div>
+      </div>
+      <div class="screen-housing"><div class="screen-bezel-90s">
+        <div class="screen-wrap" id="screenWrap">
+          <div class="l-idle" id="lIdle">
+            <div class="idle-icon">📺</div><div class="idle-title">THE TUBE</div>
+            <div class="idle-sub">◈ SELECT A PROGRAMME ◈</div>
+            <div class="test-bars">
+              <div class="test-bar" style="background:#fff"></div><div class="test-bar" style="background:#ff0"></div>
+              <div class="test-bar" style="background:#0ff"></div><div class="test-bar" style="background:#0f0"></div>
+              <div class="test-bar" style="background:#f0f"></div><div class="test-bar" style="background:#f00"></div>
+              <div class="test-bar" style="background:#00f"></div><div class="test-bar" style="background:#000"></div>
+            </div>
+          </div>
+          <div class="l-video" id="lVideo"><video id="vid" playsinline preload="auto"></video></div>
+          <div class="l-vhsfx" id="lVhs">
+            <canvas class="noisecanvas" id="vhsCanvas"></canvas>
+            <div class="vhs-stripe"></div><div class="vhs-band"></div>
+            <div class="vhs-lbl" id="vhsLbl">⏩ FF</div>
+          </div>
+          <div class="l-static" id="lStatic">
+            <canvas class="noisecanvas" id="noiseCanvas"></canvas>
+            <div class="static-lbl" id="staticLbl">TUNING...</div>
+          </div>
+          <div class="l-off" id="lOff"></div>
+          <div class="l-splash" id="lSplash">
+            <div class="sp-emoji" id="spEmoji"></div>
+            <div class="sp-title" id="spTitle"></div>
+            <div class="sp-year" id="spYear"></div>
+            <div class="sp-ep" id="spEp"></div>
+            <div class="sp-btn"></div>
+            <div class="sp-hint">▶ CLICK TO WATCH</div>
+            <div class="sp-loading" id="spLoading" style="display:none">LOADING EPISODES...</div>
+          </div>
+          <div class="l-scan" id="lScan"></div>
+          <div class="l-vig"></div>
+          <div class="l-phos" id="lPhos"></div>
+          <div class="l-ticker" id="lTicker"><span class="ticker-inner" id="tickerTxt"></span></div>
+          <!-- FULLSCREEN BUTTON -->
+          <div class="fs-btn" id="fsBtn" title="Fullscreen">⛶</div>
+        </div>
+      </div></div>
+
+      <!-- WIDE VHS DECK -->
+      <div class="vhs-deck">
+        <div class="vhs-cassette-housing">
+          <div class="vhs-label-strip">
+            <span class="vhs-show-name" id="vhsShowName">◈ NO TAPE LOADED ◈</span>
+            <span class="vhs-ep-name" id="vhsEpName"></span>
+          </div>
+          <div class="vhs-window">
+            <div class="vhs-reel" id="reelL"></div>
+            <div class="vhs-tape-stretch"></div>
+            <div class="vhs-reel" id="reelR"></div>
+            <div class="vhs-time" id="vhsTime">--:--</div>
+          </div>
+        </div>
+        <div class="transport">
+          <div class="tbtn" id="tRew" title="Rewind 15s">
+            <span class="tbtn-icon">⏪</span>
+            <span class="tbtn-lbl">-15s</span>
+          </div>
+          <div class="tbtn" id="tPlay" title="Play / Pause">
+            <span class="tbtn-icon" id="tPlayIcon">▶</span>
+          </div>
+          <div class="tbtn" id="tFF" title="Fast forward 15s">
+            <span class="tbtn-icon">⏩</span>
+            <span class="tbtn-lbl">+15s</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls-panel">
+        <div class="knob-group">
+          <div class="knob-unit">
+            <div class="knob90 k-vol" id="kVol"></div>
+            <span class="kl90">VOL</span>
+            <div class="vol-ring"><div class="vol-ring-fill" id="volFill"></div></div>
+          </div>
+          <div class="knob-unit">
+            <div class="knob90 k-static" id="kStatic"></div>
+            <span class="kl90">STATIC</span>
+            <div class="sbar"><div class="sbar-fill" id="sbarFill"></div></div>
+          </div>
+          <div class="knob-unit">
+            <div class="knob90 k-bright" id="kBright"></div>
+            <span class="kl90">BRIGHT</span>
+          </div>
+        </div>
+        <div class="pwr-area">
+          <div class="pwr90" id="pwrBtn"></div>
+          <span class="pwr-lbl">POWER</span>
+        </div>
+        <div class="spkr90">
+          <div class="spkr-slot"></div><div class="spkr-slot"></div><div class="spkr-slot"></div>
+          <div class="spkr-slot"></div><div class="spkr-slot"></div><div class="spkr-slot"></div>
+          <div class="spkr-slot"></div><div class="spkr-slot"></div>
+        </div>
+      </div>
+    </div>
+    <div class="tv-base"></div>
+    <div class="src-note">◈ STREAMING VIA INTERNET ARCHIVE ◈</div>
+  </div>
+
+  <div>
+    <div class="guide-hdr">
+      <span class="guide-title">📋 PROGRAMME GUIDE</span>
+      <span class="guide-date" id="gDate"></span>
+    </div>
+    <div class="cat-tabs" id="catTabs"></div>
+    <div class="show-list" id="showList"></div>
+    <div class="np-bar" id="npBar">
+      <span class="np-live">▶ ON AIR</span>
+      <span class="np-name" id="npName">—</span>
+      <span class="np-ch" id="npCh">CH —</span>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modalDonate">
+  <div class="modal-box">
+    <h2>☕ BUY ME A COFFEE</h2>
+    <p>Enjoying The Tube? Help keep the archive running!</p>
+    <div class="modal-opts">
+      <a class="dl dl-bmc" id="bmcLink" href="https://buymeacoffee.com/oakowltv" target="_blank">☕ BUYMEACOFFEE.COM/OAKOWLTV</a>
+      <a class="dl dl-em" href="mailto:oakowlrecords@gmail.com" target="_blank">✉ oakowlrecords@gmail.com</a>
+    </div>
+    <button class="modal-close" id="modalClose">✕ CLOSE</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const shows=[
+  {id:1,ch:'02',time:'8:00 PM',name:'Viva La Bam',emoji:'🛹',cat:'mtv',year:'2003',badges:['PLAYLIST','MTV'],desc:'Bam Margera terrorises his parents across 5 wild seasons.',tickers:["Phil's Hell Day","Don Vito is NOT happy","Castle Bam under construction"],archiveId:'vivalabam',playlist:true},
+  {id:2,ch:'03',time:'8:30 PM',name:'Jackass',emoji:'💀',cat:'mtv',year:'2000',badges:['PLAYLIST','MTV','HOT'],desc:'Johnny Knoxville, Bam & Steve-O perform dangerously stupid stunts.',tickers:['WARNING: Do not attempt','Johnny Knoxville presents...'],archiveId:'jackasscompleteseries',playlist:true},
+  {id:3,ch:'04',time:'9:00 PM',name:'Wildboyz',emoji:'🐊',cat:'mtv',year:'2003',badges:['PLAYLIST','MTV'],desc:'Steve-O and Pontius get dangerously close with wild animals.',tickers:['Steve-O vs a komodo dragon','Do NOT try this at home'],archiveId:'Wildboyz',playlist:true},
+  {id:110,ch:'35',time:'9:30 PM',name:'90s MTV Block',emoji:'🎤',cat:'mtv',year:'1990s',badges:['PLAYLIST','MTV','VHS'],desc:'Authentic VHS recording of 90s MTV programming.',tickers:['Total Request Live','Original 90s commercials'],archiveId:'1-5-2025-mtv-block-part-2',playlist:true},
+  {id:105,ch:'30',time:'6:30 PM',name:'Beavis and Butt-Head',emoji:'🎸',cat:'animation',year:'1993',badges:['PLAYLIST','MTV'],desc:'Two couch potatoes who love metal and hate everything else.',tickers:['Uh huh huh huh','I am the Great Cornholio!'],archiveId:'beavis-and-butthead-complete',playlist:true},
+  {id:4,ch:'05',time:'7:00 PM',name:'Steptoe & Son',emoji:'🗑️',cat:'british',year:'1962',badges:['PLAYLIST','BBC'],desc:'Harold and Albert Steptoe — rag-and-bone men of Oil Drum Lane.',tickers:['Harold: "You dirty old man!"','Albert fakes another illness'],archiveId:'steptoe-1',playlist:true},
+  {id:5,ch:'06',time:'7:30 PM',name:'Survivors (1975)',emoji:'☣️',cat:'british',year:'1975',badges:['PLAYLIST','BBC'],desc:'A deadly plague wipes out 99% of humanity. Survivors rebuild.',tickers:["A virus escapes","Terry Nation's masterpiece"],archiveId:'survivors-1975',playlist:true},
+  {id:131,ch:'56',time:'9:00 PM',name:'Sherlock Holmes (Granada)',emoji:'🔍',cat:'classic',year:'1984',badges:['PLAYLIST','MASTERPIECE'],desc:'Jeremy Brett as the definitive Sherlock Holmes.',tickers:['The game is afoot','Elementary, my dear Watson'],archiveId:'the-adventures-of-sherlock-holmes-1984_202303',playlist:true},
+  {id:6,ch:'07',time:'9:00 PM',name:'Alfred Hitchcock Presents',emoji:'🎩',cat:'horror',year:'1955',badges:['PLAYLIST','COLOR'],desc:'The Master of Suspense. Restored & colorised.',tickers:['Good evening...','Tonight: a tale of suspense'],archiveId:'alfred-hitchcock-presents-s-1e-1-colorized-720p-hd',playlist:true},
+  {id:7,ch:'08',time:'9:30 PM',name:'Hitchcock Season 3',emoji:'🔪',cat:'horror',year:'1957',badges:['PLAYLIST','COLOR'],desc:'Season 3 of the Hitchcock anthology.',tickers:['Another evening of suspense...'],archiveId:'alfred-hitchcock-presents-s-3e-1-colorized-sd',playlist:true},
+  {id:8,ch:'09',time:'10:00 PM',name:'New Hitchcock (1985)',emoji:'👁️',cat:'horror',year:'1985',badges:['PLAYLIST','HORROR'],desc:'Rare 1985 revival. Very hard to find.',tickers:['Good evening once more...'],archiveId:'the-new-alfred-hitchcock-presents-complete',playlist:true},
+  {id:9,ch:'10',time:'10:30 PM',name:'The Twilight Zone',emoji:'🌀',cat:'horror',year:'1959',badges:['B&W','CLASSIC'],desc:'Rod Serling\'s legendary anthology.',tickers:['Submitted for your approval...'],archiveId:'Classic_SciFi_TV_--_The_Twilight_Zone_The_Outer_Limits'},
+  {id:10,ch:'11',time:'11:00 PM',name:'Perversions of Science',emoji:'🧬',cat:'horror',year:'1997',badges:['PLAYLIST','HBO'],desc:'HBO sci-fi horror anthology.',tickers:['From the creators of Tales from the Crypt'],archiveId:'perversions-of-science-complete',playlist:true},
+  {id:11,ch:'12',time:'8:00 PM',name:'The Outer Limits',emoji:'📡',cat:'scifi',year:'1963',badges:['B&W','CLASSIC'],desc:'Do not attempt to adjust your television.',tickers:['WE ARE CONTROLLING YOUR TELEVISION SET'],archiveId:'Classic_SciFi_TV_--_The_Twilight_Zone_The_Outer_Limits'},
+  {id:12,ch:'13',time:'8:30 PM',name:'Men in Black: The Series',emoji:'🕶️',cat:'scifi',year:'1997',badges:['PLAYLIST','ANIMATED'],desc:'Agents K & J protect Earth from alien threats.',tickers:['The universe is a dangerous place'],archiveId:'men-in-black-the-series-1997',playlist:true},
+  {id:14,ch:'15',time:'9:30 PM',name:'Final Space',emoji:'🚀',cat:'scifi',year:'2018',badges:['PLAYLIST','ANIMATED'],desc:'Gary Goodspeed and Mooncake on intergalactic adventures.',tickers:['Gary Goodspeed at your service'],archiveId:'final-space_202209',playlist:true},
+  {id:15,ch:'16',time:'7:00 PM',name:'Your Show of Shows',emoji:'🎭',cat:'classic',year:'1953',badges:['B&W','LIVE'],desc:'Sid Caesar and Imogene Coca. NBC live 1953.',tickers:['LIVE from New York — 1953'],archiveId:'YourShowOfShows03211953'},
+  {id:16,ch:'17',time:'7:30 PM',name:'Bonanza',emoji:'🤠',cat:'classic',year:'1959',badges:['COLOR','CLASSIC'],desc:'The Cartwright family and the Ponderosa Ranch.',tickers:["Pa and the boys ride again"],archiveId:'Bonanza_pd'},
+  {id:17,ch:'18',time:'8:00 PM',name:'Classic TV Vault',emoji:'🎞️',cat:'classic',year:'1950s',badges:['ARCHIVE','B&W'],desc:'Burns & Allen, Car 54, Life with Elizabeth.',tickers:['Burns and Allen: Kleebob'],archiveId:'classic-tv-shows-vol.1'},
+  {id:18,ch:'19',time:'8:30 PM',name:'It Takes a Thief',emoji:'🕵️',cat:'classic',year:'1968',badges:['PLAYLIST','60s'],desc:'A reformed master thief becomes a government secret agent.',tickers:['Stylish 60s spy TV'],archiveId:'it-takes-a-thief-complete-series-1968',playlist:true},
+  {id:20,ch:'21',time:'6:30 PM',name:'Drawn Together',emoji:'🏠',cat:'animation',year:'2004',badges:['PLAYLIST','ADULT','HOT'],desc:'Eight cartoon characters in an animated reality TV parody.',tickers:['The first animated reality show'],archiveId:'DrawnTogetherComplete',playlist:true},
+  {id:107,ch:'32',time:'4:00 PM',name:'Popeye Collection',emoji:'💪',cat:'animation',year:'1930s',badges:['PLAYLIST','CLASSIC'],desc:'Classic Popeye cartoons from the golden age.',tickers:["I eats me spinach!"],archiveId:'popeye-collection',playlist:true},
+  {id:108,ch:'33',time:'5:00 PM',name:'Mickey & Donald',emoji:'🐭',cat:'animation',year:'1930s',badges:['PLAYLIST','CLASSIC'],desc:'Classic Disney cartoons — Mickey, Donald, Goofy and Pluto.',tickers:['Mickey brings the house down'],archiveId:'69as_20210705',playlist:true},
+  {id:109,ch:'34',time:'3:00 PM',name:'90s Nickelodeon VHS',emoji:'📼',cat:'animation',year:'1990s',badges:['PLAYLIST','NICK','VHS'],desc:'Authentic VHS recording of 90s Nickelodeon cartoons.',tickers:['Nicktoons block','Original commercials'],archiveId:'1-3-2025-90s-nickelodeon-tape-2',playlist:true},
+  {id:121,ch:'46',time:'6:00 PM',name:'90s Moomin',emoji:'🦛',cat:'animation',year:'1992',badges:['PLAYLIST','FAMILY'],desc:'Adventures in Moominvalley. English-dubbed 90s episodes.',tickers:['Snorkmaiden is worried','Little My causes mischief'],archiveId:'Moomins-39-78',playlist:true},
+  {id:122,ch:'47',time:'4:00 PM',name:'Arthur — Season 1',emoji:'🐻',cat:'animation',year:'1996',badges:['PLAYLIST','PBS'],desc:'The beloved PBS series about Arthur Read.',tickers:['Having fun isnt hard','A-A-R-D-V-A-R-K'],archiveId:'arthurs01iso',playlist:true},
+  {id:22,ch:'23',time:'9:00 PM',name:'Survivors — BBC',emoji:'🏚️',cat:'drama',year:'1975',badges:['BBC','DRAMA'],desc:'After a global pandemic, survivors rebuild society.',tickers:["Post-apocalyptic Britain"],archiveId:'survivors-1975',playlist:true},
+  {id:23,ch:'24',time:'8:00 PM',name:'Bonanza Western',emoji:'⭐',cat:'drama',year:'1959',badges:['COLOR','WESTERN'],desc:'Classic American Western drama.',tickers:["Lorne Greene as Pa Cartwright"],archiveId:'Bonanza_pd'},
+    { id: 24, ch: '25', time: '10:00 PM', name: 'Final Space Drama', emoji: '🌌', cat: 'drama', year: '2018', badges: ['ANIMATED', 'EMOTIONAL'], desc: 'A space opera about friendship and the end of the universe.', tickers: ['The most emotional animated series ever'], archiveId: 'final-space_202209', playlist: true },
+    { id: 132, ch: '57', time: '11:00 PM', name: 'Jerry Springer (90s Chaos)', emoji: '🎙️', cat: 'classic', year: '1991', badges: ['PLAYLIST', 'TALK SHOW', 'GUILTY PLEASURE'], desc: 'The king of 90s trash TV. Secret crushes, shocking reveals, chair-throwing, and the most infamous guilty pleasure in television history. "Take care of yourselves, and each other."', tickers: ['Jerry! Jerry! Jerry!', 'Final thought time', 'You are the father!', 'Chair throw in 3...2...'], archiveId: 'the-jerry-springer-show-various-episodes-pt-2', episodeName: 'Various Episodes (90s-2000s)', playlist: true },
+];
+
+const cats=[
+  {key:'all',label:'All Channels'},{key:'mtv',label:'📺 MTV'},{key:'british',label:'🇬🇧 British'},
+  {key:'horror',label:'👁 Horror'},{key:'scifi',label:'🚀 Sci-Fi'},{key:'classic',label:'🎞 Classic'},
+  {key:'animation',label:'🎨 Animation'},{key:'drama',label:'🎭 Drama'},
+];
+
+let active=null,activeEp=0,tvOn=false,activeCat='all';
+let noiseTimer=null,vhsTimer=null,timeTimer=null;
+let staticIntensity=0.4,brightnessVal=1.0,volumeVal=0.8;
+let kAngle={kVol:0,kStatic:0,kBright:0};
+let audioCtx=null;
+const fileCache={};
+const $=id=>document.getElementById(id);
+const vid=$('vid');
+
+/* ════ AUDIO ════ */
+const getAC=()=>{if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;};
+function makeNoise(dur,f0,f1,q,vol){try{const c=getAC(),bl=Math.floor(c.sampleRate*dur),b=c.createBuffer(1,bl,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<bl;i++)d[i]=Math.random()*2-1;const s=c.createBufferSource();s.buffer=b;const flt=c.createBiquadFilter();flt.type='bandpass';flt.frequency.setValueAtTime(f0,c.currentTime);if(f1)flt.frequency.exponentialRampToValueAtTime(f1,c.currentTime+dur*0.85);flt.Q.value=q||1;const g=c.createGain();g.gain.setValueAtTime(vol||0.25,c.currentTime);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+dur);s.connect(flt);flt.connect(g);g.connect(c.destination);s.start();s.stop(c.currentTime+dur);}catch(e){}}
+function makeTone(f0,f1,dur,type,vol){try{const c=getAC(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type=type||'sine';o.frequency.setValueAtTime(f0,c.currentTime);if(f1)o.frequency.exponentialRampToValueAtTime(f1,c.currentTime+dur);g.gain.setValueAtTime(vol||0.15,c.currentTime);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+dur);o.start();o.stop(c.currentTime+dur);}catch(e){}}
+const sndClick=()=>{makeTone(160,55,0.09,'sine',0.18);makeNoise(0.015,3000,null,0.5,0.09);};
+const sndKnob=()=>{makeTone(220,90,0.05,'sine',0.1);};
+const sndPwrOn=()=>{makeNoise(1.4,2000,180,0.8,0.35);};
+const sndPwrOff=()=>{makeNoise(0.5,400,null,1.5,0.28);makeTone(800,40,0.4,'sine',0.18);};
+const sndTune=()=>{makeNoise(0.9,4000,400,1.2,0.28*(staticIntensity+0.35));};
+const sndSeek=(ff)=>{makeTone(ff?700:350,ff?180:90,0.1,'sine',0.07);makeNoise(0.1,ff?2500:800,null,1.5,0.05);};
+const sndVHS=(ff)=>{try{const c=getAC(),bl=Math.floor(c.sampleRate*1.0),b=c.createBuffer(1,bl,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<bl;i++)d[i]=(Math.random()*2-1)*0.9;const s=c.createBufferSource();s.buffer=b;s.playbackRate.value=ff?2.1:0.45;const flt=c.createBiquadFilter();flt.type='bandpass';flt.frequency.value=ff?2800:700;flt.Q.value=1.4;const g=c.createGain();g.gain.setValueAtTime(0.22,c.currentTime);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+1.0);s.connect(flt);flt.connect(g);g.connect(c.destination);s.start();s.stop(c.currentTime+1.0);makeTone(ff?140:50,ff?50:18,0.9,'sawtooth',0.035);}catch(e){}};
+
+/* ════ CANVAS ════ */
+function drawNoise(cid,intensity){const c=$(cid);if(!c)return;c.width=c.offsetWidth||300;c.height=c.offsetHeight||225;const ctx=c.getContext('2d'),img=ctx.createImageData(c.width,c.height);const iv=(intensity||0.5)*255;for(let i=0;i<img.data.length;i+=4){const v=Math.random()*iv;img.data[i]=v;img.data[i+1]=v;img.data[i+2]=v;img.data[i+3]=255;}ctx.putImageData(img,0,0);}
+
+/* ════ FILE FILTER — the key fix ════
+   Priority order:
+   1. .ia.mp4  — archive's own h264 fast-start derivative (best for streaming)
+   2. .mp4     — standard mp4
+   3. .ogv     — only if nothing better exists (Firefox fallback)
+   Reject: .avi .mkv .mpeg .mpeg2 .mpeg4 .ogv when mp4 exists .wmv .flv .iso
+   Deduplicate: if same base name exists as both .ia.mp4 and .mp4, keep only .ia.mp4
+*/
+function filterFiles(rawFiles){
+  // Build map: baseName → best file
+  const map=new Map();
+  // Pass 1: collect all video files by base name
+  rawFiles.forEach(f=>{
+    const name=f.name||'';
+    const nl=name.toLowerCase();
+    // Skip non-video, metadata, subtitles, thumbnails, samples
+    if(!nl.match(/\.(ia\.mp4|mp4|ogv)$/)) return;
+    if(nl.includes('_thumb')||nl.includes('sample')||nl.includes('trailer')||nl.includes('_meta')||nl.includes('_files')) return;
+    // Get base name without extension
+    let base;
+    if(nl.endsWith('.ia.mp4')) base=name.slice(0,-7);
+    else if(nl.endsWith('.mp4'))    base=name.slice(0,-4);
+    else if(nl.endsWith('.ogv'))    base=name.slice(0,-4);
+    else return;
+    // Score: ia.mp4=3, mp4=2, ogv=1
+    const score=nl.endsWith('.ia.mp4')?3:nl.endsWith('.mp4')?2:1;
+    const existing=map.get(base);
+    if(!existing||score>existing.score){
+      map.set(base,{name:f.name,score,
+        url:`https://archive.org/download/${f._archiveId}/${encodeURIComponent(f.name)}`});
     }
-
-    // --- Initialization and Setup ---
-    setupInitialState() {
-        // Initial state setup logic
-        AppState.currentSegmentId = 1;
-        this.updateDisplay(); // Initial render
-    }
-
-    /**
-     * @private
-     * Simulates the passage of time and triggers the next state.
-     * Must be called whenever the state should progress.
-     */
-    advanceTime(deltaTime) {
-        // Increment time only if playing
-        if (!AppState.isPlaying) return;
-
-        try {
-            AppState.currentTime += deltaTime;
-            
-            const currentSegment = AppState.contentData.find(c => c.id === AppState.currentSegmentId);
-
-            // Check if the segment time has elapsed
-            if (AppState.currentTime >= currentSegment.duration) {
-                this.transitionToNextSegment();
-            } else {
-                // If not time to transition, just update the clock
-                this.updateDisplay();
-            }
-        } catch (error) {
-            console.error("Time advancement error:", error);
-            this.handleError("Failed to advance time.");
-        }
-    }
-
-    // --- Core Transition Logic ---
-    
-    /**
-     * Moves the state machine to the next content segment.
-     * This is the core method for scheduling changes.
-     */
-    transitionToNextSegment() {
-        const currentSegment = AppState.contentData.find(c => c.id === AppState.currentSegmentId);
-        
-        if (!currentSegment || !currentSegment.nextContentId) {
-            console.warn("End of broadcast reached.");
-            AppState.isPlaying = false;
-            AppState.currentTime = 0;
-            this.updateDisplay();
-            return;
-        }
-
-        // 1. Update State: Set the new segment ID
-        AppState.currentSegmentId = currentSegment.nextContentId;
-        
-        // 2. Find the new segment data
-        const nextSegment = AppState.contentData.find(c => c.id === AppState.currentSegmentId);
-
-        if (nextSegment) {
-            // 3. Reset Time: Start the new segment from zero
-            AppState.currentTime = 0;
-            
-            // 4. Update and Render
-            this.updateDisplay();
-        } else {
-             // Handle case where next ID points to non-existent content
-            this.handleError(`Critical content data missing for ID ${AppState.currentSegmentId}`);
-        }
-    }
-
-    // --- Public User Actions (Event Handlers) ---
-
-    /** Handles a user pressing 'Next' button. */
-    handleNextClick() {
-        if (AppState.isPlaying) {
-            // If running, clicking next might be redundant, but we allow it.
-            this.transitionToNextSegment();
-        } else {
-            // If stopped, manually force the transition
-            this.transitionToNextSegment();
-        }
-    }
-
-    /** Handles a user pressing 'Previous' button (e.g., Skip Ad). */
-    handlePrevClick() {
-        // A complex feature. For simplicity, we just force a skip backward.
-        if (AppState.contentData.find(c => c.id === AppState.currentSegmentId)?.type === 'AD') {
-            this.transitionToNextSegment(); 
-        } else {
-             this.handleError("Cannot skip backward from the current segment type.");
-        }
-    }
-
-    // --- Simulation Loop ---
-
-    /** Starts the time-based simulation loop. */
-    startSimulationLoop() {
-        if (this.simulationInterval) {
-            clearInterval(this.simulationInterval); // Ensure only one running
-        }
-        
-        this.simulationInterval = setInterval(() => {
-            if (AppState.isPlaying) {
-                this.advanceTime(1); // Advance by 1 second
-            }
-        }, 1000); // Update every 1 second
-    }
-
-    // --- Robustness and Error Handling ---
-
-    /** Global handler for catastrophic failure points. */
-    handleError(message, event = null) {
-        console.error("--- APPLICATION ERROR ---", message, event);
-        // Display a generic error message on the TV screen
-        document.getElementById('adContent').innerHTML = 
-            `<div style="color: red; padding: 20px;">📡 Signal Lost: ${message}</div>`;
-        AppState.isPlaying = false;
-    }
-
-    // --- Event Binding ---
-
-    bindEventListeners() {
-        // Using delegated events or direct assignment is best practice
-        document.getElementById('nextBtn').addEventListener('click', () => this.handleNextClick());
-        document.getElementById('prevBtn').addEventListener('click', () => this.handlePrevClick());
-    }
+  });
+  // Sort by base name numerically/alphabetically
+  return [...map.values()]
+    .sort((a,b)=>a.name.localeCompare(b.name,undefined,{numeric:true}))
+    .map(f=>({
+      name:f.name.replace(/\.ia\.mp4$|\.mp4$|\.ogv$/i,'').replace(/[_\-]+/g,' ').trim(),
+      url:f.url
+    }));
 }
 
-/**
- * ====================================================================
- * 3. THE VIEW (DOM Manipulator): Reads state and renders the display.
- * ====================================================================
- */
-
-/**
- * This function is purely responsible for reading the AppState and updating the DOM.
- * It should contain NO business logic.
- */
-function updateDisplay() {
-    const state = AppState;
-    const segment = state.contentData.find(c => c.id === state.currentSegmentId);
-
-    if (!segment) {
-        // Should have been caught by transitionToNextSegment, but good fail-safe
-        return; 
-    }
-
-    // --- Update Basic Info Bars ---
-    document.getElementById('channelDisplay').textContent = `Ch ${state.currentChannel}`;
-    document.getElementById('currentTimeDisplay').textContent = `${Math.floor(state.currentTime)}s/${segment.duration}s`;
-    
-    // --- Update Main Program Info ---
-    document.getElementById('programName').textContent = segment.programName || 'N/A';
-    document.getElementById('programTitle').textContent = segment.title;
-
-    // --- Update Main Content Area (Ad or Info) ---
-    let adHtml = '';
-    if (segment.type === 'AD' && segment.adContent) {
-        adHtml = `<h1>⚠️ ADVERTISEMENT! ⚠️</h1><p>${segment.adContent}</p>`;
-    } else if (segment.type === 'INFO') {
-        adHtml = `<h2>Welcome Viewer!</h2><p>This is an introductory message for ${segment.programName}.</p>`;
-    } else {
-        adHtml = `<h3>Live Broadcast Feed</h3><p>${segment.adContent || 'Program running smoothly...'}</p>`;
-    }
-    
-    document.getElementById('adContent').innerHTML = adHtml;
-
-    // Accessibility improvement: Announce the state change
-    const statusAnnouncement = document.getElementById('statusAnnouncement');
-    if (statusAnnouncement) {
-        statusAnnouncement.setAttribute('aria-live', 'polite');
-        statusAnnouncement.textContent = `Channel ${state.currentChannel}. Showing ${segment.type}: ${segment.title}. Time remaining: ${segment.duration - Math.floor(state.currentTime)} seconds.`;
-    }
+/* ════ FETCH FILE LIST ════ */
+async function fetchFiles(archiveId){
+  if(fileCache[archiveId]) return fileCache[archiveId];
+  try{
+    const r=await fetch(`https://archive.org/metadata/${archiveId}/files`);
+    const j=await r.json();
+    const raw=(j.result||[]).map(f=>({...f,_archiveId:archiveId}));
+    const videos=filterFiles(raw);
+    fileCache[archiveId]=videos;
+    return videos;
+  }catch(e){console.warn('Archive fetch failed',archiveId,e);return[];}
 }
 
-/**
- * ====================================================================
- * 4. INITIALIZATION
- * ====================================================================
- * (This code runs when the DOM is loaded)
- */
-document.addEventListener('DOMContentLoaded', () => {
-    // Instantiate the manager, which sets up the loop and initial state.
-    window.tvManager = new TVManager();
+/* ════ SCREEN STATE ════ */
+function screen(state){
+  $('lIdle').style.display=state==='idle'?'flex':'none';
+  $('lVideo').classList[state==='video'?'add':'remove']('show');
+  $('lVhs').classList[state==='vhs'?'add':'remove']('show');
+  $('lStatic').classList[state==='static'?'add':'remove']('show');
+  $('lSplash').classList[state==='splash'?'add':'remove']('show');
+  $('lOff').classList[state==='off'?'add':'remove']('show');
+  // Show fullscreen btn only when video is playing
+  $('fsBtn').classList.toggle('show',state==='video');
+}
+function showOff(cb){$('lOff').innerHTML='<div class="off-line"></div>';screen('off');setTimeout(()=>{$('lOff').innerHTML='';screen('idle');if(cb)cb();},550);}
+function showStaticAnim(label,cb){$('staticLbl').textContent=label||'TUNING...';screen('static');sndTune();let f=0,frames=Math.max(8,8+Math.round(staticIntensity*18));noiseTimer=setInterval(()=>{drawNoise('noiseCanvas',0.3+staticIntensity*0.7);if(++f>=frames){clearInterval(noiseTimer);if(cb)cb();}},52);}
+function showVHSAnim(isFF,cb){$('vhsLbl').textContent=isFF?'⏩ FF':'⏮ REW';screen('vhs');sndVHS(isFF);let f=0;vhsTimer=setInterval(()=>{drawNoise('vhsCanvas',0.5+Math.random()*0.4);if(++f>=20){clearInterval(vhsTimer);if(cb)cb();}},52);}
+
+/* ════ VHS DECK VISUALS ════ */
+function startReels(){
+  $('reelL').classList.add('spinning');$('reelR').classList.add('spinning');
+  clearInterval(timeTimer);
+  timeTimer=setInterval(()=>{
+    if(vid.duration&&isFinite(vid.duration)){
+      const t=vid.currentTime,d=vid.duration;
+      const mm=Math.floor(t/60),ss=Math.floor(t%60);
+      $('vhsTime').textContent=`${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
+    }
+  },1000);
+}
+function stopReels(){$('reelL').classList.remove('spinning');$('reelR').classList.remove('spinning');clearInterval(timeTimer);}
+
+/* ════ SIDEBAR ════ */
+function buildSidebar(files,curIdx,show){
+  $('epShowName').textContent=show.name.toUpperCase();
+  const list=$('epList');list.innerHTML='';
+  if(!files||!files.length){list.innerHTML='<div class="ep-empty">No streamable files found</div>';return;}
+  files.forEach((f,i)=>{
+    const el=document.createElement('div');
+    el.className='ep-item'+(i===curIdx?' ep-active':'');
+    el.innerHTML=`<span class="ep-num">${String(i+1).padStart(2,'0')}.</span><span>${f.name||'Episode '+(i+1)}</span>`;
+    el.addEventListener('click',()=>{
+      if(!tvOn)return;sndClick();
+      const prev=activeEp;clearInterval(vhsTimer);vid.pause();stopReels();
+      showVHSAnim(i>prev,()=>{activeEp=i;playFile(show,files,i);});
+    });
+    list.appendChild(el);
+  });
+  const ae=list.querySelector('.ep-active');
+  if(ae)setTimeout(()=>ae.scrollIntoView({block:'nearest',behavior:'smooth'}),80);
+}
+function markEpActive(idx){
+  document.querySelectorAll('.ep-item').forEach((el,i)=>el.classList.toggle('ep-active',i===idx));
+  const el=document.querySelectorAll('.ep-item')[idx];
+  if(el)el.scrollIntoView({block:'nearest',behavior:'smooth'});
+}
+
+/* ════ PLAY FILE ════ */
+function playFile(show,files,idx){
+  if(!files||!files[idx])return;
+  activeEp=idx;
+  const f=files[idx];
+  vid.src=f.url;
+  vid.volume=volumeVal;
+  vid.load();
+  vid.play().catch(()=>{});
+  screen('video');
+  $('lTicker').classList.add('show');
+  $('tPlayIcon').textContent='⏸';
+  $('vhsShowName').textContent=show.name.toUpperCase();
+  $('vhsEpName').textContent=f.name.length>18?f.name.slice(0,16)+'…':f.name;
+  $('spEp').textContent=f.name;
+  $('vhsTime').textContent='00:00';
+  startReels();
+  markEpActive(idx);
+  vid.onended=()=>{
+    stopReels();
+    if(files[idx+1])showVHSAnim(true,()=>playFile(show,files,idx+1));
+  };
+}
+
+/* ════ TUNE SHOW ════ */
+async function tuneShow(showId,randomEp){
+  if(!tvOn){powerOn(()=>setTimeout(()=>tuneShow(showId,randomEp),600));return;}
+  const s=shows.find(x=>x.id===showId);if(!s)return;
+  clearInterval(noiseTimer);clearInterval(vhsTimer);
+  vid.pause();vid.src='';stopReels();$('tPlayIcon').textContent='▶';
+  $('lTicker').classList.remove('show');$('lVideo').classList.remove('show');
+  active=s;activeEp=0;
+  $('vhsShowName').textContent=s.name.toUpperCase();
+  $('vhsEpName').textContent='';$('vhsTime').textContent='--:--';
+  $('chDisp').textContent=`CH ${s.ch}`;
+  $('npName').textContent=s.name;$('npCh').textContent=`CH ${s.ch}`;$('npBar').classList.add('show');
+  const t=s.tickers.join('   ◈   ');const tk=$('tickerTxt');tk.textContent=`◈  ${t}  ◈  ${t}  ◈`;tk.style.animation='none';void tk.offsetHeight;tk.style.animation='';
+  $('spEmoji').textContent=s.emoji;$('spTitle').textContent=s.name;$('spYear').textContent=s.year;
+  $('spEp').textContent='Loading...';$('spLoading').style.display='block';
+  $('epShowName').textContent=s.name.toUpperCase();$('epList').innerHTML='<div class="ep-loading">◈ FETCHING EPISODES ◈</div>';
+  showStaticAnim('TUNING...',async()=>{
+    screen('splash');$('lTicker').classList.add('show');renderList();
+    const files=await fetchFiles(s.archiveId);
+    let ep=0;
+    if(randomEp&&files.length>1)ep=1+Math.floor(Math.random()*(Math.min(files.length-1,8)));
+    activeEp=ep;
+    $('spEp').textContent=files[ep]?files[ep].name:s.name;$('spLoading').style.display='none';
+    buildSidebar(files,ep,s);
+    const onSplash=()=>{$('lSplash').removeEventListener('click',onSplash);playFile(s,files,ep);};
+    $('lSplash').addEventListener('click',onSplash);
+  });
+}
+
+/* ════ TRANSPORT ════ */
+$('tPlay').addEventListener('click',()=>{
+  sndClick();$('tPlay').classList.add('lit');setTimeout(()=>$('tPlay').classList.remove('lit'),280);
+  if(!active){showToast('◈ SELECT A SHOW FIRST ◈');return;}
+  if($('lSplash').classList.contains('show')){
+    const files=fileCache[active.archiveId];
+    if(files){$('lSplash').classList.remove('show');playFile(active,files,activeEp);}
+    return;
+  }
+  if(vid.paused){vid.play().catch(()=>{});$('tPlayIcon').textContent='⏸';startReels();}
+  else{vid.pause();$('tPlayIcon').textContent='▶';stopReels();}
 });
+
+$('tFF').addEventListener('click',()=>{
+  sndClick();$('tFF').classList.add('lit');setTimeout(()=>$('tFF').classList.remove('lit'),280);
+  if(!active||!$('lVideo').classList.contains('show')){showToast('◈ NOTHING PLAYING ◈');return;}
+  if(vid.duration&&isFinite(vid.duration)){
+    vid.currentTime=Math.min(vid.currentTime+15,vid.duration-0.5);
+    sndSeek(true);
+    showToast(`◈ +15s ◈`);
+  }else{showToast('◈ BUFFERING — TRY AGAIN ◈');}
+});
+
+$('tRew').addEventListener('click',()=>{
+  sndClick();$('tRew').classList.add('lit');setTimeout(()=>$('tRew').classList.remove('lit'),280);
+  if(!active||!$('lVideo').classList.contains('show')){showToast('◈ NOTHING PLAYING ◈');return;}
+  vid.currentTime=Math.max(0,vid.currentTime-15);
+  sndSeek(false);
+  showToast(`◈ -15s ◈`);
+});
+
+/* ════ FULLSCREEN ════ */
+$('fsBtn').addEventListener('click',()=>{
+  sndClick();
+  const wrap=$('screenWrap');
+  if(!document.fullscreenElement){
+    (wrap.requestFullscreen||wrap.webkitRequestFullscreen||wrap.mozRequestFullScreen).call(wrap).catch(()=>{});
+    $('fsBtn').textContent='✕';
+  }else{
+    (document.exitFullscreen||document.webkitExitFullscreen||document.mozCancelFullScreen).call(document).catch(()=>{});
+    $('fsBtn').textContent='⛶';
+  }
+});
+document.addEventListener('fullscreenchange',()=>{
+  if(!document.fullscreenElement)$('fsBtn').textContent='⛶';
+});
+
+/* ════ POWER ════ */
+function powerOn(cb){
+  tvOn=true;$('pwrBtn').classList.add('on');sndPwrOn();
+  const pl=shows.filter(s=>s.playlist);
+  const pick=pl[Math.floor(Math.random()*pl.length)];
+  setTimeout(()=>{if(pick)tuneShow(pick.id,true);if(cb)cb();},700);
+}
+function powerOff(){
+  sndPwrOff();tvOn=false;active=null;activeEp=0;
+  $('pwrBtn').classList.remove('on');
+  clearInterval(noiseTimer);clearInterval(vhsTimer);
+  vid.pause();vid.src='';stopReels();$('tPlayIcon').textContent='▶';
+  $('lTicker').classList.remove('show');$('npBar').classList.remove('show');
+  $('vhsShowName').textContent='◈ NO TAPE LOADED ◈';$('vhsEpName').textContent='';$('vhsTime').textContent='--:--';
+  $('chDisp').textContent='— —';
+  $('epList').innerHTML='<div class="ep-empty">Power on &amp; select<br>a show to see<br>episodes here</div>';
+  $('epShowName').textContent='— SELECT A SHOW —';
+  showOff(()=>renderList());
+}
+$('pwrBtn').addEventListener('click',()=>{sndClick();tvOn?powerOff():powerOn();});
+
+/* ════ KNOBS ════ */
+let vClicks=7;
+$('kVol').addEventListener('click',()=>{
+  sndKnob();vClicks=(vClicks+1)%11;volumeVal=vClicks/10;vid.volume=volumeVal;
+  kAngle.kVol+=36;$('kVol').style.transform=`rotate(${kAngle.kVol}deg)`;
+  $('volFill').style.width=`${vClicks*10}%`;showToast(`◈ VOLUME: ${vClicks*10}% ◈`);
+});
+let sClicks=0;
+$('kStatic').addEventListener('click',()=>{
+  sndKnob();sClicks=(sClicks+1)%8;staticIntensity=sClicks/7;
+  kAngle.kStatic+=45;$('kStatic').style.transform=`rotate(${kAngle.kStatic}deg)`;
+  $('sbarFill').style.width=`${Math.round(staticIntensity*100)}%`;
+  $('lScan').style.opacity=0.4+staticIntensity*0.6;$('lPhos').style.opacity=staticIntensity;
+});
+let bClicks=4;
+$('kBright').addEventListener('click',()=>{
+  sndKnob();bClicks=(bClicks+1)%8;brightnessVal=0.4+bClicks*(0.85/7);
+  kAngle.kBright+=45;$('kBright').style.transform=`rotate(${kAngle.kBright}deg)`;
+  $('screenWrap').style.filter=`brightness(${brightnessVal})`;
+});
+
+/* ════ HEADER ════ */
+function showToast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400);}
+$('btnShare').addEventListener('click',()=>{sndClick();if(navigator.share)navigator.share({title:'The Tube',text:'Classic TV on a CRT!',url:location.href}).catch(()=>{});else if(navigator.clipboard)navigator.clipboard.writeText(location.href).then(()=>showToast('◈ LINK COPIED ◈'));else showToast('◈ THE TUBE — RETRO TV ARCHIVE ◈');});
+$('btnDonate').addEventListener('click',()=>{sndClick();$('modalDonate').classList.add('show');});
+$('modalClose').addEventListener('click',()=>{sndClick();$('modalDonate').classList.remove('show');});
+$('modalDonate').addEventListener('click',e=>{if(e.target===$('modalDonate'))$('modalDonate').classList.remove('show');});
+$('bmcLink').addEventListener('click',e=>{e.preventDefault();sndClick();showToast('◈ THANK YOU! ◈');setTimeout(()=>window.open('https://buymeacoffee.com/oakowltv','_blank'),300);$('modalDonate').classList.remove('show');});
+$('btnSurprise').addEventListener('click',()=>{sndClick();const pick=shows[Math.floor(Math.random()*shows.length)];showToast(`◈ SURPRISE: ${pick.name.toUpperCase()} ◈`);setTimeout(()=>tuneShow(pick.id,true),500);});
+
+/* ════ GUIDE ════ */
+function buildCatTabs(){const el=$('catTabs');cats.forEach(c=>{const b=document.createElement('button');b.className='cat-btn'+(c.key==='all'?' active':'');b.textContent=c.label;b.addEventListener('click',()=>{sndClick();document.querySelectorAll('.cat-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');activeCat=c.key;renderList();});el.appendChild(b);});}
+function renderList(){
+  const el=$('showList');el.innerHTML='';
+  const filtered=activeCat==='all'?shows:shows.filter(s=>s.cat===activeCat);
+  filtered.forEach(s=>{
+    const card=document.createElement('div');card.className='show-card'+(active?.id===s.id?' active':'');
+    const bhtml=s.badges.map(b=>{let c='badge';if(b==='PLAYLIST')c+=' playlist';else if(b==='HOT')c+=' hot';else if(b==='LIVE')c+=' live';return`<span class="${c}">${b}</span>`;}).join('');
+    card.innerHTML=`<span class="s-time">${s.time}</span><span class="s-emoji">${s.emoji}</span><div class="s-info"><div class="s-name">${s.name} <span class="s-yr">(${s.year})</span></div><div class="s-desc">${s.desc}</div><div class="s-badges">${bhtml}</div></div><div class="play-dot"></div>`;
+    card.addEventListener('click',()=>{sndClick();tuneShow(s.id,false);});
+    el.appendChild(card);
+  });
+}
+const days=['SUN','MON','TUE','WED','THU','FRI','SAT'],months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+const nd=new Date();$('gDate').textContent=`${days[nd.getDay()]} ${nd.getDate()} ${months[nd.getMonth()]}`;
+buildCatTabs();renderList();screen('idle');
+</script>
+</body>
+</html>
