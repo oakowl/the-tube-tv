@@ -585,57 +585,142 @@ function markEpActive(idx){
   if(el)el.scrollIntoView({block:'nearest',behavior:'smooth'});
 }
 
-/* ════ PLAY FILE ════ */
-function playFile(show,files,idx){
-  if(!files||!files[idx])return;
-  activeEp=idx;
-  const f=files[idx];
-  vid.src=f.url;
-  vid.volume=volumeVal;
-  vid.load();
-  vid.play().catch(()=>{});
-  screen('video');
-  $('lTicker').classList.add('show');
-  $('tPlayIcon').textContent='⏸';
-  $('vhsShowName').textContent=show.name.toUpperCase();
-  $('vhsEpName').textContent=f.name.length>18?f.name.slice(0,16)+'…':f.name;
-  $('spEp').textContent=f.name;
-  $('vhsTime').textContent='00:00';
-  startReels();
-  markEpActive(idx);
-  vid.onended=()=>{
-    stopReels();
-    if(files[idx+1])showVHSAnim(true,()=>playFile(show,files,idx+1));
-  };
-}
+    /* ════ PLAY FILE ════ */
+    function playFile(show, files, idx) {
+        if (!files || !files[idx]) return;
+        activeEp = idx;
+        const f = files[idx];
+        vid.src = f.url;
+        vid.volume = volumeVal;
+        vid.load();
+        vid.play().catch(() => { });
+        screen('video');
+        $('lTicker').classList.add('show');
+        $('tPlayIcon').textContent = '⏸';
+        $('vhsShowName').textContent = show.name.toUpperCase();
+        $('vhsEpName').textContent = f.name.length > 18 ? f.name.slice(0, 16) + '…' : f.name;
+        $('spEp').textContent = f.name;
+        $('vhsTime').textContent = '00:00';
+        startReels();
+        markEpActive(idx);
+
+        vid.onended = () => {
+            stopReels();
+
+            // Save progress to localStorage
+            const storageKey = `thetube_episode_${show.id}`;
+            let nextEp = idx + 1;
+
+            if (nextEp >= files.length) {
+                // Reached the end → loop back to beginning
+                nextEp = 0;
+            }
+
+            localStorage.setItem(storageKey, nextEp);
+
+            // Auto-play next episode
+            if (files[nextEp]) {
+                showVHSAnim(true, () => {
+                    activeEp = nextEp;
+                    playFile(show, files, nextEp);
+                });
+            }
+        };
+    }
 
 /* ════ TUNE SHOW ════ */
-async function tuneShow(showId,randomEp){
-  if(!tvOn){powerOn(()=>setTimeout(()=>tuneShow(showId,randomEp),600));return;}
-  const s=shows.find(x=>x.id===showId);if(!s)return;
-  clearInterval(noiseTimer);clearInterval(vhsTimer);
-  vid.pause();vid.src='';stopReels();$('tPlayIcon').textContent='▶';
-  $('lTicker').classList.remove('show');$('lVideo').classList.remove('show');
-  active=s;activeEp=0;
-  $('vhsShowName').textContent=s.name.toUpperCase();
-  $('vhsEpName').textContent='';$('vhsTime').textContent='--:--';
-  $('chDisp').textContent=`CH ${s.ch}`;
-  $('npName').textContent=s.name;$('npCh').textContent=`CH ${s.ch}`;$('npBar').classList.add('show');
-  const t=s.tickers.join('   ◈   ');const tk=$('tickerTxt');tk.textContent=`◈  ${t}  ◈  ${t}  ◈`;tk.style.animation='none';void tk.offsetHeight;tk.style.animation='';
-  $('spEmoji').textContent=s.emoji;$('spTitle').textContent=s.name;$('spYear').textContent=s.year;
-  $('spEp').textContent='Loading...';$('spLoading').style.display='block';
-  $('epShowName').textContent=s.name.toUpperCase();$('epList').innerHTML='<div class="ep-loading">◈ FETCHING EPISODES ◈</div>';
-  showStaticAnim('TUNING...',async()=>{
-    screen('splash');$('lTicker').classList.add('show');renderList();
-    const files=await fetchFiles(s.archiveId);
-    let ep=0;
-    if(randomEp&&files.length>1)ep=1+Math.floor(Math.random()*(Math.min(files.length-1,8)));
-    activeEp=ep;
-    $('spEp').textContent=files[ep]?files[ep].name:s.name;$('spLoading').style.display='none';
-    buildSidebar(files,ep,s);
-    const onSplash=()=>{$('lSplash').removeEventListener('click',onSplash);playFile(s,files,ep);};
-    $('lSplash').addEventListener('click',onSplash);
-  });
+async function tuneShow(showId, randomEp) {
+    if (!tvOn) { powerOn(() => setTimeout(() => tuneShow(showId, randomEp), 600)); return; }
+    const s = shows.find(x => x.id === showId);
+    if (!s) return;
+    
+    const files = await fetchFiles(s.archiveId);
+    console.log(`📁 ${s.name} has ${files.length} episodes`);
+    console.log(`🔑 Storage key: thetube_episode_${showId}`);
+    console.log(`💾 Current saved value:`, localStorage.getItem(`thetube_episode_${showId}`));
+    
+    // ============================================
+    // EPISODE SELECTION LOGIC - DO THIS FIRST
+    // ============================================
+    let ep = 0;
+    if (randomEp) {
+        // Surprise Me / random mode → random episode
+        if (files.length > 1) {
+            ep = Math.floor(Math.random() * files.length);
+        }
+        console.log(`🎲 RANDOM MODE: episode ${ep + 1}/${files.length}`);
+    } else {
+        // Normal watching → use saved progress
+        const storageKey = `thetube_episode_${showId}`;
+        let savedEp = localStorage.getItem(storageKey);
+        
+        if (savedEp !== null) {
+            ep = parseInt(savedEp);
+            if (isNaN(ep) || ep >= files.length) {
+                ep = 0;
+            }
+        } else {
+            // First time watching → start at episode 0
+            ep = 0;
+            localStorage.setItem(storageKey, ep);
+        }
+        console.log(`📀 NORMAL MODE: episode ${ep + 1}/${files.length} (saved: ${savedEp})`);
+    }
+    
+    // ============================================
+    // CLEAR OLD STATE
+    // ============================================
+    clearInterval(noiseTimer);
+    clearInterval(vhsTimer);
+    vid.pause();
+    vid.src = '';
+    stopReels();
+    $('tPlayIcon').textContent = '▶';
+    $('lTicker').classList.remove('show');
+    $('lVideo').classList.remove('show');
+    
+    active = s;
+    activeEp = ep;  // ← NOW set to the correct episode
+    
+    $('vhsShowName').textContent = s.name.toUpperCase();
+    $('vhsEpName').textContent = '';
+    $('vhsTime').textContent = '--:--';
+    $('chDisp').textContent = `CH ${s.ch}`;
+    $('npName').textContent = s.name;
+    $('npCh').textContent = `CH ${s.ch}`;
+    $('npBar').classList.add('show');
+    
+    const t = s.tickers.join('   ◈   ');
+    const tk = $('tickerTxt');
+    tk.textContent = `◈  ${t}  ◈  ${t}  ◈`;
+    tk.style.animation = 'none';
+    void tk.offsetHeight;
+    tk.style.animation = '';
+    
+    $('spEmoji').textContent = s.emoji;
+    $('spTitle').textContent = s.name;
+    $('spYear').textContent = s.year;
+    $('spEp').textContent = 'Loading...';
+    $('spLoading').style.display = 'block';
+    $('epShowName').textContent = s.name.toUpperCase();
+    $('epList').innerHTML = '<div class="ep-loading">◈ FETCHING EPISODES ◈</div>';
+    
+    showStaticAnim('TUNING...', async () => {
+        screen('splash');
+        $('lTicker').classList.add('show');
+        renderList();
+        
+        // Use the already-fetched files
+        $('spEp').textContent = files[ep] ? files[ep].name : s.name;
+        $('spLoading').style.display = 'none';
+        buildSidebar(files, ep, s);
+        
+        const onSplash = () => {
+            $('lSplash').removeEventListener('click', onSplash);
+            playFile(s, files, ep);
+        };
+        $('lSplash').addEventListener('click', onSplash);
+    });
 }
 
 /* ════ TRANSPORT ════ */
@@ -1058,7 +1143,37 @@ const nd=new Date();$('gDate').textContent=`${days[nd.getDay()]} ${nd.getDate()}
             originalRenderList();
         }
     };
+    // Get next episode index for a show (or return saved progress)
+    function getEpisodeIndexForShow(showId, episodeList, forceRandom = false) {
+        const storageKey = `thetube_episode_${showId}`;
 
+        if (forceRandom) {
+            // Random mode (Surprise Me uses this)
+            return Math.floor(Math.random() * episodeList.length);
+        }
+
+        let savedIndex = localStorage.getItem(storageKey);
+
+        if (savedIndex === null) {
+            // First time watching this show → start at episode 0
+            localStorage.setItem(storageKey, 0);
+            return 0;
+        }
+
+        let index = parseInt(savedIndex);
+        if (isNaN(index) || index >= episodeList.length) {
+            index = 0;
+            localStorage.setItem(storageKey, 0);
+        }
+
+        return index;
+    }
+
+    // Save progress after watching an episode
+    function saveEpisodeProgress(showId, episodeIndex) {
+        const storageKey = `thetube_episode_${showId}`;
+        localStorage.setItem(storageKey, episodeIndex);
+    }
 // Also need to update category clicks to clear search
 // Find your buildCatTabs function and update the click handler
 // Or add this fix - find where activeCat is set and add search reset
