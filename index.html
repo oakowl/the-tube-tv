@@ -594,30 +594,75 @@ function startReels(){
 }
 function stopReels(){$('reelL').classList.remove('spinning');$('reelR').classList.remove('spinning');clearInterval(timeTimer);}
 
-/* ════ SIDEBAR ════ */
-function buildSidebar(files,curIdx,show){
-  $('epShowName').textContent=show.name.toUpperCase();
-  const list=$('epList');list.innerHTML='';
-  if(!files||!files.length){list.innerHTML='<div class="ep-empty">No streamable files found</div>';return;}
-  files.forEach((f,i)=>{
-    const el=document.createElement('div');
-    el.className='ep-item'+(i===curIdx?' ep-active':'');
-    el.innerHTML=`<span class="ep-num">${String(i+1).padStart(2,'0')}.</span><span>${f.name||'Episode '+(i+1)}</span>`;
-    el.addEventListener('click',()=>{
-      if(!tvOn)return;sndClick();
-      const prev=activeEp;clearInterval(vhsTimer);vid.pause();stopReels();
-      showVHSAnim(i>prev,()=>{activeEp=i;playFile(show,files,i);});
-    });
-    list.appendChild(el);
-  });
-  const ae=list.querySelector('.ep-active');
-  if(ae)setTimeout(()=>ae.scrollIntoView({block:'nearest',behavior:'smooth'}),80);
-}
-function markEpActive(idx){
-  document.querySelectorAll('.ep-item').forEach((el,i)=>el.classList.toggle('ep-active',i===idx));
-  const el=document.querySelectorAll('.ep-item')[idx];
-  if(el)el.scrollIntoView({block:'nearest',behavior:'smooth'});
-}
+    /* ════ SIDEBAR ════ */
+    function buildSidebar(files, curIdx, show) {
+        $('epShowName').textContent = show.name.toUpperCase();
+        const list = $('epList');
+        list.innerHTML = '';
+        if (!files || !files.length) {
+            list.innerHTML = '<div class="ep-empty">No streamable files found</div>';
+            return;
+        }
+
+        files.forEach((f, i) => {
+            const el = document.createElement('div');
+            el.className = 'ep-item' + (i === curIdx ? ' ep-active' : '');
+            el.setAttribute('data-index', i);
+            el.innerHTML = `<span class="ep-num">${String(i + 1).padStart(2, '0')}.</span><span>${f.name || 'Episode ' + (i + 1)}</span>`;
+
+            el.addEventListener('click', () => {
+                if (!tvOn) return;
+                sndClick();
+                const prev = activeEp;
+                clearInterval(vhsTimer);
+                vid.pause();
+                stopReels();
+
+                showVHSAnim(i > prev, () => {
+                    activeEp = i;
+
+                    // Check if this episode has a saved resume timestamp
+                    const savedResume = getResumePosition(show.id);
+                    let timestamp = 0;
+
+                    // If there's a saved timestamp for THIS EXACT episode, resume it
+                    if (savedResume && savedResume.episode === i && savedResume.timestamp > 30) {
+                        timestamp = savedResume.timestamp;
+                        const mins = Math.floor(timestamp / 60);
+                        const secs = (timestamp % 60).toString().padStart(2, '0');
+                        console.log(`📀 Resuming episode ${i + 1} from ${mins}:${secs}`);
+                        showToast(`◈ RESUMING EPISODE ${i + 1} ◈`);
+                    } else {
+                        // New episode or never watched → start from beginning
+                        timestamp = 0;
+                        console.log(`📀 Playing episode ${i + 1} from start`);
+                        showToast(`◈ PLAYING EPISODE ${i + 1} FROM START ◈`);
+                    }
+
+                    playFile(show, files, i, timestamp);
+                });
+            });
+            list.appendChild(el);
+        });
+
+        // Scroll to active episode
+        const activeEl = document.querySelector(`.ep-item[data-index="${curIdx}"]`);
+        if (activeEl) setTimeout(() => activeEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' }), 80);
+    }
+
+    function markEpActive(idx) {
+        document.querySelectorAll('.ep-item').forEach((el) => {
+            const epIndex = parseInt(el.getAttribute('data-index'));
+            if (epIndex === idx) {
+                el.classList.add('ep-active');
+            } else {
+                el.classList.remove('ep-active');
+            }
+        });
+
+        const activeEl = document.querySelector(`.ep-item[data-index="${idx}"]`);
+        if (activeEl) activeEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
 
     /* ════ PLAY FILE ════ */
     function playFile(show, files, idx, resumeTimestamp = 0) {
@@ -632,7 +677,7 @@ function markEpActive(idx){
         vid.volume = volumeVal;
         vid.load();
 
-        // --- NEW: Save resume position every 10 seconds ---
+        // Save resume position every 10 seconds
         window._saveInterval = setInterval(() => {
             if (vid.currentTime && vid.duration && !vid.paused && vid.currentTime < vid.duration - 5) {
                 saveResumePosition(show.id, idx, vid.currentTime);
@@ -650,20 +695,18 @@ function markEpActive(idx){
         vid.addEventListener('canplay', function onLoad() {
             vid.removeEventListener('canplay', onLoad);
 
-            // --- FIX: Use the resumeTimestamp if provided ---
             if (resumeTimestamp > 0 && resumeTimestamp < vid.duration - 5) {
+                // Resume from saved spot
                 vid.currentTime = resumeTimestamp;
                 const minutes = Math.floor(resumeTimestamp / 60);
                 const seconds = Math.floor(resumeTimestamp % 60);
                 showToast(`◈ RESUMING FROM ${minutes}:${seconds.toString().padStart(2, '0')} ◈`);
                 console.log(`▶️ Resumed ${show.name} at ${minutes}:${seconds}`);
-            } else if (vid.duration && isFinite(vid.duration)) {
-                // "Live" join: jump to a random point (30s to 90%)
-                const randomTime = Math.floor(Math.random() * (vid.duration * 0.9 - 30) + 30);
-                vid.currentTime = randomTime;
-                const minutes = Math.floor(randomTime / 60);
-                const seconds = Math.floor(randomTime % 60);
-                showToast(`◈ JOINED IN PROGRESS — ${minutes}:${seconds.toString().padStart(2, '0')} ◈`);
+            } else {
+                // Start from BEGINNING (not random!)
+                vid.currentTime = 0;
+                showToast(`◈ PLAYING FROM START ◈`);
+                console.log(`▶️ Playing ${show.name} episode ${idx + 1} from beginning`);
             }
 
             vid.play().catch(() => {
@@ -684,14 +727,14 @@ function markEpActive(idx){
         vid.onended = () => {
             stopReels();
 
-            // Clear the save interval and pause listener
+            // Clear interval and remove pause listener
             if (window._saveInterval) clearInterval(window._saveInterval);
             vid.removeEventListener('pause', onPause);
 
-            // --- FIX: Clear resume position since episode finished ---
+            // Clear resume position for this show (episode finished)
             clearResumePosition(show.id);
 
-            // Save the NEXT episode number
+            // Save next episode to play
             const storageKey = `thetube_episode_${show.id}`;
             let nextEp = idx + 1;
             if (nextEp >= files.length) nextEp = 0;
@@ -699,11 +742,13 @@ function markEpActive(idx){
 
             // Auto-play next episode
             if (files[nextEp]) {
-                showVHSAnim(true, () => {
-                    activeEp = nextEp;
-                    // Pass 0 as resumeTimestamp because it's a new episode
-                    playFile(show, files, nextEp, 0);
-                });
+                showToast(`◈ NEXT EPISODE IN 3 SECONDS ◈`);
+                setTimeout(() => {
+                    if (active && active.id === show.id) {
+                        activeEp = nextEp;
+                        playFile(show, files, nextEp, 0);
+                    }
+                }, 3000);
             }
         };
     }
