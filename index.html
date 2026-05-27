@@ -447,6 +447,40 @@ canvas.noisecanvas{position:absolute;inset:0;width:100%;height:100%}
         { id: 10, ch: '11', time: '2:00 AM', name: 'Perversions of Science', emoji: '🧬', cat: 'horror', year: '1997', badges: ['PLAYLIST', 'HBO'], desc: 'HBO sci-fi horror anthology.', tickers: ['From the creators of Tales from the Crypt'], archiveId: 'perversions-of-science-complete', playlist: true },
     ];
 
+    // ============================================
+    // RESUME POSITION HELPERS (timestamp tracking)
+    // ============================================
+
+    // Save resume position (episode + timestamp)
+    function saveResumePosition(showId, episodeIndex, currentTime) {
+        const storageKey = `thetube_resume_${showId}`;
+        const data = {
+            episode: episodeIndex,
+            timestamp: Math.floor(currentTime) // Save full seconds
+        };
+        localStorage.setItem(storageKey, JSON.stringify(data));
+        console.log(`💾 Saved resume: episode ${episodeIndex + 1}, ${Math.floor(currentTime)}s`);
+    }
+
+    // Get saved resume position
+    function getResumePosition(showId) {
+        const storageKey = `thetube_resume_${showId}`;
+        const saved = localStorage.getItem(storageKey);
+        if (saved) {
+            try {
+                return JSON.parse(saved);
+            } catch (e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    // Clear resume position (when episode ends or user finishes)
+    function clearResumePosition(showId) {
+        const storageKey = `thetube_resume_${showId}`;
+        localStorage.removeItem(storageKey);
+    }
 const cats=[
   {key:'all',label:'All Channels'},{key:'mtv',label:'📺 MTV'},{key:'british',label:'🇬🇧 British'},
   {key:'horror',label:'👁 Horror'},{key:'scifi',label:'🚀 Sci-Fi'},{key:'classic',label:'🎞 Classic'},
@@ -586,14 +620,57 @@ function markEpActive(idx){
 }
 
     /* ════ PLAY FILE ════ */
-    function playFile(show, files, idx) {
+    function playFile(show, files, idx, resumeTimestamp = 0) {
         if (!files || !files[idx]) return;
         activeEp = idx;
         const f = files[idx];
+
+        // Clear any existing save interval
+        if (window._saveInterval) clearInterval(window._saveInterval);
+
         vid.src = f.url;
         vid.volume = volumeVal;
         vid.load();
-        vid.play().catch(() => { });
+
+        // --- NEW: Save resume position every 10 seconds ---
+        window._saveInterval = setInterval(() => {
+            if (vid.currentTime && vid.duration && !vid.paused && vid.currentTime < vid.duration - 5) {
+                saveResumePosition(show.id, idx, vid.currentTime);
+            }
+        }, 10000);
+
+        // Save when user pauses
+        const onPause = () => {
+            if (vid.currentTime && vid.duration && vid.currentTime < vid.duration - 5) {
+                saveResumePosition(show.id, idx, vid.currentTime);
+            }
+        };
+        vid.addEventListener('pause', onPause);
+
+        vid.addEventListener('canplay', function onLoad() {
+            vid.removeEventListener('canplay', onLoad);
+
+            // --- FIX: Use the resumeTimestamp if provided ---
+            if (resumeTimestamp > 0 && resumeTimestamp < vid.duration - 5) {
+                vid.currentTime = resumeTimestamp;
+                const minutes = Math.floor(resumeTimestamp / 60);
+                const seconds = Math.floor(resumeTimestamp % 60);
+                showToast(`◈ RESUMING FROM ${minutes}:${seconds.toString().padStart(2, '0')} ◈`);
+                console.log(`▶️ Resumed ${show.name} at ${minutes}:${seconds}`);
+            } else if (vid.duration && isFinite(vid.duration)) {
+                // "Live" join: jump to a random point (30s to 90%)
+                const randomTime = Math.floor(Math.random() * (vid.duration * 0.9 - 30) + 30);
+                vid.currentTime = randomTime;
+                const minutes = Math.floor(randomTime / 60);
+                const seconds = Math.floor(randomTime % 60);
+                showToast(`◈ JOINED IN PROGRESS — ${minutes}:${seconds.toString().padStart(2, '0')} ◈`);
+            }
+
+            vid.play().catch(() => {
+                showToast('◈ CLICK THE VIDEO TO START ◈');
+            });
+        });
+
         screen('video');
         $('lTicker').classList.add('show');
         $('tPlayIcon').textContent = '⏸';
@@ -607,121 +684,144 @@ function markEpActive(idx){
         vid.onended = () => {
             stopReels();
 
-            // Save progress to localStorage
+            // Clear the save interval and pause listener
+            if (window._saveInterval) clearInterval(window._saveInterval);
+            vid.removeEventListener('pause', onPause);
+
+            // --- FIX: Clear resume position since episode finished ---
+            clearResumePosition(show.id);
+
+            // Save the NEXT episode number
             const storageKey = `thetube_episode_${show.id}`;
             let nextEp = idx + 1;
-
-            if (nextEp >= files.length) {
-                // Reached the end → loop back to beginning
-                nextEp = 0;
-            }
-
+            if (nextEp >= files.length) nextEp = 0;
             localStorage.setItem(storageKey, nextEp);
 
             // Auto-play next episode
             if (files[nextEp]) {
                 showVHSAnim(true, () => {
                     activeEp = nextEp;
-                    playFile(show, files, nextEp);
+                    // Pass 0 as resumeTimestamp because it's a new episode
+                    playFile(show, files, nextEp, 0);
                 });
             }
         };
     }
 
-/* ════ TUNE SHOW ════ */
-async function tuneShow(showId, randomEp) {
-    if (!tvOn) { powerOn(() => setTimeout(() => tuneShow(showId, randomEp), 600)); return; }
-    const s = shows.find(x => x.id === showId);
-    if (!s) return;
-    
-    const files = await fetchFiles(s.archiveId);
-    console.log(`📁 ${s.name} has ${files.length} episodes`);
-    console.log(`🔑 Storage key: thetube_episode_${showId}`);
-    console.log(`💾 Current saved value:`, localStorage.getItem(`thetube_episode_${showId}`));
-    
-    // ============================================
-    // EPISODE SELECTION LOGIC - DO THIS FIRST
-    // ============================================
-    let ep = 0;
-    if (randomEp) {
-        // Surprise Me / random mode → random episode
-        if (files.length > 1) {
-            ep = Math.floor(Math.random() * files.length);
-        }
-        console.log(`🎲 RANDOM MODE: episode ${ep + 1}/${files.length}`);
-    } else {
-        // Normal watching → use saved progress
-        const storageKey = `thetube_episode_${showId}`;
-        let savedEp = localStorage.getItem(storageKey);
-        
-        if (savedEp !== null) {
-            ep = parseInt(savedEp);
-            if (isNaN(ep) || ep >= files.length) {
-                ep = 0;
+    /* ════ TUNE SHOW ════ */
+    async function tuneShow(showId, randomEp) {
+        if (!tvOn) { powerOn(() => setTimeout(() => tuneShow(showId, randomEp), 600)); return; }
+        const s = shows.find(x => x.id === showId);
+        if (!s) return;
+
+        const files = await fetchFiles(s.archiveId);
+
+        // ============================================
+        // EPISODE SELECTION LOGIC
+        // ============================================
+        let ep = 0;
+        let resumeTimestamp = 0;
+
+        if (randomEp) {
+            // Surprise Me / random mode → random episode
+            if (files.length > 1) {
+                ep = Math.floor(Math.random() * files.length);
             }
+            console.log(`🎲 RANDOM MODE: episode ${ep + 1}/${files.length}`);
         } else {
-            // First time watching → start at episode 0
-            ep = 0;
-            localStorage.setItem(storageKey, ep);
+            // Normal watching → use saved progress
+            const storageKey = `thetube_episode_${showId}`;
+            let savedEp = localStorage.getItem(storageKey);
+
+            if (savedEp !== null) {
+                ep = parseInt(savedEp);
+                if (isNaN(ep) || ep >= files.length) {
+                    ep = 0;
+                }
+            } else {
+                ep = 0;
+                localStorage.setItem(storageKey, ep);
+            }
+
+            // Check for saved resume timestamp
+            const resumeData = getResumePosition(showId);
+            let timestampDisplay = '';
+
+            if (resumeData && resumeData.episode === ep && resumeData.timestamp > 30) {
+                // ✅ We HAVE a saved timestamp — resume from there!
+                resumeTimestamp = resumeData.timestamp;
+                const mins = Math.floor(resumeTimestamp / 60);
+                const secs = (resumeTimestamp % 60).toString().padStart(2, '0');
+                timestampDisplay = ` — RESUMING AT ${mins}:${secs}`;
+                console.log(`⏯️ Found saved timestamp: ${mins}:${secs}`);
+            } else if (resumeData && resumeData.episode !== ep) {
+                // User was on a different episode (maybe they clicked another show)
+                timestampDisplay = ` — WAS ON EP ${resumeData.episode + 1}, STARTING EP ${ep + 1} FRESH`;
+                clearResumePosition(showId);
+            } else {
+                // No saved timestamp — this is a fresh episode (first time or episode finished)
+                timestampDisplay = ` — FRESH EPISODE (no saved position)`;
+                resumeTimestamp = 0; // Explicitly set to 0 so it starts from beginning or random point
+            }
+
+            console.log(`📀 NORMAL MODE: episode ${ep + 1}/${files.length}${timestampDisplay}`);
         }
-        console.log(`📀 NORMAL MODE: episode ${ep + 1}/${files.length} (saved: ${savedEp})`);
+
+        // ============================================
+        // CLEAR OLD STATE
+        // ============================================
+        if (window._saveInterval) clearInterval(window._saveInterval);
+        clearInterval(noiseTimer);
+        clearInterval(vhsTimer);
+        vid.pause();
+        vid.src = '';
+        stopReels();
+        $('tPlayIcon').textContent = '▶';
+        $('lTicker').classList.remove('show');
+        $('lVideo').classList.remove('show');
+
+        active = s;
+        activeEp = ep;
+
+        $('vhsShowName').textContent = s.name.toUpperCase();
+        $('vhsEpName').textContent = '';
+        $('vhsTime').textContent = '--:--';
+        $('chDisp').textContent = `CH ${s.ch}`;
+        $('npName').textContent = s.name;
+        $('npCh').textContent = `CH ${s.ch}`;
+        $('npBar').classList.add('show');
+
+        const t = s.tickers.join('   ◈   ');
+        const tk = $('tickerTxt');
+        tk.textContent = `◈  ${t}  ◈  ${t}  ◈`;
+        tk.style.animation = 'none';
+        void tk.offsetHeight;
+        tk.style.animation = '';
+
+        $('spEmoji').textContent = s.emoji;
+        $('spTitle').textContent = s.name;
+        $('spYear').textContent = s.year;
+        $('spEp').textContent = 'Loading...';
+        $('spLoading').style.display = 'block';
+        $('epShowName').textContent = s.name.toUpperCase();
+        $('epList').innerHTML = '<div class="ep-loading">◈ FETCHING EPISODES ◈</div>';
+
+        showStaticAnim('TUNING...', async () => {
+            screen('splash');
+            $('lTicker').classList.add('show');
+            renderList();
+
+            $('spEp').textContent = files[ep] ? files[ep].name : s.name;
+            $('spLoading').style.display = 'none';
+            buildSidebar(files, ep, s);
+
+            const onSplash = () => {
+                $('lSplash').removeEventListener('click', onSplash);
+                playFile(s, files, ep, resumeTimestamp);
+            };
+            $('lSplash').addEventListener('click', onSplash);
+        });
     }
-    
-    // ============================================
-    // CLEAR OLD STATE
-    // ============================================
-    clearInterval(noiseTimer);
-    clearInterval(vhsTimer);
-    vid.pause();
-    vid.src = '';
-    stopReels();
-    $('tPlayIcon').textContent = '▶';
-    $('lTicker').classList.remove('show');
-    $('lVideo').classList.remove('show');
-    
-    active = s;
-    activeEp = ep;  // ← NOW set to the correct episode
-    
-    $('vhsShowName').textContent = s.name.toUpperCase();
-    $('vhsEpName').textContent = '';
-    $('vhsTime').textContent = '--:--';
-    $('chDisp').textContent = `CH ${s.ch}`;
-    $('npName').textContent = s.name;
-    $('npCh').textContent = `CH ${s.ch}`;
-    $('npBar').classList.add('show');
-    
-    const t = s.tickers.join('   ◈   ');
-    const tk = $('tickerTxt');
-    tk.textContent = `◈  ${t}  ◈  ${t}  ◈`;
-    tk.style.animation = 'none';
-    void tk.offsetHeight;
-    tk.style.animation = '';
-    
-    $('spEmoji').textContent = s.emoji;
-    $('spTitle').textContent = s.name;
-    $('spYear').textContent = s.year;
-    $('spEp').textContent = 'Loading...';
-    $('spLoading').style.display = 'block';
-    $('epShowName').textContent = s.name.toUpperCase();
-    $('epList').innerHTML = '<div class="ep-loading">◈ FETCHING EPISODES ◈</div>';
-    
-    showStaticAnim('TUNING...', async () => {
-        screen('splash');
-        $('lTicker').classList.add('show');
-        renderList();
-        
-        // Use the already-fetched files
-        $('spEp').textContent = files[ep] ? files[ep].name : s.name;
-        $('spLoading').style.display = 'none';
-        buildSidebar(files, ep, s);
-        
-        const onSplash = () => {
-            $('lSplash').removeEventListener('click', onSplash);
-            playFile(s, files, ep);
-        };
-        $('lSplash').addEventListener('click', onSplash);
-    });
-}
 
 /* ════ TRANSPORT ════ */
 $('tPlay').addEventListener('click',()=>{
