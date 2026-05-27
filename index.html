@@ -786,8 +786,130 @@ const nd=new Date();$('gDate').textContent=`${days[nd.getDay()]} ${nd.getDate()}
             { startTime: 1 * 60, endTime: 2 * 60, channel: "CH 35", name: "90s MTV Block", emoji: "🎤", id: 34 }
         ]; for (const sh of s) { if (m >= sh.startTime && m < sh.endTime) return sh; } return { name: "The Tube", emoji: "📺", message: "Nothing scheduled" };
     }
-    function updateWidget() { const w = document.getElementById('whatsOnWidget'); if (!w) return; const c = getCurrentShow(); if (c.message) { w.innerHTML = '<div style="background:#060800;border:1px solid #f5a623;border-radius:6px;padding:10px;margin-bottom:15px;"><div style="font-family:VT323;font-size:.7rem;color:#4a3015;">🔴 NOW PLAYING</div><div style="display:flex;align-items:center;gap:10px;"><div style="font-size:2rem;">📺</div><div><div style="font-family:Oswald;color:#f5a623;">Off Air</div><div style="font-family:VT323;font-size:.7rem;">Select a show from the guide</div></div></div></div>'; } else { w.innerHTML = '<div style="background:#060800;border:1px solid #39ff14;border-radius:6px;padding:10px;margin-bottom:15px;cursor:pointer;" onclick="tuneShow(' + c.id + ')"><div style="display:flex;justify-content:space-between;"><div style="font-family:VT323;font-size:.65rem;color:#39ff14;">🔴 LIVE NOW</div><div style="font-family:VT323;font-size:.6rem;color:#4a3015;">' + c.channel + '</div></div><div style="display:flex;align-items:center;gap:10px;margin-top:5px;"><div style="font-size:2rem;">' + c.emoji + '</div><div><div style="font-family:Oswald;font-size:1rem;font-weight:600;color:#d4b483;">' + c.name + '</div><div style="font-family:VT323;font-size:.65rem;color:#7a5a28;">▶ Click to watch</div></div></div></div>'; } }
-    updateWidget(); setInterval(updateWidget, 60000);// ============================================
+    function updateWidget() { const w = document.getElementById('whatsOnWidget'); if (!w) return; const c = getCurrentShow(); if (c.message) { w.innerHTML = '<div style="background:#060800;border:1px solid #f5a623;border-radius:6px;padding:10px;margin-bottom:15px;"><div style="font-family:VT323;font-size:.7rem;color:#4a3015;">🔴 NOW PLAYING</div><div style="display:flex;align-items:center;gap:10px;"><div style="font-size:2rem;">📺</div><div><div style="font-family:Oswald;color:#f5a623;">Off Air</div><div style="font-family:VT323;font-size:.7rem;">Select a show from the guide</div></div></div></div>'; } else { w.innerHTML = '<div style="background:#060800;border:1px solid #39ff14;border-radius:6px;padding:10px;margin-bottom:15px;cursor:pointer;" onclick="liveNow(' + c.id + ')"><div style="display:flex;justify-content:space-between;"><div style="font-family:VT323;font-size:.65rem;color:#39ff14;">🔴 LIVE NOW</div><div style="font-family:VT323;font-size:.6rem;color:#4a3015;">' + c.channel + '</div></div><div style="display:flex;align-items:center;gap:10px;margin-top:5px;"><div style="font-size:2rem;">' + c.emoji + '</div><div><div style="font-family:Oswald;font-size:1rem;font-weight:600;color:#d4b483;">' + c.name + '</div><div style="font-family:VT323;font-size:.65rem;color:#7a5a28;">▶ Click to watch</div></div></div></div>'; } }
+    updateWidget(); setInterval(updateWidget, 60000);// LIVE NOW - Random episode with FUNNY one-liner per episode
+    async function liveNow(showId) {
+        if (!tvOn) { powerOn(() => setTimeout(() => liveNow(showId), 600)); return; }
+        const s = shows.find(x => x.id === showId);
+        if (!s) return;
+        const files = await fetchFiles(s.archiveId);
+        if (!files || files.length === 0) { tuneShow(showId, true); return; }
+        const randomEp = Math.floor(Math.random() * files.length);
+        const targetFile = files[randomEp];
+
+        clearInterval(noiseTimer); clearInterval(vhsTimer);
+        vid.pause(); vid.src = ''; stopReels(); $('tPlayIcon').textContent = '▶';
+        $('lTicker').classList.remove('show'); $('lVideo').classList.remove('show');
+        active = s; activeEp = randomEp;
+
+        $('vhsShowName').textContent = s.name.toUpperCase();
+        $('vhsEpName').textContent = targetFile.name.length > 18 ? targetFile.name.slice(0, 16) + '…' : targetFile.name;
+        $('vhsTime').textContent = '--:--';
+        $('chDisp').textContent = `CH ${s.ch}`;
+        $('npName').textContent = s.name; $('npCh').textContent = `CH ${s.ch}`; $('npBar').classList.add('show');
+
+        // FUNNY ONE-LINERS - specific to each show
+        const funnyLines = {
+            // MTV shows
+            'Viva La Bam': ['🛹 BAM!', 'DON VITO IS WATCHING', 'CASTLE BAM RULES', 'WHERE\'S RAAB?'],
+            'Jackass': ['💀 PAIN IS FUN', 'STEVE-O DID WHAT?', 'DON\'T TRY THIS', 'JOHNNY KNOXVILLE SURVIVED'],
+            'Wildboyz': ['🐊 RUN STEVE-O!', 'PONTIUS VS NATURE', 'CROCS AND CRAZIES', 'STEVE-O LIVES'],
+            'Beavis and Butt-Head': ['🎸 UH HUH HUH', 'FIRE FIRE FIRE', 'CORNHOLIO NEEDS TP', 'SCORE!'],
+            'Drawn Together': ['🏠 REALITY PARODY', 'UNCENSORED CHAOS', 'CARTOON HOUSE OF HORRORS', 'WAFFLE TIME'],
+            '90s MTV Block': ['🎤 TALKING HEADS', 'MTV SPRING BREAK', '90S COMMERCIALS', 'TOTAL REQUEST LIVE'],
+
+            // Animation
+            'Spider-Man (1994 Animated)': ['🕷️ SHOCKER!', 'THE ALIEN COSTUME', 'MARY JANE WAITS', 'WITH GREAT POWER'],
+            'Batman: The Animated Series': ['🦇 I AM VENGEANCE', 'WHERE\'S HARLEY?', 'THE JOKER LAUGHS', 'DARK DECO'],
+            'Popeye Collection': ['💪 I EATS ME SPINACH', 'POPEYE VS BLUTO', 'SWEET PEA', 'WELL BLOW ME DOWN'],
+            'Mickey & Donald': ['🐭 HOT DOG!', 'DONALD ANGRY AGAIN', 'PLUTO GOES WILD', 'MICKEY MOUSE CLUB'],
+            '90s Moomin': ['🦛 MOOMINVALLEY', 'SNORKMAIDEN', 'LITTLE MY MISCHIEF', 'GROKE IS COMING'],
+            'Arthur — Season 1': ['🐻 HAVING FUN ISN\'T HARD', 'A-A-R-D-V-A-R-K', 'DW BLOWS THE WHISTLE', 'BUSTER LOVES FOOD'],
+            'Even Stevens': ['🍞 BEANS!', 'LOUIS STEVENS STRIKES', 'REN IS PERFECT', 'THE EVEN STEVENS MOVIE'],
+            'ALF (Complete Series)': ['👽 HEY WILLY!', 'NO CATS WERE HARMED', 'MELMAC RULES', 'ALF THE SURVIVOR'],
+            'Saved by the Bell': ['📣 ZACK ATTACK!', 'I\'M SO EXCITED', 'HEY HEY HEY', 'MR BELDING WATCHES'],
+
+            // Horror/Mystery
+            'Murder, She Wrote': ['✍️ JESSICA DID IT', 'CABOT COVE', 'ANOTHER DEAD GUEST', 'FLETCHER ON THE CASE'],
+            'Ally McBeal': ['👗 DANCING BABY', 'UNISEX BATHROOM', 'VONDA SHEPARD SINGS', 'BARRY WHITE'],
+            'Buffy the Vampire Slayer': ['🧛 THE HELLMOUTH', 'SPIKE AND DRUSILLA', 'SLAYER ALERT', 'SCOOBY GANG'],
+            'The Twilight Zone': ['🌀 SUBMITTED FOR APPROVAL', 'FIFTH DIMENSION', 'DOOR OPENS', 'SERLING NARRATES'],
+            'Jerry Springer': ['🎙️ JERRY! JERRY!', 'CHAIR THROW!', 'YOU ARE THE FATHER!', 'FINAL THOUGHTS'],
+
+            // Default
+            'default': ['📺 TUNE IN', 'CLASSIC VIBES', 'CRT GOODNESS', 'RETRO REWIND']
+        };
+
+        // Get funny lines for this show, or use default
+        const showLines = funnyLines[s.name] || funnyLines['default'];
+        const randomLine = showLines[Math.floor(Math.random() * showLines.length)];
+
+        // TICKER: Show name + funny one-liner (no episode name clutter)
+        const tickerText = `${s.name} — ${randomLine}`;
+        const tk = $('tickerTxt');
+        tk.textContent = `◈  ${tickerText}  ◈  ${tickerText}  ◈`;
+        tk.style.animation = 'none'; void tk.offsetHeight; tk.style.animation = '';
+
+        $('spEmoji').textContent = s.emoji; $('spTitle').textContent = s.name; $('spYear').textContent = s.year;
+        $('spEp').textContent = `📡 TUNING TO LIVE...`;
+        $('spLoading').style.display = 'block';
+        $('epShowName').textContent = s.name.toUpperCase();
+        $('epList').innerHTML = '<div class="ep-loading">◈ LOADING EPISODES ◈</div>';
+
+        showStaticAnim('TUNING...', async () => {
+            screen('splash'); $('lTicker').classList.add('show'); renderList();
+            const episodeFiles = await fetchFiles(s.archiveId);
+            if (episodeFiles && episodeFiles.length) {
+                buildSidebar(episodeFiles, randomEp, s);
+                $('spEp').textContent = episodeFiles[randomEp]?.name || s.name;
+                $('vhsEpName').textContent = episodeFiles[randomEp]?.name.length > 18 ? episodeFiles[randomEp].name.slice(0, 16) + '…' : episodeFiles[randomEp].name;
+            } else {
+                $('spEp').textContent = s.name;
+            }
+            $('spLoading').style.display = 'none';
+
+            const onSplash = () => {
+                $('lSplash').removeEventListener('click', onSplash);
+                vid.src = targetFile.url;
+                vid.volume = volumeVal;
+                vid.load();
+
+                vid.addEventListener('canplay', function onCanPlay() {
+                    vid.removeEventListener('canplay', onCanPlay);
+                    if (vid.duration && isFinite(vid.duration)) {
+                        const randomTime = Math.floor(Math.random() * (vid.duration * 0.9 - 30) + 30);
+                        vid.currentTime = randomTime;
+                        const minutes = Math.floor(randomTime / 60);
+                        const seconds = Math.floor(randomTime % 60);
+                        showToast(`◈ JOINED IN PROGRESS — ${minutes}:${seconds.toString().padStart(2, '0')} ◈`);
+                    }
+                    vid.play().catch((e) => {
+                        console.log('Autoplay failed:', e);
+                        showToast('◈ CLICK THE VIDEO TO START ◈');
+                    });
+                });
+
+                screen('video'); $('lTicker').classList.add('show'); $('tPlayIcon').textContent = '⏸';
+                $('vhsShowName').textContent = s.name.toUpperCase();
+                $('vhsEpName').textContent = targetFile.name.length > 18 ? targetFile.name.slice(0, 16) + '…' : targetFile.name;
+                $('vhsTime').textContent = '00:00'; startReels();
+
+                markEpActive(randomEp);
+
+                vid.onended = () => {
+                    stopReels();
+                    if (episodeFiles[randomEp + 1]) {
+                        showVHSAnim(true, () => {
+                            activeEp = randomEp + 1;
+                            playFile(s, episodeFiles, randomEp + 1);
+                            markEpActive(randomEp + 1);
+                        });
+                    }
+                };
+            };
+            $('lSplash').addEventListener('click', onSplash);
+        });
+    }// ============================================
     // SEARCH FUNCTIONALITY
     // ============================================
     const searchBox = document.getElementById('searchBox');
