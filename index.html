@@ -1062,9 +1062,61 @@ const nd=new Date();$('gDate').textContent=`${days[nd.getDay()]} ${nd.getDate()}
         ];
         for (const sh of s) { if (m >= sh.startTime && m < sh.endTime) return sh; }
         return { name: "The Tube", emoji: "📺", message: "Nothing scheduled" };
+    } // Helper function to get schedule entry for a specific show
+    function getScheduleEntryForShow(showId) {
+        const schedule = [
+            { startTime: 6 * 60, endTime: 6 * 60 + 30, channel: "CH 28", name: "Reading Rainbow", emoji: "🌈", id: 27 },
+            { startTime: 6 * 60 + 30, endTime: 7 * 60, channel: "CH 34", name: "90s Nickelodeon VHS", emoji: "📼", id: 33 },
+            { startTime: 7 * 60, endTime: 7 * 60 + 30, channel: "CH 36", name: "Popeye Collection", emoji: "💪", id: 31 },
+            { startTime: 7 * 60 + 30, endTime: 8 * 60, channel: "CH 40", name: "Arthur — Season 1", emoji: "🐻", id: 39 },
+            { startTime: 8 * 60, endTime: 8 * 60 + 30, channel: "CH 33", name: "Mickey & Donald", emoji: "🐭", id: 32 },
+            { startTime: 8 * 60 + 30, endTime: 9 * 60, channel: "CH 46", name: "90s Moomin", emoji: "🦛", id: 38 },
+            { startTime: 9 * 60, endTime: 9 * 60 + 30, channel: "CH 22", name: "Even Stevens", emoji: "🍞", id: 21 },
+            { startTime: 10 * 60, endTime: 10 * 60 + 30, channel: "CH 21", name: "Drawn Together", emoji: "🏠", id: 20 },
+            { startTime: 10 * 60 + 30, endTime: 11 * 60, channel: "CH 30", name: "Beavis and Butt-Head", emoji: "🎸", id: 29 },
+            { startTime: 11 * 60, endTime: 11 * 60 + 30, channel: "CH 29", name: "ALF", emoji: "👽", id: 28 },
+            { startTime: 11 * 60 + 30, endTime: 12 * 60, channel: "CH 31", name: "Saved by the Bell", emoji: "📣", id: 30 },
+            { startTime: 12 * 60, endTime: 12 * 60 + 30, channel: "CH 16", name: "Bonanza", emoji: "🤠", id: 15 },
+            { startTime: 12 * 60 + 30, endTime: 13 * 60, channel: "CH 05", name: "Steptoe & Son", emoji: "🗑️", id: 4 },
+            { startTime: 13 * 60, endTime: 13 * 60 + 30, channel: "CH 06", name: "Survivors (1975)", emoji: "☣️", id: 5 },
+            { startTime: 13 * 60 + 30, endTime: 14 * 60, channel: "CH 38", name: "Batman TAS", emoji: "🦇", id: 37 },
+            { startTime: 14 * 60, endTime: 14 * 60 + 30, channel: "CH 58", name: "Spider-Man TAS", emoji: "🕷️", id: 133 },
+            { startTime: 14 * 60 + 30, endTime: 15 * 60, channel: "CH 27", name: "Buffy", emoji: "🧛", id: 26 },
+            { startTime: 15 * 60, endTime: 15 * 60 + 30, channel: "CH 13", name: "Men in Black: TAS", emoji: "🕶️", id: 12 },
+            { startTime: 15 * 60 + 30, endTime: 16 * 60, channel: "CH 12", name: "The Outer Limits", emoji: "📡", id: 11 },
+            { startTime: 19 * 60, endTime: 19 * 60 + 30, channel: "CH 15", name: "Your Show of Shows", emoji: "🎭", id: 14 },
+            { startTime: 19 * 60, endTime: 19 * 60 + 30, channel: "CH 19", name: "Sherlock Holmes", emoji: "🔍", id: 18 },
+            { startTime: 19 * 60 + 30, endTime: 20 * 60, channel: "CH 17", name: "Classic TV Vault", emoji: "🎞️", id: 16 },
+            { startTime: 19 * 60 + 30, endTime: 20 * 60, channel: "CH 18", name: "It Takes a Thief", emoji: "🕵️", id: 17 },
+            { startTime: 19 * 60 + 30, endTime: 20 * 60, channel: "CH 26", name: "Ally McBeal", emoji: "👗", id: 25 },
+            { startTime: 20 * 60, endTime: 20 * 60 + 30, channel: "CH 20", name: "Murder, She Wrote", emoji: "✍️", id: 19 },
+            { startTime: 20 * 60, endTime: 20 * 60 + 30, channel: "CH 24", name: "Bonanza Western", emoji: "⭐", id: 23 },
+            { startTime: 20 * 60 + 30, endTime: 21 * 60, channel: "CH 23", name: "Survivors — BBC", emoji: "🏚️", id: 22 },
+            { startTime: 20 * 60 + 30, endTime: 21 * 60, channel: "CH 10", name: "The Twilight Zone", emoji: "🌀", id: 9 },
+            { startTime: 21 * 60, endTime: 21 * 60 + 30, channel: "CH 07", name: "Alfred Hitchcock Presents", emoji: "🎩", id: 6 },
+            { startTime: 21 * 60, endTime: 21 * 60 + 30, channel: "CH 14", name: "Final Space", emoji: "🚀", id: 13 },
+            { startTime: 21 * 60 + 30, endTime: 22 * 60, channel: "CH 08", name: "Hitchcock Season 3", emoji: "🔪", id: 7 },
+            { startTime: 22 * 60, endTime: 22 * 60 + 30, channel: "CH 09", name: "New Hitchcock (1985)", emoji: "👁️", id: 8 },
+            { startTime: 22 * 60 + 30, endTime: 23 * 60, channel: "CH 25", name: "Final Space Drama", emoji: "🌌", id: 24 },
+            { startTime: 23 * 60, endTime: 23 * 60 + 30, channel: "CH 03", name: "Jackass", emoji: "💀", id: 2 },
+            { startTime: 23 * 60 + 30, endTime: 24 * 60, channel: "CH 36", name: "Jerry Springer", emoji: "🎙️", id: 35 },
+            { startTime: 0, endTime: 0 * 60 + 30, channel: "CH 04", name: "Wildboyz", emoji: "🐊", id: 3 },
+            { startTime: 0 * 60 + 30, endTime: 1 * 60, channel: "CH 02", name: "Viva La Bam", emoji: "🛹", id: 1 },
+            { startTime: 1 * 60, endTime: 2 * 60, channel: "CH 35", name: "90s MTV Block", emoji: "🎤", id: 34 },
+            { startTime: 2 * 60, endTime: 3 * 60, channel: "CH 11", name: "Perversions of Science", emoji: "🧬", id: 10 },
+            { startTime: 3 * 60, endTime: 4 * 60, channel: "CH 28", name: "Reading Rainbow (Overnight)", emoji: "🌈", id: 27 },
+            { startTime: 4 * 60, endTime: 5 * 60, channel: "CH 34", name: "90s Nickelodeon VHS (Overnight)", emoji: "📼", id: 33 },
+            { startTime: 5 * 60, endTime: 6 * 60, channel: "CH 36", name: "Popeye Collection (Overnight)", emoji: "💪", id: 31 },
+        ];
+        for (const entry of schedule) {
+            if (entry.id === showId) {
+                return entry;
+            }
+        }
+        return null;
     }
     function updateWidget() { const w = document.getElementById('whatsOnWidget'); if (!w) return; const c = getCurrentShow(); if (c.message) { w.innerHTML = '<div style="background:#060800;border:1px solid #f5a623;border-radius:6px;padding:10px;margin-bottom:15px;"><div style="font-family:VT323;font-size:.7rem;color:#4a3015;">🔴 NOW PLAYING</div><div style="display:flex;align-items:center;gap:10px;"><div style="font-size:2rem;">📺</div><div><div style="font-family:Oswald;color:#f5a623;">Off Air</div><div style="font-family:VT323;font-size:.7rem;">Select a show from the guide</div></div></div></div>'; } else { w.innerHTML = '<div style="background:#060800;border:1px solid #39ff14;border-radius:6px;padding:10px;margin-bottom:15px;cursor:pointer;" onclick="liveNow(' + c.id + ')"><div style="display:flex;justify-content:space-between;"><div style="font-family:VT323;font-size:.65rem;color:#39ff14;">🔴 LIVE NOW</div><div style="font-family:VT323;font-size:.6rem;color:#4a3015;">' + c.channel + '</div></div><div style="display:flex;align-items:center;gap:10px;margin-top:5px;"><div style="font-size:2rem;">' + c.emoji + '</div><div><div style="font-family:Oswald;font-size:1rem;font-weight:600;color:#d4b483;">' + c.name + '</div><div style="font-family:VT323;font-size:.65rem;color:#7a5a28;">▶ Click to watch</div></div></div></div>'; } }
-    updateWidget(); setInterval(updateWidget, 60000);// LIVE NOW - Plays next episode in sequence + keeps funny one-liners
+    updateWidget(); setInterval(updateWidget, 60000);// LIVE NOW - Plays next episode in sequence + keeps funny one-liners + respects scheduled time
     async function liveNow(showId) {
         if (!tvOn) {
             powerOn(() => setTimeout(() => liveNow(showId), 600));
@@ -1087,7 +1139,6 @@ const nd=new Date();$('gDate').textContent=`${days[nd.getDay()]} ${nd.getDate()}
 
         if (savedEpisode !== null) {
             episodeIndex = parseInt(savedEpisode);
-            // Make sure it's valid
             if (isNaN(episodeIndex) || episodeIndex >= files.length) {
                 episodeIndex = 0;
             }
@@ -1096,6 +1147,10 @@ const nd=new Date();$('gDate').textContent=`${days[nd.getDay()]} ${nd.getDate()}
         const targetFile = files[episodeIndex];
         const episodeNumber = episodeIndex + 1;
         const totalEpisodes = files.length;
+
+        // Check if this is the currently SCHEDULED show (for "LIVE NOW" feel)
+        const currentScheduled = getCurrentShow();
+        const isCurrentlyScheduled = (currentScheduled && currentScheduled.id === showId);
 
         // FUNNY ONE-LINERS (preserved!)
         const funnyLines = {
@@ -1125,7 +1180,11 @@ const nd=new Date();$('gDate').textContent=`${days[nd.getDay()]} ${nd.getDate()}
         const randomLine = showLines[Math.floor(Math.random() * showLines.length)];
 
         // Show progress toast
-        showToast(`◈ EPISODE ${episodeNumber} of ${totalEpisodes} ◈ ${randomLine} ◈`);
+        if (isCurrentlyScheduled) {
+            showToast(`◈ NOW AIRING — ${s.name} ◈ ${randomLine} ◈`);
+        } else {
+            showToast(`◈ EPISODE ${episodeNumber} of ${totalEpisodes} ◈ ${randomLine} ◈`);
+        }
 
         // Stop current playback
         if (noiseTimer) clearInterval(noiseTimer);
@@ -1153,8 +1212,13 @@ const nd=new Date();$('gDate').textContent=`${days[nd.getDay()]} ${nd.getDate()}
         $('npCh').textContent = `CH ${s.ch}`;
         $('npBar').classList.add('show');
 
-        // TICKER: Show name + funny line + episode info
-        const tickerText = `${s.name} — ${randomLine} — EP ${episodeNumber}/${totalEpisodes}`;
+        // TICKER: Show name + funny line + episode info (add "NOW AIRING" if scheduled)
+        let tickerText;
+        if (isCurrentlyScheduled) {
+            tickerText = `${s.name} — ${randomLine} — NOW AIRING`;
+        } else {
+            tickerText = `${s.name} — ${randomLine} — EP ${episodeNumber}/${totalEpisodes}`;
+        }
         const tk = $('tickerTxt');
         tk.textContent = `◈  ${tickerText}  ◈  ${tickerText}  ◈`;
         tk.style.animation = 'none';
@@ -1164,7 +1228,7 @@ const nd=new Date();$('gDate').textContent=`${days[nd.getDay()]} ${nd.getDate()}
         $('spEmoji').textContent = s.emoji;
         $('spTitle').textContent = s.name;
         $('spYear').textContent = s.year;
-        $('spEp').textContent = `📡 EPISODE ${episodeNumber}/${totalEpisodes} — ${targetFile.name}`;
+        $('spEp').textContent = `📡 ${isCurrentlyScheduled ? 'NOW AIRING' : `EPISODE ${episodeNumber}/${totalEpisodes}`} — ${targetFile.name}`;
         $('spLoading').style.display = 'block';
         $('epShowName').textContent = s.name.toUpperCase();
         $('epList').innerHTML = '<div class="ep-loading">◈ LOADING EPISODES ◈</div>';
@@ -1194,13 +1258,46 @@ const nd=new Date();$('gDate').textContent=`${days[nd.getDay()]} ${nd.getDate()}
 
                     vid.addEventListener('canplay', function onLoad() {
                         vid.removeEventListener('canplay', onLoad);
-                        if (vid.duration && isFinite(vid.duration)) {
+
+                        // Determine where to start playing
+                        if (isCurrentlyScheduled) {
+                            // Calculate how long the show has been airing
+                            const now = new Date();
+                            const currentMinutes = (now.getHours() * 60) + now.getMinutes();
+                            const scheduleEntry = getScheduleEntryForShow(s.id);
+
+                            if (scheduleEntry && vid.duration && isFinite(vid.duration)) {
+                                const startMinutes = scheduleEntry.startTime;
+                                const minutesAired = currentMinutes - startMinutes;
+                                const secondsAired = minutesAired * 60;
+                                const maxSeek = vid.duration * 0.9;
+                                const targetTime = Math.min(secondsAired, maxSeek);
+
+                                if (targetTime > 30 && targetTime < vid.duration) {
+                                    vid.currentTime = targetTime;
+                                    const minutes = Math.floor(targetTime / 60);
+                                    const seconds = Math.floor(targetTime % 60);
+                                    showToast(`◈ JOINED LIVE — ${minutes}m ${seconds}s IN PROGRESS ◈`);
+                                } else {
+                                    vid.currentTime = 0;
+                                    showToast(`◈ NOW AIRING — JUST STARTED ◈`);
+                                }
+                            } else {
+                                vid.currentTime = 0;
+                                showToast(`◈ NOW AIRING FROM START ◈`);
+                            }
+                        } else if (vid.duration && isFinite(vid.duration)) {
+                            // Not scheduled → random timestamp for "joined in progress" feel
                             const randomTime = Math.floor(Math.random() * (vid.duration * 0.9 - 30) + 30);
                             vid.currentTime = randomTime;
                             const minutes = Math.floor(randomTime / 60);
                             const seconds = Math.floor(randomTime % 60);
-                            showToast(`◈ RESUME FROM ${minutes}:${seconds.toString().padStart(2, '0')} ◈`);
+                            showToast(`◈ JOINED IN PROGRESS — ${minutes}:${seconds.toString().padStart(2, '0')} ◈`);
+                        } else {
+                            vid.currentTime = 0;
+                            showToast(`◈ PLAYING FROM START ◈`);
                         }
+
                         vid.play().catch(() => {
                             showToast('◈ CLICK THE VIDEO TO START ◈');
                         });
