@@ -1488,10 +1488,7 @@
     <div class="modal-bg" id="modalDonate"><div class="modal-box"><h2>☕ BUY ME A COFFEE</h2><p>Enjoying The Tube? Help keep the archive running!</p><div class="modal-opts"><a class="dl dl-bmc" id="bmcLink" href="https://buymeacoffee.com/oakowltv" target="_blank">☕ BUYMEACOFFEE.COM/OAKOWLTV</a><a class="dl dl-em" href="mailto:oakowlrecords@gmail.com" target="_blank">✉ oakowlrecords@gmail.com</a></div><button class="modal-close" id="modalClose">✕ CLOSE</button></div></div>
     <div class="toast" id="toast"></div>
     <script>
-        // All the JavaScript remains exactly the same as the previous working version
-        // (keeping all the working LIVE MODE functionality)
-        // The only change is the HTML/CSS layout for the live indicator position
-
+        // All shows array and cats remain the same as before
         const shows = [
             { id: 27, ch: '28', time: '6:00 AM', name: 'Reading Rainbow', emoji: '🌈', cat: 'classic', year: '1983', badges: ['PLAYLIST', 'PBS', 'CLASSIC'], desc: "LeVar Burton takes you on a magical journey through children's literature.", tickers: ['Take a look its in a book'], archiveId: 'ReadingRainbowTVSeries', playlist: true },
             { id: 33, ch: '34', time: '6:30 AM', name: '90s Nickelodeon VHS', emoji: '📼', cat: 'animation', year: '1990s', badges: ['PLAYLIST', 'NICK', 'VHS'], desc: 'Authentic VHS recording of 90s Nickelodeon cartoons.', tickers: ['Nicktoons block'], archiveId: '1-3-2025-90s-nickelodeon-tape-2', playlist: true },
@@ -1666,7 +1663,7 @@
             return Math.max(0, Math.min(secondsAired, 3600));
         }
 
-        async function autoLiveNow(showId) {
+        async function autoLiveNow(showId, autoPlay = true) {
             if (!tvOn) return;
             const s = shows.find(x => x.id === showId);
             if (!s) return;
@@ -1733,7 +1730,7 @@
                 $('lTicker').classList.add('show');
                 renderList();
                 $('spLoading').style.display = 'none';
-                playFile(s, files, episodeIndex, 0, true, liveSeekTime);
+                playFile(s, files, episodeIndex, 0, autoPlay, liveSeekTime);
                 $('lSplash').classList.remove('show');
                 screen('video');
             });
@@ -1745,7 +1742,45 @@
         $('fsBtn').addEventListener('click', () => { sndClick(); const wrap = $('screenWrap'); if (!document.fullscreenElement) { (wrap.requestFullscreen || wrap.webkitRequestFullscreen || wrap.mozRequestFullScreen).call(wrap).catch(() => { }); $('fsBtn').textContent = '✕'; } else { (document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen).call(document).catch(() => { }); $('fsBtn').textContent = '⛶'; } });
         document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement) $('fsBtn').textContent = '⛶'; });
 
-        function powerOn(cb) { tvOn = true; $('pwrBtn').classList.add('on'); sndPwrOn(); if (!liveMode) { const pl = shows.filter(s => s.playlist); const pick = pl[Math.floor(Math.random() * pl.length)]; setTimeout(() => { if (pick) tuneShow(pick.id, true); if (cb) cb(); }, 700); } else { setTimeout(() => { checkAndSwitchLiveChannel(); if (cb) cb(); }, 700); } }
+        // UPDATED powerOn function - now starts at the current live program with correct timestamp!
+        function powerOn(cb) {
+            tvOn = true;
+            $('pwrBtn').classList.add('on');
+            sndPwrOn();
+
+            // Get the currently scheduled show
+            const currentSchedule = getCurrentShow();
+
+            if (currentSchedule && !currentSchedule.message) {
+                // There's a show on air right now - join it live!
+                const currentShow = shows.find(s => s.id === currentSchedule.id);
+                if (currentShow) {
+                    // Calculate the live seek time
+                    const liveSeekTime = calculateLiveSeekTime(currentSchedule);
+                    const minutes = Math.floor(liveSeekTime / 60);
+                    const seconds = Math.floor(liveSeekTime % 60);
+                    showToast(`🔴 TUNING IN — ${currentShow.name} (LIVE at ${minutes}:${seconds.toString().padStart(2, '0')})`);
+
+                    // Use autoLiveNow to join the current program at the correct timestamp
+                    setTimeout(() => {
+                        if (tvOn) {
+                            autoLiveNow(currentShow.id, true);
+                        }
+                        if (cb) cb();
+                    }, 700);
+                    return;
+                }
+            }
+
+            // Fallback: pick a random show from playlist
+            const pl = shows.filter(s => s.playlist);
+            const pick = pl[Math.floor(Math.random() * pl.length)];
+            setTimeout(() => {
+                if (pick && tvOn) tuneShow(pick.id, true);
+                if (cb) cb();
+            }, 700);
+        }
+
         function powerOff() { sndPwrOff(); tvOn = false; active = null; activeEp = 0; $('pwrBtn').classList.remove('on'); clearInterval(noiseTimer); clearInterval(vhsTimer); vid.pause(); vid.src = ''; stopReels(); $('tPlayIcon').textContent = '▶'; $('lTicker').classList.remove('show'); $('npBar').classList.remove('show'); $('vhsShowName').textContent = '◈ NO TAPE LOADED ◈'; $('vhsEpName').textContent = ''; $('vhsTime').textContent = '--:--'; $('chDisp').textContent = '— —'; $('epList').innerHTML = '<div class="ep-empty">Power on &amp; select<br>a show to see<br>episodes here</div>'; $('epShowName').textContent = '— SELECT A SHOW —'; showOff(() => renderList()); }
         $('pwrBtn').addEventListener('click', () => { sndClick(); tvOn ? powerOff() : powerOn(); });
 
@@ -1794,7 +1829,7 @@
                     currentLiveShowId = currentShow.id;
                     setTimeout(() => {
                         if (liveMode && tvOn) {
-                            autoLiveNow(newShow.id);
+                            autoLiveNow(newShow.id, true);
                         }
                     }, 500);
                 }
@@ -1884,93 +1919,15 @@
 
         function getDailyEpisodeIndex(showId, totalEpisodes) { const storageKey = `thetube_daily_episode_${showId}`, lastDateKey = `${storageKey}_date`, today = new Date().toDateString(); const lastPlayedDate = localStorage.getItem(lastDateKey); let currentEpisode = localStorage.getItem(storageKey); if (currentEpisode === null) currentEpisode = 0; else currentEpisode = parseInt(currentEpisode); if (lastPlayedDate !== today) { currentEpisode = (currentEpisode + 1) % totalEpisodes; localStorage.setItem(storageKey, currentEpisode); localStorage.setItem(lastDateKey, today); } return currentEpisode; }
 
+        // UPDATED liveNow function - now uses autoLiveNow with autoPlay=true for click-free experience!
         async function liveNow(showId) {
             if (liveMode) stopLiveMode();
-            if (active && active.id !== showId) { if (noiseTimer) clearInterval(noiseTimer); if (vhsTimer) clearInterval(vhsTimer); if (window._saveInterval) clearInterval(window._saveInterval); vid.pause(); vid.src = ''; vid.load(); if (typeof stopReels === 'function') stopReels(); }
-            if (!tvOn) { powerOn(() => setTimeout(() => liveNow(showId), 600)); return; }
-            const s = shows.find(x => x.id === showId); if (!s) return;
-            const files = await fetchFiles(s.archiveId); if (!files || files.length === 0) { tuneShow(showId, true); return; }
-            const currentScheduled = getCurrentShow(); const isCurrentlyScheduled = (currentScheduled && currentScheduled.id === showId);
-            let episodeIndex = 0; const storageKey = `thetube_episode_${showId}`; let savedEpisode = localStorage.getItem(storageKey);
-            if (isCurrentlyScheduled) { episodeIndex = getDailyEpisodeIndex(showId, files.length); } else { if (savedEpisode !== null) { episodeIndex = parseInt(savedEpisode); if (isNaN(episodeIndex) || episodeIndex >= files.length) episodeIndex = 0; } }
-            const targetFile = files[episodeIndex]; const episodeNumber = episodeIndex + 1, totalEpisodes = files.length;
-            const funnyLines = { 'Viva La Bam': ['🛹 BAM!', 'DON VITO IS WATCHING'], 'Jackass': ['💀 PAIN IS FUN', 'STEVE-O DID WHAT?'], 'Jerry Springer': ['🎙️ JERRY! JERRY!', 'CHAIR THROW!'], 'Beavis and Butt-Head': ['🎸 UH HUH HUH', 'FIRE FIRE FIRE', 'I AM THE GREAT CORNHOLIO'], 'Batman TAS': ['🦇 I AM VENGEANCE'], 'Spider-Man TAS': ['🕷️ SHOCKER!', 'WITH GREAT POWER'], 'Buffy': ['🧛 SLAYER ALERT', 'THE HELLMOUTH'], 'Horrid Henry': ['😈 HORRID HENRY!', 'PURPLE HAND GANG', 'PERFECT PETER'], 'Tracy Beaker': ['📝 THE DUMPING GROUND', 'JUST TRACY', 'ELAINE THE PAIN'] };
-            const showLines = funnyLines[s.name] || ['📺 TUNE IN', 'CLASSIC VIBES', 'CRT GOODNESS']; const randomLine = showLines[Math.floor(Math.random() * showLines.length)];
-            if (isCurrentlyScheduled) showToast(`◈ NOW AIRING — ${s.name} ◈ ${randomLine} ◈ (Episode ${episodeNumber}/${totalEpisodes})`);
-            else showToast(`◈ EPISODE ${episodeNumber} of ${totalEpisodes} ◈ ${randomLine} ◈`);
-            if (noiseTimer) clearInterval(noiseTimer); if (vhsTimer) clearInterval(vhsTimer); if (window._saveInterval) clearInterval(window._saveInterval);
-            vid.pause(); vid.src = ''; vid.load(); if (typeof stopReels === 'function') stopReels();
-            const playIcon = $('tPlayIcon'); if (playIcon) playIcon.textContent = '▶';
-            $('lTicker').classList.remove('show'); $('lVideo').classList.remove('show');
-            active = s; activeEp = episodeIndex;
-            const vhsShow = $('vhsShowName'); if (vhsShow) vhsShow.textContent = s.name.toUpperCase();
-            const vhsEp = $('vhsEpName'); if (vhsEp) vhsEp.textContent = targetFile.name.length > 18 ? targetFile.name.slice(0, 16) + '…' : targetFile.name;
-            const vhsTime = $('vhsTime'); if (vhsTime) vhsTime.textContent = '--:--';
-            $('chDisp').textContent = `CH ${s.ch}`; $('npName').textContent = s.name; $('npCh').textContent = `CH ${s.ch}`; $('npBar').classList.add('show');
-            let tickerText = isCurrentlyScheduled ? `${s.name} — ${randomLine} — NOW AIRING — EP ${episodeNumber}/${totalEpisodes}` : `${s.name} — ${randomLine} — EP ${episodeNumber}/${totalEpisodes}`;
-            const tk = $('tickerTxt'); tk.textContent = `◈  ${tickerText}  ◈  ${tickerText}  ◈`; tk.style.animation = 'none'; void tk.offsetHeight; tk.style.animation = '';
-            $('spEmoji').textContent = s.emoji; $('spTitle').textContent = s.name; $('spYear').textContent = s.year;
-            $('spEp').textContent = `📡 ${isCurrentlyScheduled ? 'NOW AIRING' : `EPISODE ${episodeNumber}/${totalEpisodes}`} — ${targetFile.name}`;
-            $('spLoading').style.display = 'block'; $('epShowName').textContent = s.name.toUpperCase(); $('epList').innerHTML = '<div class="ep-loading">◈ LOADING EPISODES ◈</div>';
-            if (typeof showStaticAnim === 'function') {
-                showStaticAnim('TUNING...', async () => {
-                    screen('splash'); $('lTicker').classList.add('show'); if (typeof renderList === 'function') renderList();
-                    const episodeFiles = await fetchFiles(s.archiveId);
-                    if (episodeFiles && episodeFiles.length) { if (typeof buildSidebar === 'function') buildSidebar(episodeFiles, episodeIndex, s); $('spEp').textContent = episodeFiles[episodeIndex]?.name || s.name; const vhsEpName = $('vhsEpName'); if (vhsEpName) vhsEpName.textContent = episodeFiles[episodeIndex]?.name.length > 18 ? episodeFiles[episodeIndex].name.slice(0, 16) + '…' : episodeFiles[episodeIndex].name; } else { $('spEp').textContent = s.name; }
-                    $('spLoading').style.display = 'none';
-                    const onSplash = () => {
-                        $('lSplash').removeEventListener('click', onSplash);
-                        vid.src = targetFile.url; vid.volume = volumeVal || 0.8; vid.load();
-                        vid.addEventListener('canplay', function onLoad() {
-                            vid.removeEventListener('canplay', onLoad);
-                            if (isCurrentlyScheduled) {
-                                const now = new Date(); const currentMinutes = (now.getHours() * 60) + now.getMinutes();
-                                const scheduleEntry = getScheduleEntryForShow(s.id);
-                                if (scheduleEntry && vid.duration && isFinite(vid.duration)) {
-                                    const startMinutes = scheduleEntry.startTime;
-                                    const minutesAired = currentMinutes - startMinutes;
-                                    const secondsAired = minutesAired * 60;
-                                    const maxSeek = vid.duration * 0.9;
-                                    const targetTime = Math.min(secondsAired, maxSeek);
-                                    if (targetTime > 30 && targetTime < vid.duration) { vid.currentTime = targetTime; const minutes = Math.floor(targetTime / 60), seconds = Math.floor(targetTime % 60); showToast(`◈ JOINED LIVE — ${minutes}m ${seconds}s IN PROGRESS ◈`); } else { vid.currentTime = 0; showToast(`◈ NOW AIRING — JUST STARTED ◈`); }
-                                } else { vid.currentTime = 0; showToast(`◈ NOW AIRING FROM START ◈`); }
-                            } else if (vid.duration && isFinite(vid.duration)) { const randomTime = Math.floor(Math.random() * (vid.duration * 0.9 - 30) + 30); vid.currentTime = randomTime; const minutes = Math.floor(randomTime / 60), seconds = Math.floor(randomTime % 60); showToast(`◈ JOINED IN PROGRESS — ${minutes}:${seconds.toString().padStart(2, '0')} ◈`); } else { vid.currentTime = 0; showToast(`◈ PLAYING FROM START ◈`); }
-                            vid.play().catch(() => { showToast('◈ CLICK THE VIDEO TO START ◈'); });
-                        });
-                        if (typeof screen === 'function') screen('video');
-                        $('lTicker').classList.add('show'); if (playIcon) playIcon.textContent = '⏸';
-                        if (vhsShow) vhsShow.textContent = s.name.toUpperCase(); if (vhsEp) vhsEp.textContent = targetFile.name.length > 18 ? targetFile.name.slice(0, 16) + '…' : targetFile.name; if (vhsTime) vhsTime.textContent = '00:00';
-                        if (typeof startReels === 'function') startReels(); if (typeof markEpActive === 'function') markEpActive(episodeIndex);
-                        vid.onended = () => {
-                            if (typeof stopReels === 'function') stopReels();
-                            let nextEpisode = episodeIndex + 1; if (nextEpisode >= episodeFiles.length) nextEpisode = 0;
-                            localStorage.setItem(storageKey, nextEpisode);
-                            if (nextEpisode === 0) showToast(`◈ SERIES COMPLETE! STARTING OVER ◈ ${randomLine} ◈`);
-                            else showToast(`◈ NEXT EPISODE IN 3 SECONDS... EP ${nextEpisode + 1}/${totalEpisodes} ◈`);
-                            setTimeout(() => {
-                                if (active && active.id === s.id) {
-                                    const nextFile = episodeFiles[nextEpisode];
-                                    if (nextFile) {
-                                        if (window._saveInterval) clearInterval(window._saveInterval);
-                                        vid.src = nextFile.url; vid.volume = volumeVal || 0.8; vid.load();
-                                        vid.addEventListener('canplay', function onLoadNext() {
-                                            vid.removeEventListener('canplay', onLoadNext);
-                                            vid.currentTime = 0;
-                                            showToast(`◈ NOW PLAYING EPISODE ${nextEpisode + 1}/${totalEpisodes} ◈`);
-                                            vid.play().catch(() => { showToast('◈ CLICK THE VIDEO TO START ◈'); });
-                                        });
-                                        $('spEp').textContent = nextFile.name; $('vhsEpName').textContent = nextFile.name.length > 18 ? nextFile.name.slice(0, 16) + '…' : nextFile.name; $('vhsTime').textContent = '00:00'; $('tPlayIcon').textContent = '⏸';
-                                        if (typeof markEpActive === 'function') markEpActive(nextEpisode); if (typeof buildSidebar === 'function') buildSidebar(episodeFiles, nextEpisode, s);
-                                        window._saveInterval = setInterval(() => { if (vid.currentTime && vid.duration && !vid.paused && vid.currentTime < vid.duration - 5) saveResumePosition(s.id, nextEpisode, vid.currentTime); }, 10000);
-                                        vid.onended = arguments.callee;
-                                    }
-                                }
-                            }, 3000);
-                        };
-                    };
-                    $('lSplash').addEventListener('click', onSplash);
-                });
-            } else { screen('splash'); $('lTicker').classList.add('show'); const episodeFiles = await fetchFiles(s.archiveId); if (episodeFiles && episodeFiles.length) { if (typeof buildSidebar === 'function') buildSidebar(episodeFiles, episodeIndex, s); } $('spLoading').style.display = 'none'; const onSplash = () => { $('lSplash').removeEventListener('click', onSplash); vid.src = targetFile.url; vid.load(); vid.play().catch(() => { }); screen('video'); }; $('lSplash').addEventListener('click', onSplash); }
+            if (!tvOn) {
+                powerOn(() => setTimeout(() => liveNow(showId), 600));
+                return;
+            }
+            // Use autoLiveNow which auto-plays without splash screen click
+            await autoLiveNow(showId, true);
         }
 
         async function tuneShow(showId, randomEp) {
