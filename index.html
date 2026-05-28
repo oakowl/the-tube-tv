@@ -1879,17 +1879,27 @@
                         if (typeof markEpActive === 'function') markEpActive(episodeIndex);
                         vid.onended = () => {
                             if (typeof stopReels === 'function') stopReels();
+
+                            // Calculate next episode
                             let nextEpisode = episodeIndex + 1;
                             if (nextEpisode >= episodeFiles.length) nextEpisode = 0;
+
+                            // Save progress for next time
                             localStorage.setItem(storageKey, nextEpisode);
-                            if (nextEpisode === 0) { showToast(`◈ SERIES COMPLETE! STARTING OVER ◈ ${randomLine} ◈`); } else { showToast(`◈ NEXT EPISODE IN 3 SECONDS... EP ${nextEpisode + 1}/${totalEpisodes} ◈`); }
+
+                            // Show what's happening
+                            if (nextEpisode === 0) {
+                                showToast(`◈ SERIES COMPLETE! STARTING OVER ◈ ${randomLine} ◈`);
+                            } else {
+                                showToast(`◈ NEXT EPISODE IN 3 SECONDS... EP ${nextEpisode + 1}/${totalEpisodes} ◈`);
+                            }
+
+                            // Auto-play next episode from BEGINNING (not live mode)
                             setTimeout(() => {
                                 if (active && active.id === s.id) {
-                                    // Use tuneShow to play next episode from beginning (not liveNow)
                                     tuneShow(s.id, false);
                                 }
                             }, 3000);
-                        };
                         };
                     };
                     $('lSplash').addEventListener('click', onSplash);
