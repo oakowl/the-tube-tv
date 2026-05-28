@@ -1867,16 +1867,43 @@
         }
 
         async function liveNow(showId) {
-            if (!tvOn) { powerOn(() => setTimeout(() => liveNow(showId), 600)); return; }
+            // If already playing a different show, force clean stop
+            if (active && active.id !== showId) {
+                // Clear all intervals and timers
+                if (noiseTimer) clearInterval(noiseTimer);
+                if (vhsTimer) clearInterval(vhsTimer);
+                if (window._saveInterval) clearInterval(window._saveInterval);
+
+                // Stop and clear video
+                vid.pause();
+                vid.src = '';
+                vid.load(); // This helps reset the video element
+
+                // Stop reels animation
+                if (typeof stopReels === 'function') stopReels();
+            }
+
+            if (!tvOn) {
+                powerOn(() => setTimeout(() => liveNow(showId), 600));
+                return;
+            }
+
             const s = shows.find(x => x.id === showId);
             if (!s) return;
+
             const files = await fetchFiles(s.archiveId);
-            if (!files || files.length === 0) { tuneShow(showId, true); return; }
+            if (!files || files.length === 0) {
+                tuneShow(showId, true);
+                return;
+            }
+
             const currentScheduled = getCurrentShow();
             const isCurrentlyScheduled = (currentScheduled && currentScheduled.id === showId);
+
             let episodeIndex = 0;
             const storageKey = `thetube_episode_${showId}`;
             let savedEpisode = localStorage.getItem(storageKey);
+
             if (isCurrentlyScheduled) {
                 episodeIndex = getDailyEpisodeIndex(showId, files.length);
                 console.log(`📺 LIVE NOW (scheduled): daily episode ${episodeIndex + 1}/${files.length}`);
@@ -1887,9 +1914,11 @@
                 }
                 console.log(`📺 LIVE NOW (other): saved episode ${episodeIndex + 1}/${files.length}`);
             }
+
             const targetFile = files[episodeIndex];
             const episodeNumber = episodeIndex + 1;
             const totalEpisodes = files.length;
+
             const funnyLines = {
                 'Viva La Bam': ['🛹 BAM!', 'DON VITO IS WATCHING', 'CASTLE BAM RULES', 'WHERE\'S RAAB?'],
                 'Jackass': ['💀 PAIN IS FUN', 'STEVE-O DID WHAT?', 'DON\'T TRY THIS', 'JOHNNY KNOXVILLE SURVIVED'],
@@ -1912,24 +1941,34 @@
                 'The Twilight Zone': ['🌀 SUBMITTED FOR APPROVAL', 'FIFTH DIMENSION', 'DOOR OPENS', 'SERLING NARRATES'],
                 'Jerry Springer': ['🎙️ JERRY! JERRY!', 'CHAIR THROW!', 'YOU ARE THE FATHER!', 'FINAL THOUGHTS']
             };
+
             const showLines = funnyLines[s.name] || ['📺 TUNE IN', 'CLASSIC VIBES', 'CRT GOODNESS', 'RETRO REWIND'];
             const randomLine = showLines[Math.floor(Math.random() * showLines.length)];
+
             if (isCurrentlyScheduled) {
                 showToast(`◈ NOW AIRING — ${s.name} ◈ ${randomLine} ◈ (Episode ${episodeNumber}/${totalEpisodes})`);
             } else {
                 showToast(`◈ EPISODE ${episodeNumber} of ${totalEpisodes} ◈ ${randomLine} ◈`);
             }
+
             if (noiseTimer) clearInterval(noiseTimer);
             if (vhsTimer) clearInterval(vhsTimer);
+            if (window._saveInterval) clearInterval(window._saveInterval);
+
             vid.pause();
             vid.src = '';
+            vid.load(); // Reset video element
+
             if (typeof stopReels === 'function') stopReels();
+
             const playIcon = $('tPlayIcon');
             if (playIcon) playIcon.textContent = '▶';
             $('lTicker').classList.remove('show');
             $('lVideo').classList.remove('show');
+
             active = s;
             activeEp = episodeIndex;
+
             const vhsShow = $('vhsShowName');
             if (vhsShow) vhsShow.textContent = s.name.toUpperCase();
             const vhsEp = $('vhsEpName');
@@ -1940,6 +1979,7 @@
             $('npName').textContent = s.name;
             $('npCh').textContent = `CH ${s.ch}`;
             $('npBar').classList.add('show');
+
             let tickerText;
             if (isCurrentlyScheduled) {
                 tickerText = `${s.name} — ${randomLine} — NOW AIRING — EP ${episodeNumber}/${totalEpisodes}`;
@@ -1951,6 +1991,7 @@
             tk.style.animation = 'none';
             void tk.offsetHeight;
             tk.style.animation = '';
+
             $('spEmoji').textContent = s.emoji;
             $('spTitle').textContent = s.name;
             $('spYear').textContent = s.year;
@@ -1958,11 +1999,13 @@
             $('spLoading').style.display = 'block';
             $('epShowName').textContent = s.name.toUpperCase();
             $('epList').innerHTML = '<div class="ep-loading">◈ LOADING EPISODES ◈</div>';
+
             if (typeof showStaticAnim === 'function') {
                 showStaticAnim('TUNING...', async () => {
                     screen('splash');
                     $('lTicker').classList.add('show');
                     if (typeof renderList === 'function') renderList();
+
                     const episodeFiles = await fetchFiles(s.archiveId);
                     if (episodeFiles && episodeFiles.length) {
                         if (typeof buildSidebar === 'function') buildSidebar(episodeFiles, episodeIndex, s);
@@ -1971,11 +2014,13 @@
                         if (vhsEpName) vhsEpName.textContent = episodeFiles[episodeIndex]?.name.length > 18 ? episodeFiles[episodeIndex].name.slice(0, 16) + '…' : episodeFiles[episodeIndex].name;
                     } else { $('spEp').textContent = s.name; }
                     $('spLoading').style.display = 'none';
+
                     const onSplash = () => {
                         $('lSplash').removeEventListener('click', onSplash);
                         vid.src = targetFile.url;
                         vid.volume = volumeVal || 0.8;
                         vid.load();
+
                         vid.addEventListener('canplay', function onLoad() {
                             vid.removeEventListener('canplay', onLoad);
                             if (isCurrentlyScheduled) {
@@ -2013,6 +2058,81 @@
                             }
                             vid.play().catch(() => { showToast('◈ CLICK THE VIDEO TO START ◈'); });
                         });
+
+                        if (typeof screen === 'function') screen('video');
+                        $('lTicker').classList.add('show');
+                        if (playIcon) playIcon.textContent = '⏸';
+                        if (vhsShow) vhsShow.textContent = s.name.toUpperCase();
+                        if (vhsEp) vhsEp.textContent = targetFile.name.length > 18 ? targetFile.name.slice(0, 16) + '…' : targetFile.name;
+                        if (vhsTime) vhsTime.textContent = '00:00';
+                        if (typeof startReels === 'function') startReels();
+                        if (typeof markEpActive === 'function') markEpActive(episodeIndex);
+
+                        vid.onended = () => {
+                            if (typeof stopReels === 'function') stopReels();
+
+                            let nextEpisode = episodeIndex + 1;
+                            if (nextEpisode >= episodeFiles.length) nextEpisode = 0;
+
+                            localStorage.setItem(storageKey, nextEpisode);
+
+                            if (nextEpisode === 0) {
+                                showToast(`◈ SERIES COMPLETE! STARTING OVER ◈ ${randomLine} ◈`);
+                            } else {
+                                showToast(`◈ NEXT EPISODE IN 3 SECONDS... EP ${nextEpisode + 1}/${totalEpisodes} ◈`);
+                            }
+
+                            setTimeout(() => {
+                                if (active && active.id === s.id) {
+                                    const nextFile = episodeFiles[nextEpisode];
+                                    if (nextFile) {
+                                        if (window._saveInterval) clearInterval(window._saveInterval);
+
+                                        vid.src = nextFile.url;
+                                        vid.volume = volumeVal || 0.8;
+                                        vid.load();
+
+                                        vid.addEventListener('canplay', function onLoadNext() {
+                                            vid.removeEventListener('canplay', onLoadNext);
+                                            vid.currentTime = 0;
+                                            showToast(`◈ NOW PLAYING EPISODE ${nextEpisode + 1}/${totalEpisodes} ◈`);
+                                            vid.play().catch(() => {
+                                                showToast('◈ CLICK THE VIDEO TO START ◈');
+                                            });
+                                        });
+
+                                        $('spEp').textContent = nextFile.name;
+                                        $('vhsEpName').textContent = nextFile.name.length > 18 ? nextFile.name.slice(0, 16) + '…' : nextFile.name;
+                                        $('vhsTime').textContent = '00:00';
+                                        $('tPlayIcon').textContent = '⏸';
+
+                                        if (typeof markEpActive === 'function') markEpActive(nextEpisode);
+                                        if (typeof buildSidebar === 'function') buildSidebar(episodeFiles, nextEpisode, s);
+
+                                        window._saveInterval = setInterval(() => {
+                                            if (vid.currentTime && vid.duration && !vid.paused && vid.currentTime < vid.duration - 5) {
+                                                saveResumePosition(s.id, nextEpisode, vid.currentTime);
+                                            }
+                                        }, 10000);
+
+                                        vid.onended = arguments.callee;
+                                    }
+                                }
+                            }, 3000);
+                        };
+                    };
+                    $('lSplash').addEventListener('click', onSplash);
+                });
+            } else {
+                screen('splash');
+                $('lTicker').classList.add('show');
+                const episodeFiles = await fetchFiles(s.archiveId);
+                if (episodeFiles && episodeFiles.length) { if (typeof buildSidebar === 'function') buildSidebar(episodeFiles, episodeIndex, s); }
+                $('spLoading').style.display = 'none';
+                const onSplash = () => { $('lSplash').removeEventListener('click', onSplash); vid.src = targetFile.url; vid.load(); vid.play().catch(() => { }); screen('video'); };
+                $('lSplash').addEventListener('click', onSplash);
+            }
+        }
                         if (typeof screen === 'function') screen('video');
                         $('lTicker').classList.add('show');
                         if (playIcon) playIcon.textContent = '⏸';
