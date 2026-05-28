@@ -1883,7 +1883,13 @@
                             if (nextEpisode >= episodeFiles.length) nextEpisode = 0;
                             localStorage.setItem(storageKey, nextEpisode);
                             if (nextEpisode === 0) { showToast(`◈ SERIES COMPLETE! STARTING OVER ◈ ${randomLine} ◈`); } else { showToast(`◈ NEXT EPISODE IN 3 SECONDS... EP ${nextEpisode + 1}/${totalEpisodes} ◈`); }
-                            setTimeout(() => { if (active && active.id === s.id) liveNow(s.id); }, 3000);
+                            setTimeout(() => {
+                                if (active && active.id === s.id) {
+                                    // Use tuneShow to play next episode from beginning (not liveNow)
+                                    tuneShow(s.id, false);
+                                }
+                            }, 3000);
+                        };
                         };
                     };
                     $('lSplash').addEventListener('click', onSplash);
