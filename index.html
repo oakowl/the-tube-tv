@@ -224,7 +224,151 @@
             text-align: center;
             animation: flk .8s infinite
         }
+        /* ============================================
+   MOBILE OPTIMIZATIONS
+   ============================================ */
 
+        /* Small phones (portrait) */
+        @media (max-width: 768px) {
+            body {
+                padding: 6px 4px 20px;
+            }
+
+            .logo {
+                font-size: clamp(1.5rem, 6vw, 2.5rem);
+            }
+
+            .tagline {
+                font-size: 0.65rem;
+                letter-spacing: 0.15em;
+            }
+
+            .header-actions {
+                gap: 6px;
+            }
+
+            .hbtn {
+                font-size: 0.65rem;
+                padding: 4px 8px;
+            }
+
+            /* Hide some buttons on very small screens, keep share + surprise */
+            .btn-donate {
+                display: none; /* Hide donate on small screens to save space */
+            }
+
+            /* Search box smaller */
+            .header-actions input {
+                width: 100px !important;
+                font-size: 0.65rem !important;
+                padding: 4px 8px !important;
+            }
+
+            /* TV takes full width */
+            .layout {
+                gap: 8px;
+                padding: 6px 4px 0;
+            }
+
+            /* Make knobs smaller for fat thumbs */
+            .knob90 {
+                width: 24px;
+                height: 24px;
+            }
+
+                .knob90::after {
+                    width: 2px;
+                    height: 7px;
+                    top: 2px;
+                }
+
+            .tbtn {
+                width: 42px; /* Wider for thumbs */
+                height: 32px;
+            }
+
+            .tbtn-icon {
+                font-size: 1rem;
+            }
+
+            .vhs-time {
+                font-size: 0.5rem;
+            }
+
+            /* Programme guide shows as single column */
+            .show-card {
+                padding: 8px 6px;
+            }
+
+            .s-time {
+                font-size: 0.7rem;
+                min-width: 32px;
+            }
+
+            .s-name {
+                font-size: 0.7rem;
+            }
+
+            .s-desc {
+                font-size: 0.5rem;
+                -webkit-line-clamp: 1; /* Only show 1 line on mobile */
+            }
+
+            /* Widget more compact */
+            #whatsOnWidget > div {
+                padding: 8px !important;
+                margin-bottom: 8px !important;
+            }
+
+            #whatsOnWidget .ticker-inner {
+                font-size: 0.6rem;
+            }
+        }
+
+        /* Very small phones (under 480px) */
+        @media (max-width: 480px) {
+            .hbtn {
+                font-size: 0.55rem;
+                padding: 3px 6px;
+            }
+
+            .btn-share, .btn-surprise {
+                /* Keep these visible */
+            }
+
+            .header-actions input {
+                width: 80px !important;
+            }
+
+            .tbtn {
+                width: 38px;
+                height: 28px;
+            }
+
+            .tbtn-icon {
+                font-size: 0.85rem;
+            }
+
+            .vhs-deck {
+                padding: 6px 10px;
+            }
+
+            .vhs-show-name {
+                font-size: 0.55rem;
+            }
+
+            .vhs-ep-name {
+                font-size: 0.45rem;
+            }
+
+            .sp-title {
+                font-size: 0.9rem;
+            }
+
+            .sp-emoji {
+                font-size: 2.5rem;
+            }
+        }
         @media(max-width:860px) {
             .ep-sidebar {
                 display: none
