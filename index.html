@@ -2038,10 +2038,54 @@
                                 showToast(`◈ NEXT EPISODE IN 3 SECONDS... EP ${nextEpisode + 1}/${totalEpisodes} ◈`);
                             }
 
-                            // Auto-play next episode from BEGINNING (not live mode)
+                            // AUTO-PLAY NEXT EPISODE WITHOUT SPLASH SCREEN
                             setTimeout(() => {
                                 if (active && active.id === s.id) {
-                                    tuneShow(s.id, false);
+                                    // Get the next episode file directly
+                                    const nextFile = episodeFiles[nextEpisode];
+                                    if (nextFile) {
+                                        // Update active episode
+                                        activeEp = nextEpisode;
+                                        episodeIndex = nextEpisode;
+
+                                        // Clear any existing intervals
+                                        if (window._saveInterval) clearInterval(window._saveInterval);
+
+                                        // Set video source and play directly
+                                        vid.src = nextFile.url;
+                                        vid.volume = volumeVal || 0.8;
+                                        vid.load();
+
+                                        vid.addEventListener('canplay', function onLoadNext() {
+                                            vid.removeEventListener('canplay', onLoadNext);
+                                            // Start from beginning (0:00)
+                                            vid.currentTime = 0;
+                                            showToast(`◈ NOW PLAYING EPISODE ${nextEpisode + 1}/${totalEpisodes} ◈`);
+                                            vid.play().catch(() => {
+                                                showToast('◈ CLICK THE VIDEO TO START ◈');
+                                            });
+                                        });
+
+                                        // Update UI for next episode
+                                        $('spEp').textContent = nextFile.name;
+                                        $('vhsEpName').textContent = nextFile.name.length > 18 ? nextFile.name.slice(0, 16) + '…' : nextFile.name;
+                                        $('vhsTime').textContent = '00:00';
+                                        $('tPlayIcon').textContent = '⏸';
+
+                                        // Update sidebar highlight
+                                        if (typeof markEpActive === 'function') markEpActive(nextEpisode);
+                                        if (typeof buildSidebar === 'function') buildSidebar(episodeFiles, nextEpisode, s);
+
+                                        // Save resume position every 10 seconds for new episode
+                                        window._saveInterval = setInterval(() => {
+                                            if (vid.currentTime && vid.duration && !vid.paused && vid.currentTime < vid.duration - 5) {
+                                                saveResumePosition(s.id, nextEpisode, vid.currentTime);
+                                            }
+                                        }, 10000);
+
+                                        // Update onended for this new episode
+                                        vid.onended = arguments.callee; // Reuse same function for continuous playback
+                                    }
                                 }
                             }, 3000);
                         };
