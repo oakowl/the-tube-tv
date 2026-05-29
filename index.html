@@ -1525,7 +1525,7 @@
     <div class="modal-bg" id="modalDonate"><div class="modal-box"><h2>☕ BUY ME A COFFEE</h2><p>Enjoying The Tube? Help keep the archive running!</p><div class="modal-opts"><a class="dl dl-bmc" id="bmcLink" href="https://buymeacoffee.com/oakowltv" target="_blank">☕ BUYMEACOFFEE.COM/OAKOWLTV</a><a class="dl dl-em" href="mailto:oakowlrecords@gmail.com" target="_blank">✉ oakowlrecords@gmail.com</a></div><button class="modal-close" id="modalClose">✕ CLOSE</button></div></div>
     <div class="toast" id="toast"></div>
     <script>
-        // All shows array remains the same
+        // All shows array remains the same (keeping the schedule with Tracy Beaker at 9am, Horrid Henry at 9:30am)
         const shows = [
             { id: 27, ch: '28', time: '6:00 AM', name: 'Reading Rainbow', emoji: '🌈', cat: 'classic', year: '1983', badges: ['PLAYLIST', 'PBS', 'CLASSIC'], desc: "LeVar Burton takes you on a magical journey through children's literature.", tickers: ['Take a look its in a book'], archiveId: 'ReadingRainbowTVSeries', playlist: true },
             { id: 33, ch: '34', time: '6:30 AM', name: '90s Nickelodeon VHS', emoji: '📼', cat: 'animation', year: '1990s', badges: ['PLAYLIST', 'NICK', 'VHS'], desc: 'Authentic VHS recording of 90s Nickelodeon cartoons.', tickers: ['Nicktoons block'], archiveId: '1-3-2025-90s-nickelodeon-tape-2', playlist: true },
@@ -1585,6 +1585,56 @@
         const $ = id => document.getElementById(id);
         const vid = $('vid');
 
+        // SAVED SETTINGS FUNCTIONS
+        function saveSettings() {
+            localStorage.setItem('thetube_settings', JSON.stringify({
+                volume: volumeVal,
+                staticIntensity: staticIntensity,
+                brightness: brightnessVal,
+                volClicks: vClicks,
+                staticClicks: sClicks,
+                brightClicks: bClicks,
+                kAngleVol: kAngle.kVol,
+                kAngleStatic: kAngle.kStatic,
+                kAngleBright: kAngle.kBright
+            }));
+        }
+
+        function loadSettings() {
+            const saved = localStorage.getItem('thetube_settings');
+            if (saved) {
+                try {
+                    const settings = JSON.parse(saved);
+                    volumeVal = settings.volume !== undefined ? settings.volume : 0.8;
+                    staticIntensity = settings.staticIntensity !== undefined ? settings.staticIntensity : 0.4;
+                    brightnessVal = settings.brightness !== undefined ? settings.brightness : 1.0;
+                    vClicks = settings.volClicks !== undefined ? settings.volClicks : 7;
+                    sClicks = settings.staticClicks !== undefined ? settings.staticClicks : 0;
+                    bClicks = settings.brightClicks !== undefined ? settings.brightClicks : 4;
+                    kAngle.kVol = settings.kAngleVol !== undefined ? settings.kAngleVol : 0;
+                    kAngle.kStatic = settings.kAngleStatic !== undefined ? settings.kAngleStatic : 0;
+                    kAngle.kBright = settings.kAngleBright !== undefined ? settings.kAngleBright : 0;
+
+                    // Apply loaded settings to UI
+                    if (vid) vid.volume = volumeVal;
+                    $('volFill').style.width = `${vClicks * 10}%`;
+                    $('kVol').style.transform = `rotate(${kAngle.kVol}deg)`;
+
+                    $('sbarFill').style.width = `${Math.round(staticIntensity * 100)}%`;
+                    $('kStatic').style.transform = `rotate(${kAngle.kStatic}deg)`;
+                    $('lScan').style.opacity = staticIntensity * 0.8;
+                    $('lPhos').style.opacity = staticIntensity * 0.5;
+
+                    $('screenWrap').style.filter = `brightness(${brightnessVal})`;
+                    $('kBright').style.transform = `rotate(${kAngle.kBright}deg)`;
+
+                    showToast(`◈ LOADED YOUR SAVED SETTINGS ◈`);
+                    return true;
+                } catch (e) { console.warn('Failed to load settings', e); }
+            }
+            return false;
+        }
+
         function saveResumePosition(showId, episodeIndex, currentTime) {
             localStorage.setItem(`thetube_resume_${showId}`, JSON.stringify({ episode: episodeIndex, timestamp: Math.floor(currentTime) }));
         }
@@ -1601,7 +1651,7 @@
             const seconds = Math.floor(timestamp % 60);
             badge.textContent = `⏯ RESUMING AT ${minutes}:${seconds.toString().padStart(2, '0')}`;
             badge.classList.remove('show');
-            void badge.offsetWidth; // Force reflow
+            void badge.offsetWidth;
             badge.classList.add('show');
             setTimeout(() => {
                 badge.classList.remove('show');
@@ -1661,7 +1711,6 @@
                     showToast(`🔴 LIVE — JOINED AT ${minutes}:${seconds.toString().padStart(2, '0')}`);
                 } else if (resumeTimestamp > 0 && resumeTimestamp < vid.duration - 5 && liveSeekTime === null) {
                     targetTime = resumeTimestamp;
-                    // Badge already shown in calling function, just toast
                     const minutes = Math.floor(targetTime / 60);
                     const seconds = Math.floor(targetTime % 60);
                     showToast(`◈ RESUMING FROM ${minutes}:${seconds.toString().padStart(2, '0')} ◈`);
@@ -1732,22 +1781,18 @@
             let resumeTimestamp = 0;
 
             if (randomEpisode) {
-                // Pick a random episode - start from beginning
                 episodeIndex = Math.floor(Math.random() * files.length);
                 localStorage.setItem(`thetube_episode_${showId}`, episodeIndex);
                 showToast(`🎲 SURPRISE! Random episode ${episodeIndex + 1}/${files.length}`);
             } else if (isCurrentlyScheduled) {
-                // Live show - use daily episode index
                 episodeIndex = getDailyEpisodeIndex(showId, files.length);
             } else {
-                // Normal selection - check for saved resume position
                 const storageKey = `thetube_episode_${showId}`;
                 let savedEp = localStorage.getItem(storageKey);
                 if (savedEp !== null) {
                     episodeIndex = parseInt(savedEp);
                     if (isNaN(episodeIndex) || episodeIndex >= files.length) episodeIndex = 0;
                 }
-                // Check for saved resume timestamp
                 const resumeData = getResumePosition(showId);
                 if (resumeData && resumeData.episode === episodeIndex && resumeData.timestamp > 30) {
                     resumeTimestamp = resumeData.timestamp;
@@ -1846,7 +1891,7 @@
             }, 700);
         }
 
-        function powerOff() { sndPwrOff(); tvOn = false; active = null; activeEp = 0; $('pwrBtn').classList.remove('on'); clearInterval(noiseTimer); clearInterval(vhsTimer); vid.pause(); vid.src = ''; stopReels(); $('tPlayIcon').textContent = '▶'; $('lTicker').classList.remove('show'); $('npBar').classList.remove('show'); $('vhsShowName').textContent = '◈ NO TAPE LOADED ◈'; $('vhsEpName').textContent = ''; $('vhsTime').textContent = '--:--'; $('chDisp').textContent = '— —'; $('epList').innerHTML = '<div class="ep-empty">Power on &amp; select<br>a show to see<br>episodes here</div>'; $('epShowName').textContent = '— SELECT A SHOW —'; showOff(() => renderList()); }
+        function powerOff() { sndPwrOff(); tvOn = false; active = null; activeEp = 0; $('pwrBtn').classList.remove('on'); clearInterval(noiseTimer); clearInterval(vhsTimer); vid.pause(); vid.src = ''; stopReels(); $('tPlayIcon').textContent = '▶'; $('lTicker').classList.remove('show'); $('npBar').classList.remove('show'); $('vhsShowName').textContent = '◈ NO TAPE LOADED ◈'; $('vhsEpName').textContent = ''; $('vhsTime').textContent = '--:--'; $('chDisp').textContent = '— —'; $('epList').innerHTML = '<div class="ep-empty">Power on &amp; select<br>a show to see<br>episodes here</div>'; $('epShowName').textContent = '— SELECT A SHOW —'; showOff(() => renderList()); saveSettings(); }
         $('pwrBtn').addEventListener('click', () => { sndClick(); tvOn ? powerOff() : powerOn(); });
 
         function stopLiveMode() {
@@ -1910,9 +1955,45 @@
             }
         });
 
-        let vClicks = 7; $('kVol').addEventListener('click', () => { sndKnob(); vClicks = (vClicks + 1) % 11; volumeVal = vClicks / 10; vid.volume = volumeVal; kAngle.kVol += 36; $('kVol').style.transform = `rotate(${kAngle.kVol}deg)`; $('volFill').style.width = `${vClicks * 10}%`; showToast(`◈ VOLUME: ${vClicks * 10}% ◈`); });
-        let sClicks = 0; $('kStatic').addEventListener('click', () => { sndKnob(); sClicks = (sClicks + 1) % 8; staticIntensity = sClicks / 7; kAngle.kStatic += 45; $('kStatic').style.transform = `rotate(${kAngle.kStatic}deg)`; $('sbarFill').style.width = `${Math.round(staticIntensity * 100)}%`; $('lScan').style.opacity = staticIntensity * 0.8; $('lPhos').style.opacity = staticIntensity * 0.5; });
-        let bClicks = 4; $('kBright').addEventListener('click', () => { sndKnob(); bClicks = (bClicks + 1) % 8; brightnessVal = 0.4 + bClicks * (0.85 / 7); kAngle.kBright += 45; $('kBright').style.transform = `rotate(${kAngle.kBright}deg)`; $('screenWrap').style.filter = `brightness(${brightnessVal})`; });
+        // Updated knob handlers with save
+        let vClicks = 7;
+        $('kVol').addEventListener('click', () => {
+            sndKnob();
+            vClicks = (vClicks + 1) % 11;
+            volumeVal = vClicks / 10;
+            vid.volume = volumeVal;
+            kAngle.kVol += 36;
+            $('kVol').style.transform = `rotate(${kAngle.kVol}deg)`;
+            $('volFill').style.width = `${vClicks * 10}%`;
+            showToast(`◈ VOLUME: ${vClicks * 10}% ◈`);
+            saveSettings();
+        });
+
+        let sClicks = 0;
+        $('kStatic').addEventListener('click', () => {
+            sndKnob();
+            sClicks = (sClicks + 1) % 8;
+            staticIntensity = sClicks / 7;
+            kAngle.kStatic += 45;
+            $('kStatic').style.transform = `rotate(${kAngle.kStatic}deg)`;
+            $('sbarFill').style.width = `${Math.round(staticIntensity * 100)}%`;
+            $('lScan').style.opacity = staticIntensity * 0.8;
+            $('lPhos').style.opacity = staticIntensity * 0.5;
+            showToast(`◈ STATIC: ${Math.round(staticIntensity * 100)}% ◈`);
+            saveSettings();
+        });
+
+        let bClicks = 4;
+        $('kBright').addEventListener('click', () => {
+            sndKnob();
+            bClicks = (bClicks + 1) % 8;
+            brightnessVal = 0.4 + bClicks * (0.85 / 7);
+            kAngle.kBright += 45;
+            $('kBright').style.transform = `rotate(${kAngle.kBright}deg)`;
+            $('screenWrap').style.filter = `brightness(${brightnessVal})`;
+            showToast(`◈ BRIGHTNESS: ${Math.round(brightnessVal * 100)}% ◈`);
+            saveSettings();
+        });
 
         function showToast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2400); }
         $('btnShare').addEventListener('click', () => { sndClick(); if (navigator.share) navigator.share({ title: 'The Tube', text: 'Classic TV on a CRT!', url: location.href }).catch(() => { }); else if (navigator.clipboard) navigator.clipboard.writeText(location.href).then(() => showToast('◈ LINK COPIED ◈')); else showToast('◈ THE TUBE — RETRO TV ARCHIVE ◈'); });
@@ -1939,6 +2020,9 @@
         const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'], months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
         const nd = new Date(); $('gDate').textContent = `${days[nd.getDay()]} ${nd.getDate()} ${months[nd.getMonth()]}`;
         buildCatTabs(); renderList(); screen('idle');
+
+        // Load saved settings on startup
+        loadSettings();
 
         function getCurrentShow() {
             const n = new Date(), m = (n.getHours() * 60) + n.getMinutes();
