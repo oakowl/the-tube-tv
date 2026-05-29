@@ -334,6 +334,43 @@
             box-shadow: inset 0 2px 4px rgba(0,0,0,.8)
         }
 
+        .resume-badge {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: #39ff14;
+            font-family: 'VT323',monospace;
+            font-size: .65rem;
+            padding: 3px 8px;
+            border-radius: 3px;
+            border-left: 3px solid #39ff14;
+            z-index: 20;
+            pointer-events: none;
+            display: none;
+            letter-spacing: .05em;
+        }
+
+            .resume-badge.show {
+                display: block;
+                animation: fadeOut 3s ease-out forwards;
+            }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+            }
+
+            70% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+                display: none;
+            }
+        }
+
         .screen-housing {
             background: #2a2a28;
             border-radius: 8px;
@@ -1482,13 +1519,13 @@
     </div>
     <div class="layout">
         <div class="ep-sidebar"><div class="ep-sidebar-hdr">📼 EPISODES</div><div class="ep-show-name" id="epShowName">— SELECT A SHOW —</div><div class="ep-list" id="epList"><div class="ep-empty">Power on &amp; select<br>a show to see<br>episodes here</div></div></div>
-        <div><div class="tv-shell"><div class="tv-top-strip"><span class="tv-brand-90s">NOSTALGIVISION™</span><div class="channel-area"><span id="liveModeIndicator" style="display:none;" class="live-indicator">🔴 LIVE</span><div class="ch-display" id="chDisp">— —</div></div></div><div class="screen-housing"><div class="screen-bezel-90s"><div class="screen-wrap" id="screenWrap"><div class="l-idle" id="lIdle"><div class="idle-icon">📺</div><div class="idle-title">THE TUBE</div><div class="idle-sub">◈ SELECT A PROGRAMME ◈</div><div class="test-bars"><div class="test-bar" style="background:#fff"></div><div class="test-bar" style="background:#ff0"></div><div class="test-bar" style="background:#0ff"></div><div class="test-bar" style="background:#0f0"></div><div class="test-bar" style="background:#f0f"></div><div class="test-bar" style="background:#f00"></div><div class="test-bar" style="background:#00f"></div><div class="test-bar" style="background:#000"></div></div></div><div class="l-video" id="lVideo"><video id="vid" playsinline preload="auto"></video></div><div class="l-vhsfx" id="lVhs"><canvas class="noisecanvas" id="vhsCanvas"></canvas><div class="vhs-stripe"></div><div class="vhs-band"></div><div class="vhs-lbl" id="vhsLbl">⏩ FF</div></div><div class="l-static" id="lStatic"><canvas class="noisecanvas" id="noiseCanvas"></canvas><div class="static-lbl" id="staticLbl">TUNING...</div></div><div class="l-off" id="lOff"></div><div class="l-splash" id="lSplash"><div class="sp-emoji" id="spEmoji"></div><div class="sp-title" id="spTitle"></div><div class="sp-year" id="spYear"></div><div class="sp-ep" id="spEp"></div><div class="sp-btn"></div><div class="sp-hint">▶ CLICK TO WATCH</div><div class="sp-loading" id="spLoading" style="display:none">LOADING EPISODES...</div></div><div class="l-scan" id="lScan"></div><div class="l-vig"></div><div class="l-phos" id="lPhos"></div><div class="l-ticker" id="lTicker"><span class="ticker-inner" id="tickerTxt"></span></div><div class="fs-btn" id="fsBtn" title="Fullscreen">⛶</div></div></div></div><div class="vhs-deck"><div class="vhs-cassette-housing"><div class="vhs-label-strip"><span class="vhs-show-name" id="vhsShowName">◈ NO TAPE LOADED ◈</span><span class="vhs-ep-name" id="vhsEpName"></span></div><div class="vhs-window"><div class="vhs-reel" id="reelL"></div><div class="vhs-tape-stretch"></div><div class="vhs-reel" id="reelR"></div><div class="vhs-time" id="vhsTime">--:--</div></div></div><div class="transport"><div class="tbtn" id="tRew" title="Rewind 15s"><span class="tbtn-icon">⏪</span><span class="tbtn-lbl">-15s</span></div><div class="tbtn" id="tPlay" title="Play / Pause"><span class="tbtn-icon" id="tPlayIcon">▶</span></div><div class="tbtn" id="tFF" title="Fast forward 15s"><span class="tbtn-icon">⏩</span><span class="tbtn-lbl">+15s</span></div></div></div><div class="controls-panel"><div class="knob-group"><div class="knob-unit"><div class="knob90 k-vol" id="kVol"></div><span class="kl90">VOL</span><div class="vol-ring"><div class="vol-ring-fill" id="volFill"></div></div></div><div class="knob-unit"><div class="knob90 k-static" id="kStatic"></div><span class="kl90">STATIC</span><div class="sbar"><div class="sbar-fill" id="sbarFill"></div></div></div><div class="knob-unit"><div class="knob90 k-bright" id="kBright"></div><span class="kl90">BRIGHT</span></div></div><div class="pwr-area"><div class="pwr90" id="pwrBtn"></div><span class="pwr-lbl">POWER</span></div><div class="spkr90"><div class="spkr-slot"></div><div class="spkr-slot"></div><div class="spkr-slot"></div><div class="spkr-slot"></div><div class="spkr-slot"></div><div class="spkr-slot"></div><div class="spkr-slot"></div><div class="spkr-slot"></div></div></div></div><div class="tv-base"></div><div class="src-note">◈ STREAMING VIA INTERNET ARCHIVE ◈</div></div>
+        <div><div class="tv-shell"><div class="tv-top-strip"><span class="tv-brand-90s">NOSTALGIVISION™</span><div class="channel-area"><span id="liveModeIndicator" style="display:none;" class="live-indicator">🔴 LIVE</span><div class="ch-display" id="chDisp">— —</div></div></div><div class="screen-housing"><div class="screen-bezel-90s"><div class="screen-wrap" id="screenWrap"><div class="l-idle" id="lIdle"><div class="idle-icon">📺</div><div class="idle-title">THE TUBE</div><div class="idle-sub">◈ SELECT A PROGRAMME ◈</div><div class="test-bars"><div class="test-bar" style="background:#fff"></div><div class="test-bar" style="background:#ff0"></div><div class="test-bar" style="background:#0ff"></div><div class="test-bar" style="background:#0f0"></div><div class="test-bar" style="background:#f0f"></div><div class="test-bar" style="background:#f00"></div><div class="test-bar" style="background:#00f"></div><div class="test-bar" style="background:#000"></div></div></div><div class="l-video" id="lVideo"><video id="vid" playsinline preload="auto"></video><div id="resumeBadge" class="resume-badge"></div></div><div class="l-vhsfx" id="lVhs"><canvas class="noisecanvas" id="vhsCanvas"></canvas><div class="vhs-stripe"></div><div class="vhs-band"></div><div class="vhs-lbl" id="vhsLbl">⏩ FF</div></div><div class="l-static" id="lStatic"><canvas class="noisecanvas" id="noiseCanvas"></canvas><div class="static-lbl" id="staticLbl">TUNING...</div></div><div class="l-off" id="lOff"></div><div class="l-splash" id="lSplash"><div class="sp-emoji" id="spEmoji"></div><div class="sp-title" id="spTitle"></div><div class="sp-year" id="spYear"></div><div class="sp-ep" id="spEp"></div><div class="sp-btn"></div><div class="sp-hint">▶ CLICK TO WATCH</div><div class="sp-loading" id="spLoading" style="display:none">LOADING EPISODES...</div></div><div class="l-scan" id="lScan"></div><div class="l-vig"></div><div class="l-phos" id="lPhos"></div><div class="l-ticker" id="lTicker"><span class="ticker-inner" id="tickerTxt"></span></div><div class="fs-btn" id="fsBtn" title="Fullscreen">⛶</div></div></div></div><div class="vhs-deck"><div class="vhs-cassette-housing"><div class="vhs-label-strip"><span class="vhs-show-name" id="vhsShowName">◈ NO TAPE LOADED ◈</span><span class="vhs-ep-name" id="vhsEpName"></span></div><div class="vhs-window"><div class="vhs-reel" id="reelL"></div><div class="vhs-tape-stretch"></div><div class="vhs-reel" id="reelR"></div><div class="vhs-time" id="vhsTime">--:--</div></div></div><div class="transport"><div class="tbtn" id="tRew" title="Rewind 15s"><span class="tbtn-icon">⏪</span><span class="tbtn-lbl">-15s</span></div><div class="tbtn" id="tPlay" title="Play / Pause"><span class="tbtn-icon" id="tPlayIcon">▶</span></div><div class="tbtn" id="tFF" title="Fast forward 15s"><span class="tbtn-icon">⏩</span><span class="tbtn-lbl">+15s</span></div></div></div><div class="controls-panel"><div class="knob-group"><div class="knob-unit"><div class="knob90 k-vol" id="kVol"></div><span class="kl90">VOL</span><div class="vol-ring"><div class="vol-ring-fill" id="volFill"></div></div></div><div class="knob-unit"><div class="knob90 k-static" id="kStatic"></div><span class="kl90">STATIC</span><div class="sbar"><div class="sbar-fill" id="sbarFill"></div></div></div><div class="knob-unit"><div class="knob90 k-bright" id="kBright"></div><span class="kl90">BRIGHT</span></div></div><div class="pwr-area"><div class="pwr90" id="pwrBtn"></div><span class="pwr-lbl">POWER</span></div><div class="spkr90"><div class="spkr-slot"></div><div class="spkr-slot"></div><div class="spkr-slot"></div><div class="spkr-slot"></div><div class="spkr-slot"></div><div class="spkr-slot"></div><div class="spkr-slot"></div><div class="spkr-slot"></div></div></div></div><div class="tv-base"></div><div class="src-note">◈ STREAMING VIA INTERNET ARCHIVE ◈</div></div>
         <div><div class="guide-hdr"><span class="guide-title">📋 PROGRAMME GUIDE</span><span class="guide-date" id="gDate"></span></div><div id="whatsOnWidget"></div><div class="cat-tabs" id="catTabs"></div><div class="show-list" id="showList"></div><div class="np-bar" id="npBar"><span class="np-live">▶ ON AIR</span><span class="np-name" id="npName">—</span><span class="np-ch" id="npCh">CH —</span></div></div>
     </div>
     <div class="modal-bg" id="modalDonate"><div class="modal-box"><h2>☕ BUY ME A COFFEE</h2><p>Enjoying The Tube? Help keep the archive running!</p><div class="modal-opts"><a class="dl dl-bmc" id="bmcLink" href="https://buymeacoffee.com/oakowltv" target="_blank">☕ BUYMEACOFFEE.COM/OAKOWLTV</a><a class="dl dl-em" href="mailto:oakowlrecords@gmail.com" target="_blank">✉ oakowlrecords@gmail.com</a></div><button class="modal-close" id="modalClose">✕ CLOSE</button></div></div>
     <div class="toast" id="toast"></div>
     <script>
-        // All shows array and cats remain the same as before
+        // All shows array remains the same
         const shows = [
             { id: 27, ch: '28', time: '6:00 AM', name: 'Reading Rainbow', emoji: '🌈', cat: 'classic', year: '1983', badges: ['PLAYLIST', 'PBS', 'CLASSIC'], desc: "LeVar Burton takes you on a magical journey through children's literature.", tickers: ['Take a look its in a book'], archiveId: 'ReadingRainbowTVSeries', playlist: true },
             { id: 33, ch: '34', time: '6:30 AM', name: '90s Nickelodeon VHS', emoji: '📼', cat: 'animation', year: '1990s', badges: ['PLAYLIST', 'NICK', 'VHS'], desc: 'Authentic VHS recording of 90s Nickelodeon cartoons.', tickers: ['Nicktoons block'], archiveId: '1-3-2025-90s-nickelodeon-tape-2', playlist: true },
@@ -1548,9 +1585,28 @@
         const $ = id => document.getElementById(id);
         const vid = $('vid');
 
-        function saveResumePosition(showId, episodeIndex, currentTime) { localStorage.setItem(`thetube_resume_${showId}`, JSON.stringify({ episode: episodeIndex, timestamp: Math.floor(currentTime) })); }
-        function getResumePosition(showId) { const saved = localStorage.getItem(`thetube_resume_${showId}`); if (saved) try { return JSON.parse(saved); } catch (e) { return null; } return null; }
+        function saveResumePosition(showId, episodeIndex, currentTime) {
+            localStorage.setItem(`thetube_resume_${showId}`, JSON.stringify({ episode: episodeIndex, timestamp: Math.floor(currentTime) }));
+        }
+        function getResumePosition(showId) {
+            const saved = localStorage.getItem(`thetube_resume_${showId}`);
+            if (saved) try { return JSON.parse(saved); } catch (e) { return null; }
+            return null;
+        }
         function clearResumePosition(showId) { localStorage.removeItem(`thetube_resume_${showId}`); }
+
+        function showResumeBadge(timestamp) {
+            const badge = $('resumeBadge');
+            const minutes = Math.floor(timestamp / 60);
+            const seconds = Math.floor(timestamp % 60);
+            badge.textContent = `⏯ RESUMING AT ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            badge.classList.remove('show');
+            void badge.offsetWidth; // Force reflow
+            badge.classList.add('show');
+            setTimeout(() => {
+                badge.classList.remove('show');
+            }, 3500);
+        }
 
         const getAC = () => { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); return audioCtx; };
         function makeNoise(dur, f0, f1, q, vol) { try { const c = getAC(), bl = Math.floor(c.sampleRate * dur), b = c.createBuffer(1, bl, c.sampleRate), d = b.getChannelData(0); for (let i = 0; i < bl; i++) d[i] = Math.random() * 2 - 1; const s = c.createBufferSource(); s.buffer = b; const flt = c.createBiquadFilter(); flt.type = 'bandpass'; flt.frequency.setValueAtTime(f0, c.currentTime); if (f1) flt.frequency.exponentialRampToValueAtTime(f1, c.currentTime + dur * 0.85); flt.Q.value = q || 1; const g = c.createGain(); g.gain.setValueAtTime(vol || 0.25, c.currentTime); g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + dur); s.connect(flt); flt.connect(g); g.connect(c.destination); s.start(); s.stop(c.currentTime + dur); } catch (e) { } }
@@ -1576,10 +1632,10 @@
         function startReels() { $('reelL').classList.add('spinning'); $('reelR').classList.add('spinning'); clearInterval(timeTimer); timeTimer = setInterval(() => { if (vid.duration && isFinite(vid.duration)) { const t = vid.currentTime, d = vid.duration; const mm = Math.floor(t / 60), ss = Math.floor(t % 60); $('vhsTime').textContent = `${String(mm).padStart(2, '0')}:${String(ss).padStart(2, '0')}`; } }, 1000); }
         function stopReels() { $('reelL').classList.remove('spinning'); $('reelR').classList.remove('spinning'); clearInterval(timeTimer); }
 
-        function buildSidebar(files, curIdx, show) { $('epShowName').textContent = show.name.toUpperCase(); const list = $('epList'); list.innerHTML = ''; if (!files || !files.length) { list.innerHTML = '<div class="ep-empty">No streamable files found</div>'; return; } files.forEach((f, i) => { const el = document.createElement('div'); el.className = 'ep-item' + (i === curIdx ? ' ep-active' : ''); el.setAttribute('data-index', i); el.innerHTML = `<span class="ep-num">${String(i + 1).padStart(2, '0')}.</span><span>${f.name || 'Episode ' + (i + 1)}</span>`; el.addEventListener('click', () => { if (!tvOn) return; sndClick(); const prev = activeEp; clearInterval(vhsTimer); vid.pause(); stopReels(); showVHSAnim(i > prev, () => { activeEp = i; const savedResume = getResumePosition(show.id); let timestamp = 0; if (savedResume && savedResume.episode === i && savedResume.timestamp > 30) { timestamp = savedResume.timestamp; showToast(`◈ RESUMING EPISODE ${i + 1} ◈`); } else { timestamp = 0; showToast(`◈ PLAYING EPISODE ${i + 1} FROM START ◈`); } playFile(show, files, i, timestamp, false); }); }); list.appendChild(el); }); const activeEl = document.querySelector(`.ep-item[data-index="${curIdx}"]`); if (activeEl) setTimeout(() => activeEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' }), 80); }
+        function buildSidebar(files, curIdx, show) { $('epShowName').textContent = show.name.toUpperCase(); const list = $('epList'); list.innerHTML = ''; if (!files || !files.length) { list.innerHTML = '<div class="ep-empty">No streamable files found</div>'; return; } files.forEach((f, i) => { const el = document.createElement('div'); el.className = 'ep-item' + (i === curIdx ? ' ep-active' : ''); el.setAttribute('data-index', i); el.innerHTML = `<span class="ep-num">${String(i + 1).padStart(2, '0')}.</span><span>${f.name || 'Episode ' + (i + 1)}</span>`; el.addEventListener('click', () => { if (!tvOn) return; sndClick(); const prev = activeEp; clearInterval(vhsTimer); vid.pause(); stopReels(); showVHSAnim(i > prev, () => { activeEp = i; const savedResume = getResumePosition(show.id); let timestamp = 0; if (savedResume && savedResume.episode === i && savedResume.timestamp > 30) { timestamp = savedResume.timestamp; showResumeBadge(timestamp); } playFile(show, files, i, timestamp, true); }); }); list.appendChild(el); }); const activeEl = document.querySelector(`.ep-item[data-index="${curIdx}"]`); if (activeEl) setTimeout(() => activeEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' }), 80); }
         function markEpActive(idx) { document.querySelectorAll('.ep-item').forEach((el) => { const epIndex = parseInt(el.getAttribute('data-index')); if (epIndex === idx) el.classList.add('ep-active'); else el.classList.remove('ep-active'); }); const activeEl = document.querySelector(`.ep-item[data-index="${idx}"]`); if (activeEl) activeEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
 
-        function playFile(show, files, idx, resumeTimestamp = 0, autoPlay = false, liveSeekTime = null) {
+        function playFile(show, files, idx, resumeTimestamp = 0, autoPlay = true, liveSeekTime = null) {
             if (!files || !files[idx]) return;
             activeEp = idx;
             const f = files[idx];
@@ -1605,6 +1661,7 @@
                     showToast(`🔴 LIVE — JOINED AT ${minutes}:${seconds.toString().padStart(2, '0')}`);
                 } else if (resumeTimestamp > 0 && resumeTimestamp < vid.duration - 5 && liveSeekTime === null) {
                     targetTime = resumeTimestamp;
+                    // Badge already shown in calling function, just toast
                     const minutes = Math.floor(targetTime / 60);
                     const seconds = Math.floor(targetTime % 60);
                     showToast(`◈ RESUMING FROM ${minutes}:${seconds.toString().padStart(2, '0')} ◈`);
@@ -1663,7 +1720,7 @@
             return Math.max(0, Math.min(secondsAired, 3600));
         }
 
-        async function autoLiveNow(showId, autoPlay = true) {
+        async function autoLiveNow(showId, autoPlay = true, randomEpisode = false) {
             if (!tvOn) return;
             const s = shows.find(x => x.id === showId);
             if (!s) return;
@@ -1672,29 +1729,46 @@
             const scheduleEntry = getScheduleEntryForShow(showId);
             const isCurrentlyScheduled = (scheduleEntry && scheduleEntry.id === showId);
             let episodeIndex = 0;
-            const storageKey = `thetube_episode_${showId}`;
-            let savedEpisode = localStorage.getItem(storageKey);
-            if (isCurrentlyScheduled) {
-                const dailyIndex = getDailyEpisodeIndex(showId, files.length);
-                episodeIndex = dailyIndex;
+            let resumeTimestamp = 0;
+
+            if (randomEpisode) {
+                // Pick a random episode - start from beginning
+                episodeIndex = Math.floor(Math.random() * files.length);
+                localStorage.setItem(`thetube_episode_${showId}`, episodeIndex);
+                showToast(`🎲 SURPRISE! Random episode ${episodeIndex + 1}/${files.length}`);
+            } else if (isCurrentlyScheduled) {
+                // Live show - use daily episode index
+                episodeIndex = getDailyEpisodeIndex(showId, files.length);
             } else {
-                if (savedEpisode !== null) {
-                    episodeIndex = parseInt(savedEpisode);
+                // Normal selection - check for saved resume position
+                const storageKey = `thetube_episode_${showId}`;
+                let savedEp = localStorage.getItem(storageKey);
+                if (savedEp !== null) {
+                    episodeIndex = parseInt(savedEp);
                     if (isNaN(episodeIndex) || episodeIndex >= files.length) episodeIndex = 0;
                 }
+                // Check for saved resume timestamp
+                const resumeData = getResumePosition(showId);
+                if (resumeData && resumeData.episode === episodeIndex && resumeData.timestamp > 30) {
+                    resumeTimestamp = resumeData.timestamp;
+                    showResumeBadge(resumeTimestamp);
+                }
             }
+
             const targetFile = files[episodeIndex];
             const episodeNumber = episodeIndex + 1;
             const totalEpisodes = files.length;
             let liveSeekTime = null;
-            if (isCurrentlyScheduled && scheduleEntry) {
+
+            if (!randomEpisode && isCurrentlyScheduled && scheduleEntry) {
                 liveSeekTime = calculateLiveSeekTime(scheduleEntry);
                 const minutes = Math.floor(liveSeekTime / 60);
                 const seconds = Math.floor(liveSeekTime % 60);
                 showToast(`🔴 LIVE → ${s.name} (${minutes}:${seconds.toString().padStart(2, '0')})`);
-            } else {
-                showToast(`🔴 LIVE → ${s.name} (Episode ${episodeNumber}/${totalEpisodes})`);
+            } else if (!randomEpisode && resumeTimestamp === 0) {
+                showToast(`📺 TUNING → ${s.name} (Episode ${episodeNumber}/${totalEpisodes})`);
             }
+
             if (window._saveInterval) clearInterval(window._saveInterval);
             clearInterval(noiseTimer);
             clearInterval(vhsTimer);
@@ -1725,58 +1799,49 @@
             $('spEp').textContent = targetFile.name;
             $('epShowName').textContent = s.name.toUpperCase();
             buildSidebar(files, episodeIndex, s);
+
             showStaticAnim('TUNING...', async () => {
                 screen('splash');
                 $('lTicker').classList.add('show');
                 renderList();
                 $('spLoading').style.display = 'none';
-                playFile(s, files, episodeIndex, 0, autoPlay, liveSeekTime);
+                playFile(s, files, episodeIndex, resumeTimestamp, autoPlay, liveSeekTime);
                 $('lSplash').classList.remove('show');
                 screen('video');
             });
         }
 
-        $('tPlay').addEventListener('click', () => { sndClick(); $('tPlay').classList.add('lit'); setTimeout(() => $('tPlay').classList.remove('lit'), 280); if (!active) { showToast('◈ SELECT A SHOW FIRST ◈'); return; } if ($('lSplash').classList.contains('show')) { const files = fileCache[active.archiveId]; if (files) { $('lSplash').classList.remove('show'); playFile(active, files, activeEp, 0, false, null); } return; } if (vid.paused) { vid.play().catch(() => { }); $('tPlayIcon').textContent = '⏸'; startReels(); } else { vid.pause(); $('tPlayIcon').textContent = '▶'; stopReels(); } });
+        $('tPlay').addEventListener('click', () => { sndClick(); $('tPlay').classList.add('lit'); setTimeout(() => $('tPlay').classList.remove('lit'), 280); if (!active) { showToast('◈ SELECT A SHOW FIRST ◈'); return; } if ($('lSplash').classList.contains('show')) { const files = fileCache[active.archiveId]; if (files) { $('lSplash').classList.remove('show'); playFile(active, files, activeEp, 0, true, null); } return; } if (vid.paused) { vid.play().catch(() => { }); $('tPlayIcon').textContent = '⏸'; startReels(); } else { vid.pause(); $('tPlayIcon').textContent = '▶'; stopReels(); } });
         $('tFF').addEventListener('click', () => { sndClick(); $('tFF').classList.add('lit'); setTimeout(() => $('tFF').classList.remove('lit'), 280); if (!active || !$('lVideo').classList.contains('show')) { showToast('◈ NOTHING PLAYING ◈'); return; } if (vid.duration && isFinite(vid.duration)) { vid.currentTime = Math.min(vid.currentTime + 15, vid.duration - 0.5); sndSeek(true); showToast(`◈ +15s ◈`); } else { showToast('◈ BUFFERING — TRY AGAIN ◈'); } });
         $('tRew').addEventListener('click', () => { sndClick(); $('tRew').classList.add('lit'); setTimeout(() => $('tRew').classList.remove('lit'), 280); if (!active || !$('lVideo').classList.contains('show')) { showToast('◈ NOTHING PLAYING ◈'); return; } vid.currentTime = Math.max(0, vid.currentTime - 15); sndSeek(false); showToast(`◈ -15s ◈`); });
         $('fsBtn').addEventListener('click', () => { sndClick(); const wrap = $('screenWrap'); if (!document.fullscreenElement) { (wrap.requestFullscreen || wrap.webkitRequestFullscreen || wrap.mozRequestFullScreen).call(wrap).catch(() => { }); $('fsBtn').textContent = '✕'; } else { (document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen).call(document).catch(() => { }); $('fsBtn').textContent = '⛶'; } });
         document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement) $('fsBtn').textContent = '⛶'; });
 
-        // UPDATED powerOn function - now starts at the current live program with correct timestamp!
         function powerOn(cb) {
             tvOn = true;
             $('pwrBtn').classList.add('on');
             sndPwrOn();
-
-            // Get the currently scheduled show
             const currentSchedule = getCurrentShow();
-
             if (currentSchedule && !currentSchedule.message) {
-                // There's a show on air right now - join it live!
                 const currentShow = shows.find(s => s.id === currentSchedule.id);
                 if (currentShow) {
-                    // Calculate the live seek time
                     const liveSeekTime = calculateLiveSeekTime(currentSchedule);
                     const minutes = Math.floor(liveSeekTime / 60);
                     const seconds = Math.floor(liveSeekTime % 60);
                     showToast(`🔴 TUNING IN — ${currentShow.name} (LIVE at ${minutes}:${seconds.toString().padStart(2, '0')})`);
-
-                    // Use autoLiveNow to join the current program at the correct timestamp
                     setTimeout(() => {
                         if (tvOn) {
-                            autoLiveNow(currentShow.id, true);
+                            autoLiveNow(currentShow.id, true, false);
                         }
                         if (cb) cb();
                     }, 700);
                     return;
                 }
             }
-
-            // Fallback: pick a random show from playlist
             const pl = shows.filter(s => s.playlist);
             const pick = pl[Math.floor(Math.random() * pl.length)];
             setTimeout(() => {
-                if (pick && tvOn) tuneShow(pick.id, true);
+                if (pick && tvOn) autoLiveNow(pick.id, true, false);
                 if (cb) cb();
             }, 700);
         }
@@ -1829,7 +1894,7 @@
                     currentLiveShowId = currentShow.id;
                     setTimeout(() => {
                         if (liveMode && tvOn) {
-                            autoLiveNow(newShow.id, true);
+                            autoLiveNow(newShow.id, true, false);
                         }
                     }, 500);
                 }
@@ -1855,10 +1920,21 @@
         $('modalClose').addEventListener('click', () => { sndClick(); $('modalDonate').classList.remove('show'); });
         $('modalDonate').addEventListener('click', e => { if (e.target === $('modalDonate')) $('modalDonate').classList.remove('show'); });
         $('bmcLink').addEventListener('click', e => { e.preventDefault(); sndClick(); showToast('◈ THANK YOU! ◈'); setTimeout(() => window.open('https://buymeacoffee.com/oakowltv', '_blank'), 300); $('modalDonate').classList.remove('show'); });
-        $('btnSurprise').addEventListener('click', () => { sndClick(); if (liveMode) stopLiveMode(); const pick = shows[Math.floor(Math.random() * shows.length)]; showToast(`◈ SURPRISE: ${pick.name.toUpperCase()} ◈`); setTimeout(() => { if (tvOn) tuneShow(pick.id, true); else powerOn(() => tuneShow(pick.id, true)); }, 500); });
+
+        $('btnSurprise').addEventListener('click', () => {
+            sndClick();
+            if (liveMode) stopLiveMode();
+            const pick = shows[Math.floor(Math.random() * shows.length)];
+            showToast(`🎲 SURPRISE: ${pick.name.toUpperCase()} (Random Episode)`);
+            setTimeout(() => {
+                if (tvOn) autoLiveNow(pick.id, true, true);
+                else powerOn(() => autoLiveNow(pick.id, true, true));
+            }, 500);
+        });
 
         function buildCatTabs() { const el = $('catTabs'); cats.forEach(c => { const b = document.createElement('button'); b.className = 'cat-btn' + (c.key === 'all' ? ' active' : ''); b.textContent = c.label; b.addEventListener('click', () => { sndClick(); document.querySelectorAll('.cat-btn').forEach(x => x.classList.remove('active')); b.classList.add('active'); activeCat = c.key; renderList(); }); el.appendChild(b); }); }
-        function renderList() { const el = $('showList'); el.innerHTML = ''; const filtered = activeCat === 'all' ? shows : shows.filter(s => s.cat === activeCat); filtered.forEach(s => { const card = document.createElement('div'); card.className = 'show-card' + (active?.id === s.id ? ' active' : ''); const bhtml = s.badges.map(b => { let c = 'badge'; if (b === 'PLAYLIST') c += ' playlist'; else if (b === 'HOT') c += ' hot'; else if (b === 'LIVE') c += ' live'; return `<span class="${c}">${b}</span>`; }).join(''); card.innerHTML = `<span class="s-time">${s.time}</span><span class="s-emoji">${s.emoji}</span><div class="s-info"><div class="s-name">${s.name} <span class="s-yr">(${s.year})</span></div><div class="s-desc">${s.desc}</div><div class="s-badges">${bhtml}</div></div><div class="play-dot"></div>`; card.addEventListener('click', () => { sndClick(); if (liveMode) stopLiveMode(); if (tvOn) tuneShow(s.id, false); else powerOn(() => tuneShow(s.id, false)); }); el.appendChild(card); }); }
+
+        function renderList() { const el = $('showList'); el.innerHTML = ''; const filtered = activeCat === 'all' ? shows : shows.filter(s => s.cat === activeCat); filtered.forEach(s => { const card = document.createElement('div'); card.className = 'show-card' + (active?.id === s.id ? ' active' : ''); const bhtml = s.badges.map(b => { let c = 'badge'; if (b === 'PLAYLIST') c += ' playlist'; else if (b === 'HOT') c += ' hot'; else if (b === 'LIVE') c += ' live'; return `<span class="${c}">${b}</span>`; }).join(''); card.innerHTML = `<span class="s-time">${s.time}</span><span class="s-emoji">${s.emoji}</span><div class="s-info"><div class="s-name">${s.name} <span class="s-yr">(${s.year})</span></div><div class="s-desc">${s.desc}</div><div class="s-badges">${bhtml}</div></div><div class="play-dot"></div>`; card.addEventListener('click', () => { sndClick(); if (liveMode) stopLiveMode(); if (tvOn) autoLiveNow(s.id, true, false); else powerOn(() => autoLiveNow(s.id, true, false)); }); el.appendChild(card); }); }
 
         const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'], months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
         const nd = new Date(); $('gDate').textContent = `${days[nd.getDay()]} ${nd.getDate()} ${months[nd.getMonth()]}`;
@@ -1919,94 +1995,18 @@
 
         function getDailyEpisodeIndex(showId, totalEpisodes) { const storageKey = `thetube_daily_episode_${showId}`, lastDateKey = `${storageKey}_date`, today = new Date().toDateString(); const lastPlayedDate = localStorage.getItem(lastDateKey); let currentEpisode = localStorage.getItem(storageKey); if (currentEpisode === null) currentEpisode = 0; else currentEpisode = parseInt(currentEpisode); if (lastPlayedDate !== today) { currentEpisode = (currentEpisode + 1) % totalEpisodes; localStorage.setItem(storageKey, currentEpisode); localStorage.setItem(lastDateKey, today); } return currentEpisode; }
 
-        // UPDATED liveNow function - now uses autoLiveNow with autoPlay=true for click-free experience!
         async function liveNow(showId) {
             if (liveMode) stopLiveMode();
             if (!tvOn) {
                 powerOn(() => setTimeout(() => liveNow(showId), 600));
                 return;
             }
-            // Use autoLiveNow which auto-plays without splash screen click
-            await autoLiveNow(showId, true);
-        }
-
-        async function tuneShow(showId, randomEp) {
-            if (!tvOn) {
-                powerOn(() => setTimeout(() => tuneShow(showId, randomEp), 600));
-                return;
-            }
-            const s = shows.find(x => x.id === showId);
-            if (!s) return;
-            const files = await fetchFiles(s.archiveId);
-            let ep = 0, resumeTimestamp = 0;
-            if (randomEp) {
-                if (files.length > 1) ep = Math.floor(Math.random() * files.length);
-            } else {
-                const storageKey = `thetube_episode_${showId}`;
-                let savedEp = localStorage.getItem(storageKey);
-                if (savedEp !== null) {
-                    ep = parseInt(savedEp);
-                    if (isNaN(ep) || ep >= files.length) ep = 0;
-                } else {
-                    ep = 0;
-                    localStorage.setItem(storageKey, ep);
-                }
-                const resumeData = getResumePosition(showId);
-                if (resumeData && resumeData.episode === ep && resumeData.timestamp > 30) {
-                    resumeTimestamp = resumeData.timestamp;
-                } else if (resumeData && resumeData.episode !== ep) {
-                    clearResumePosition(showId);
-                }
-            }
-            if (window._saveInterval) clearInterval(window._saveInterval);
-            clearInterval(noiseTimer);
-            clearInterval(vhsTimer);
-            vid.pause();
-            vid.src = '';
-            stopReels();
-            $('tPlayIcon').textContent = '▶';
-            $('lTicker').classList.remove('show');
-            $('lVideo').classList.remove('show');
-            active = s;
-            activeEp = ep;
-            $('vhsShowName').textContent = s.name.toUpperCase();
-            $('vhsEpName').textContent = '';
-            $('vhsTime').textContent = '--:--';
-            $('chDisp').textContent = `CH ${s.ch}`;
-            $('npName').textContent = s.name;
-            $('npCh').textContent = `CH ${s.ch}`;
-            $('npBar').classList.add('show');
-            const tickerText = s.tickers.join('   ◈   ');
-            const tk = $('tickerTxt');
-            tk.textContent = `◈  ${tickerText}  ◈  ${tickerText}  ◈`;
-            tk.style.animation = 'none';
-            void tk.offsetHeight;
-            tk.style.animation = '';
-            $('spEmoji').textContent = s.emoji;
-            $('spTitle').textContent = s.name;
-            $('spYear').textContent = s.year;
-            $('spEp').textContent = 'Loading...';
-            $('spLoading').style.display = 'block';
-            $('epShowName').textContent = s.name.toUpperCase();
-            $('epList').innerHTML = '<div class="ep-loading">◈ FETCHING EPISODES ◈</div>';
-            showStaticAnim('TUNING...', async () => {
-                screen('splash');
-                $('lTicker').classList.add('show');
-                renderList();
-                $('spEp').textContent = files[ep] ? files[ep].name : s.name;
-                $('spLoading').style.display = 'none';
-                buildSidebar(files, ep, s);
-                const onSplash = () => {
-                    $('lSplash').removeEventListener('click', onSplash);
-                    playFile(s, files, ep, resumeTimestamp, false, null);
-                };
-                $('lSplash').addEventListener('click', onSplash);
-            });
+            await autoLiveNow(showId, true, false);
         }
 
         const searchBox = document.getElementById('searchBox');
         let currentSearchTerm = '';
-        function filterShowsBySearch() { const term = currentSearchTerm.toLowerCase().trim(); let showsToFilter = shows; if (activeCat !== 'all') showsToFilter = shows.filter(s => s.cat === activeCat); const filtered = showsToFilter.filter(show => { if (term === '') return true; return show.name.toLowerCase().includes(term) || show.desc.toLowerCase().includes(term) || show.year.toString().includes(term) || (show.badges && show.badges.some(b => b.toLowerCase().includes(term))); }); const el = document.getElementById('showList'); if (!el) return; el.innerHTML = ''; if (filtered.length === 0 && term !== '') { const emptyMsg = document.createElement('div'); emptyMsg.style.cssText = 'text-align:center; padding:20px; font-family:VT323; color:#4a3015;'; emptyMsg.textContent = '◈ NO SHOWS FOUND ◈'; el.appendChild(emptyMsg); return; } filtered.forEach(s => { const card = document.createElement('div'); card.className = 'show-card' + (active?.id === s.id ? ' active' : ''); const bhtml = s.badges.map(b => { let c = 'badge'; if (b === 'PLAYLIST') c += ' playlist'; else if (b === 'HOT') c += ' hot'; else if (b === 'LIVE') c += ' live'; return `<span class="${c}">${b}</span>`; }).join(''); card.innerHTML = `<span class="s-time">${s.time}</span><span class="s-emoji">${s.emoji}</span><div class="s-info"><div class="s-name">${s.name} <span class="s-yr">(${s.year})</span></div><div class="s-desc">${s.desc}</div><div class="s-badges">${bhtml}</div></div><div class="play-dot"></div>`; card.addEventListener('click', () => { sndClick(); if (liveMode) stopLiveMode(); tuneShow(s.id, false); }); el.appendChild(card); }); }
+        function filterShowsBySearch() { const term = currentSearchTerm.toLowerCase().trim(); let showsToFilter = shows; if (activeCat !== 'all') showsToFilter = shows.filter(s => s.cat === activeCat); const filtered = showsToFilter.filter(show => { if (term === '') return true; return show.name.toLowerCase().includes(term) || show.desc.toLowerCase().includes(term) || show.year.toString().includes(term) || (show.badges && show.badges.some(b => b.toLowerCase().includes(term))); }); const el = document.getElementById('showList'); if (!el) return; el.innerHTML = ''; if (filtered.length === 0 && term !== '') { const emptyMsg = document.createElement('div'); emptyMsg.style.cssText = 'text-align:center; padding:20px; font-family:VT323; color:#4a3015;'; emptyMsg.textContent = '◈ NO SHOWS FOUND ◈'; el.appendChild(emptyMsg); return; } filtered.forEach(s => { const card = document.createElement('div'); card.className = 'show-card' + (active?.id === s.id ? ' active' : ''); const bhtml = s.badges.map(b => { let c = 'badge'; if (b === 'PLAYLIST') c += ' playlist'; else if (b === 'HOT') c += ' hot'; else if (b === 'LIVE') c += ' live'; return `<span class="${c}">${b}</span>`; }).join(''); card.innerHTML = `<span class="s-time">${s.time}</span><span class="s-emoji">${s.emoji}</span><div class="s-info"><div class="s-name">${s.name} <span class="s-yr">(${s.year})</span></div><div class="s-desc">${s.desc}</div><div class="s-badges">${bhtml}</div></div><div class="play-dot"></div>`; card.addEventListener('click', () => { sndClick(); if (liveMode) stopLiveMode(); if (tvOn) autoLiveNow(s.id, true, false); else powerOn(() => autoLiveNow(s.id, true, false)); }); el.appendChild(card); }); }
         if (searchBox) { searchBox.addEventListener('input', (e) => { currentSearchTerm = e.target.value; filterShowsBySearch(); }); }
         const originalRenderList = renderList;
         renderList = function () { if (currentSearchTerm !== '') filterShowsBySearch(); else originalRenderList(); };
