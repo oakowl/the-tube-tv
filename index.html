@@ -1507,7 +1507,7 @@
     <div class="modal-bg" id="modalDonate"><div class="modal-box"><h2>☕ BUY ME A COFFEE</h2><p>Enjoying The Tube? Help keep the archive running!</p><div class="modal-opts"><a class="dl dl-bmc" id="bmcLink" href="https://buymeacoffee.com/oakowltv" target="_blank">☕ BUYMEACOFFEE.COM/OAKOWLTV</a><a class="dl dl-em" href="mailto:oakowlrecords@gmail.com" target="_blank">✉ oakowlrecords@gmail.com</a></div><button class="modal-close" id="modalClose">✕ CLOSE</button></div></div>
     <div class="toast" id="toast"></div>
     <script>
-        // ===== MASTER SCHEDULE — UPDATED WITH WORKING HITCHCOCK IDs =====
+        // ===== MASTER SCHEDULE =====
         const shows = [
             { id: 1, ch: '01', time: '6:00 AM', name: 'Reading Rainbow', emoji: '🌈', cat: 'classic', year: '1983', badges: ['PLAYLIST', 'PBS'], desc: 'LeVar Burton takes you on a magical reading journey.', tickers: ['Take a look, it’s in a book'], archiveId: 'ReadingRainbowTVSeries', playlist: true },
             { id: 2, ch: '02', time: '6:30 AM', name: 'Popeye Collection', emoji: '💪', cat: 'animation', year: '1930s', badges: ['PLAYLIST', 'CLASSIC'], desc: "I yam what I yam! Classic Popeye cartoons.", tickers: ["I eats me spinach!"], archiveId: 'popeye-collection', playlist: true },
@@ -1569,7 +1569,6 @@
         const $ = id => document.getElementById(id);
         const vid = $('vid');
 
-        // === LIVE SCHEDULE ===
         function getCurrentShow() {
             const n = new Date(), m = (n.getHours() * 60) + n.getMinutes();
             const schedule = [
@@ -1619,7 +1618,7 @@
                 { startTime: 5 * 60, endTime: 6 * 60, id: 44, name: "Classic TV Vault", emoji: "🎞️" }
             ];
             for (const sh of schedule) if (m >= sh.startTime && m < sh.endTime) return sh;
-            return { name: "The Tube", emoji: "📺", message: "Off Air - No program scheduled" };
+            return { name: "The Tube", emoji: "📺", message: "Off Air" };
         }
 
         function updateWidget() {
@@ -1635,7 +1634,6 @@
             }
         }
 
-        // === CORE FUNCTIONS (fullscreen fixed) ===
         function screen(state) { $('lIdle').style.display = state === 'idle' ? 'flex' : 'none'; $('lVideo').classList[state === 'video' ? 'add' : 'remove']('show'); $('lVhs').classList[state === 'vhs' ? 'add' : 'remove']('show'); $('lStatic').classList[state === 'static' ? 'add' : 'remove']('show'); $('lSplash').classList[state === 'splash' ? 'add' : 'remove']('show'); $('lOff').classList[state === 'off' ? 'add' : 'remove']('show'); $('fsBtn').classList.toggle('show', state === 'video'); }
         function showOff(cb) { $('lOff').innerHTML = '<div class="off-line"></div>'; screen('off'); setTimeout(() => { $('lOff').innerHTML = ''; screen('idle'); if (cb) cb(); }, 550); }
         function showStaticAnim(label, cb) { $('staticLbl').textContent = label || 'TUNING...'; screen('static'); let f = 0, frames = 12; noiseTimer = setInterval(() => { drawNoise('noiseCanvas', 0.5); if (++f >= frames) { clearInterval(noiseTimer); if (cb) cb(); } }, 52); }
@@ -1647,11 +1645,52 @@
         function buildSidebar(files, curIdx, show) { const list = $('epList'); list.innerHTML = ''; if (!files.length) { list.innerHTML = '<div class="ep-empty">No streamable files</div>'; return; } files.forEach((f, i) => { const el = document.createElement('div'); el.className = 'ep-item' + (i === curIdx ? ' ep-active' : ''); el.setAttribute('data-index', i); el.innerHTML = `<span class="ep-num">${String(i + 1).padStart(2, '0')}.</span><span>${f.name}</span>`; el.addEventListener('click', () => { if (!tvOn) return; vid.pause(); stopReels(); showVHSAnim(i > curIdx, () => { activeEp = i; playFile(show, files, i, 0, true, null); }); }); list.appendChild(el); }); }
         async function fetchFiles(archiveId) { if (fileCache[archiveId]) return fileCache[archiveId]; try { const r = await fetch(`https://archive.org/metadata/${archiveId}/files`); const j = await r.json(); const raw = (j.result || []).map(f => ({ ...f, _archiveId: archiveId })); const videos = filterFiles(raw); fileCache[archiveId] = videos; return videos; } catch (e) { return []; } }
         function filterFiles(rawFiles) { const map = new Map(); rawFiles.forEach(f => { const name = f.name || '', nl = name.toLowerCase(); if (!nl.match(/\.(ia\.mp4|mp4|ogv)$/)) return; let base = nl.endsWith('.ia.mp4') ? name.slice(0, -7) : (nl.endsWith('.mp4') ? name.slice(0, -4) : name.slice(0, -4)); const score = nl.endsWith('.ia.mp4') ? 3 : (nl.endsWith('.mp4') ? 2 : 1); const existing = map.get(base); if (!existing || score > existing.score) map.set(base, { name: f.name, score, url: `https://archive.org/download/${f._archiveId}/${encodeURIComponent(f.name)}` }); }); return [...map.values()].map(f => ({ name: f.name.replace(/\.ia\.mp4$|\.mp4$|\.ogv$/i, '').replace(/[_\-]+/g, ' ').trim(), url: f.url })); }
-        function playFile(show, files, idx, resumeTimestamp, autoPlay, liveSeekTime) { const f = files[idx]; if (!f) return; if (window._saveInterval) clearInterval(window._saveInterval); vid.src = f.url; vid.volume = volumeVal; vid.load(); window._saveInterval = setInterval(() => { if (vid.currentTime && vid.duration && !vid.paused && vid.currentTime < vid.duration - 5) localStorage.setItem(`thetube_resume_${show.id}`, JSON.stringify({ episode: idx, timestamp: Math.floor(vid.currentTime) })); }, 10000); vid.addEventListener('canplay', function onLoad() { vid.removeEventListener('canplay', onLoad); let target = (liveSeekTime && liveSeekTime > 30 && liveSeekTime < vid.duration - 10) ? liveSeekTime : (resumeTimestamp > 0 && resumeTimestamp < vid.duration - 5 ? resumeTimestamp : 0); if (target > 0) vid.currentTime = target; vid.play().catch(() => { }); }); screen('video'); $('tPlayIcon').textContent = '⏸'; $('vhsShowName').textContent = show.name.toUpperCase(); $('vhsEpName').textContent = f.name.length > 18 ? f.name.slice(0, 16) + '…' : f.name; startReels(); markEpActive(idx); $('vhsTime').textContent = '00:00'; }
-        async function autoLiveNow(showId, autoPlay = true, randomEpisode = false) { if (!tvOn) return; const s = shows.find(x => x.id === showId); if (!s) return; const files = await fetchFiles(s.archiveId); if (!files || files.length === 0) return; let episodeIndex = 0, resumeTimestamp = 0, liveSeekTime = null; if (randomEpisode) episodeIndex = Math.floor(Math.random() * files.length); else { const scheduleEntry = getScheduleEntryForShow(showId); if (scheduleEntry) episodeIndex = 0; else { const stored = localStorage.getItem(`thetube_episode_${showId}`); if (stored !== null) episodeIndex = parseInt(stored) || 0; const resumeData = getResumePosition(showId); if (resumeData && resumeData.episode === episodeIndex && resumeData.timestamp > 30) resumeTimestamp = resumeData.timestamp; } if (scheduleEntry) liveSeekTime = calculateLiveSeekTime(scheduleEntry); } if (window._saveInterval) clearInterval(window._saveInterval); clearInterval(noiseTimer); clearInterval(vhsTimer); vid.pause(); vid.src = ''; stopReels(); $('tPlayIcon').textContent = '▶'; $('lTicker').classList.remove('show'); $('lVideo').classList.remove('show'); active = s; activeEp = episodeIndex; $('vhsShowName').textContent = s.name.toUpperCase(); $('chDisp').textContent = `CH ${s.ch}`; $('npName').textContent = s.name; $('npCh').textContent = `CH ${s.ch}`; $('npBar').classList.add('show'); const tk = $('tickerTxt'); tk.textContent = `◈  ${s.tickers.join('   ◈   ')}  ◈  ${s.tickers.join('   ◈   ')}  ◈`; tk.style.animation = 'none'; void tk.offsetHeight; tk.style.animation = ''; $('spEmoji').textContent = s.emoji; $('spTitle').textContent = s.name; $('spYear').textContent = s.year; $('epShowName').textContent = s.name.toUpperCase(); buildSidebar(files, episodeIndex, s); showStaticAnim('TUNING...', async () => { screen('splash'); $('lTicker').classList.add('show'); renderList(); playFile(s, files, episodeIndex, resumeTimestamp, autoPlay, liveSeekTime); $('lSplash').classList.remove('show'); screen('video'); }); }
+        function showResumeBadge(timestamp) { const badge = $('resumeBadge'); const minutes = Math.floor(timestamp / 60); const seconds = Math.floor(timestamp % 60); badge.textContent = `⏯ RESUMING AT ${minutes}:${seconds.toString().padStart(2, '0')}`; badge.classList.remove('show'); void badge.offsetWidth; badge.classList.add('show'); setTimeout(() => { badge.classList.remove('show'); }, 3500); }
+        function playFile(show, files, idx, resumeTimestamp, autoPlay, liveSeekTime) {
+            const f = files[idx]; if (!f) return;
+            if (window._saveInterval) clearInterval(window._saveInterval);
+            vid.src = f.url; vid.volume = volumeVal; vid.load();
+            window._saveInterval = setInterval(() => { if (vid.currentTime && vid.duration && !vid.paused && vid.currentTime < vid.duration - 5) localStorage.setItem(`thetube_resume_${show.id}`, JSON.stringify({ episode: idx, timestamp: Math.floor(vid.currentTime) })); }, 10000);
+            const onPause = () => { if (vid.currentTime && vid.duration && vid.currentTime < vid.duration - 5) localStorage.setItem(`thetube_resume_${show.id}`, JSON.stringify({ episode: idx, timestamp: Math.floor(vid.currentTime) })); };
+            vid.addEventListener('pause', onPause);
+            vid.addEventListener('canplay', function onLoad() {
+                vid.removeEventListener('canplay', onLoad);
+                let targetTime = resumeTimestamp;
+                if (liveSeekTime !== null && liveSeekTime > 30 && liveSeekTime < vid.duration - 10) { targetTime = liveSeekTime; showToast(`🔴 LIVE — JOINED AT ${Math.floor(targetTime / 60)}:${Math.floor(targetTime % 60).toString().padStart(2, '0')}`); }
+                else if (resumeTimestamp > 0 && resumeTimestamp < vid.duration - 5 && liveSeekTime === null) { targetTime = resumeTimestamp; showResumeBadge(targetTime); showToast(`◈ RESUMING FROM ${Math.floor(targetTime / 60)}:${Math.floor(targetTime % 60).toString().padStart(2, '0')} ◈`); }
+                else if (liveSeekTime === null) { targetTime = 0; showToast(`◈ PLAYING FROM START ◈`); }
+                if (targetTime > 0 && targetTime < vid.duration) vid.currentTime = targetTime; else vid.currentTime = 0;
+                vid.play().catch(() => { if (!autoPlay) showToast('◈ CLICK THE VIDEO TO START ◈'); });
+            });
+            screen('video'); $('lTicker').classList.add('show'); $('tPlayIcon').textContent = '⏸';
+            $('vhsShowName').textContent = show.name.toUpperCase(); $('vhsEpName').textContent = f.name.length > 18 ? f.name.slice(0, 16) + '…' : f.name; $('vhsTime').textContent = '00:00'; startReels(); markEpActive(idx);
+            $('spEp').textContent = f.name;
+            // NEXT EPISODE AUTO-PLAY (FIXED)
+            vid.onended = () => {
+                stopReels(); if (window._saveInterval) clearInterval(window._saveInterval); vid.removeEventListener('pause', onPause); clearResumePosition(show.id);
+                const nextEp = idx + 1;
+                if (nextEp < files.length) {
+                    showToast(`◈ NEXT EPISODE IN 3 SECONDS ◈`);
+                    setTimeout(() => { if (active && active.id === show.id) { activeEp = nextEp; playFile(show, files, nextEp, 0, true, null); } }, 3000);
+                } else { showToast(`◈ END OF EPISODES ◈`); }
+            };
+        }
+        function clearResumePosition(showId) { localStorage.removeItem(`thetube_resume_${showId}`); }
         function getResumePosition(showId) { const saved = localStorage.getItem(`thetube_resume_${showId}`); if (saved) try { return JSON.parse(saved); } catch (e) { return null; } return null; }
         function getScheduleEntryForShow(showId) { const cur = getCurrentShow(); return cur.id === showId ? cur : null; }
         function calculateLiveSeekTime(scheduleEntry) { if (!scheduleEntry) return 0; const now = new Date(), currentMinutes = (now.getHours() * 60) + now.getMinutes(), minutesAired = currentMinutes - scheduleEntry.startTime; return Math.max(0, Math.min(minutesAired * 60, 3600)); }
+        async function autoLiveNow(showId, autoPlay = true, randomEpisode = false) {
+            if (!tvOn) return; const s = shows.find(x => x.id === showId); if (!s) return; const files = await fetchFiles(s.archiveId); if (!files || files.length === 0) return;
+            let episodeIndex = 0, resumeTimestamp = 0, liveSeekTime = null;
+            if (randomEpisode) episodeIndex = Math.floor(Math.random() * files.length);
+            else {
+                const scheduleEntry = getScheduleEntryForShow(showId);
+                if (scheduleEntry) episodeIndex = 0;
+                else { const stored = localStorage.getItem(`thetube_episode_${showId}`); if (stored !== null) episodeIndex = parseInt(stored) || 0; const resumeData = getResumePosition(showId); if (resumeData && resumeData.episode === episodeIndex && resumeData.timestamp > 30) resumeTimestamp = resumeData.timestamp; }
+                if (scheduleEntry) liveSeekTime = calculateLiveSeekTime(scheduleEntry);
+            }
+            if (window._saveInterval) clearInterval(window._saveInterval); clearInterval(noiseTimer); clearInterval(vhsTimer); vid.pause(); vid.src = ''; stopReels(); $('tPlayIcon').textContent = '▶'; $('lTicker').classList.remove('show'); $('lVideo').classList.remove('show'); active = s; activeEp = episodeIndex; $('vhsShowName').textContent = s.name.toUpperCase(); $('chDisp').textContent = `CH ${s.ch}`; $('npName').textContent = s.name; $('npCh').textContent = `CH ${s.ch}`; $('npBar').classList.add('show'); const tk = $('tickerTxt'); tk.textContent = `◈  ${s.tickers.join('   ◈   ')}  ◈  ${s.tickers.join('   ◈   ')}  ◈`; tk.style.animation = 'none'; void tk.offsetHeight; tk.style.animation = ''; $('spEmoji').textContent = s.emoji; $('spTitle').textContent = s.name; $('spYear').textContent = s.year; $('epShowName').textContent = s.name.toUpperCase(); buildSidebar(files, episodeIndex, s); showStaticAnim('TUNING...', async () => { screen('splash'); $('lTicker').classList.add('show'); renderList(); playFile(s, files, episodeIndex, resumeTimestamp, autoPlay, liveSeekTime); $('lSplash').classList.remove('show'); screen('video'); });
+        }
         function powerOn(cb) { tvOn = true; $('pwrBtn').classList.add('on'); const current = getCurrentShow(); if (current && current.id) { autoLiveNow(current.id, true, false); if (cb) cb(); } else { const pl = shows.filter(s => s.playlist); const pick = pl[Math.floor(Math.random() * pl.length)]; if (pick && tvOn) autoLiveNow(pick.id, true, false); if (cb) cb(); } }
         function powerOff() { tvOn = false; active = null; activeEp = 0; $('pwrBtn').classList.remove('on'); clearInterval(noiseTimer); clearInterval(vhsTimer); vid.pause(); vid.src = ''; stopReels(); $('tPlayIcon').textContent = '▶'; $('lTicker').classList.remove('show'); $('npBar').classList.remove('show'); $('vhsShowName').textContent = '◈ NO TAPE LOADED ◈'; $('chDisp').textContent = '— —'; $('epList').innerHTML = '<div class="ep-empty">Power on & select<br>a show to see<br>episodes here</div>'; $('epShowName').textContent = '— SELECT A SHOW —'; showOff(() => renderList()); saveSettings(); }
         function startLiveMode() { if (!tvOn) { showToast('◈ TURN TV ON FIRST ◈'); return; } liveMode = true; $('btnLiveMode').classList.add('active'); $('liveModeIndicator').style.display = 'inline-block'; showToast('🔴 LIVE MODE ACTIVATED'); checkAndSwitchLiveChannel(); if (liveCheckInterval) clearInterval(liveCheckInterval); liveCheckInterval = setInterval(() => { if (liveMode && tvOn) checkAndSwitchLiveChannel(); }, 30000); }
@@ -1662,7 +1701,7 @@
         function saveSettings() { localStorage.setItem('thetube_settings', JSON.stringify({ volume: volumeVal, staticIntensity, brightness: brightnessVal })); }
         function loadSettings() { const saved = localStorage.getItem('thetube_settings'); if (saved) try { const s = JSON.parse(saved); volumeVal = s.volume || 0.8; staticIntensity = s.staticIntensity || 0.4; brightnessVal = s.brightness || 1.0; if (vid) vid.volume = volumeVal; $('volFill').style.width = `${volumeVal * 100}%`; $('sbarFill').style.width = `${staticIntensity * 100}%`; $('lScan').style.opacity = staticIntensity * 0.8; $('screenWrap').style.filter = `brightness(${brightnessVal})`; } catch (e) { } }
         function showToast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2400); }
-        // Event listeners
+
         $('pwrBtn').addEventListener('click', () => { tvOn ? powerOff() : powerOn(); });
         $('btnLiveMode').addEventListener('click', () => { liveMode ? stopLiveMode() : startLiveMode(); });
         $('btnSurprise').addEventListener('click', () => { if (liveMode) stopLiveMode(); const pick = shows[Math.floor(Math.random() * shows.length)]; showToast(`🎲 SURPRISE: ${pick.name}`); setTimeout(() => { if (tvOn) autoLiveNow(pick.id, true, true); else powerOn(() => autoLiveNow(pick.id, true, true)); }, 500); });
@@ -1671,15 +1710,16 @@
         $('modalClose').addEventListener('click', () => { $('modalDonate').classList.remove('show'); });
         $('searchBox').addEventListener('input', () => renderList());
         $('tPlay').addEventListener('click', () => { if (!active) return; if (vid.paused) { vid.play(); $('tPlayIcon').textContent = '⏸'; startReels(); } else { vid.pause(); $('tPlayIcon').textContent = '▶'; stopReels(); } });
-        $('tFF').addEventListener('click', () => { if (vid.duration) vid.currentTime = Math.min(vid.currentTime + 15, vid.duration - 0.5); });
-        $('tRew').addEventListener('click', () => { if (vid.duration) vid.currentTime = Math.max(0, vid.currentTime - 15); });
-        // FULLSCREEN FIXED
+        $('tFF').addEventListener('click', () => { if (vid.duration) vid.currentTime = Math.min(vid.currentTime + 15, vid.duration - 0.5); showToast(`◈ +15s ◈`); });
+        $('tRew').addEventListener('click', () => { if (vid.duration) vid.currentTime = Math.max(0, vid.currentTime - 15); showToast(`◈ -15s ◈`); });
         $('fsBtn').addEventListener('click', () => { const wrap = $('screenWrap'); if (!document.fullscreenElement) { (wrap.requestFullscreen || wrap.webkitRequestFullscreen || wrap.mozRequestFullScreen || wrap.msRequestFullscreen).call(wrap).catch(e => { }); $('fsBtn').textContent = '✕'; } else { (document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen).call(document).catch(e => { }); $('fsBtn').textContent = '⛶'; } });
         document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement) $('fsBtn').textContent = '⛶'; });
+
         let vClicks = 7, sClicks = 0, bClicks = 4;
-        $('kVol').addEventListener('click', () => { vClicks = (vClicks + 1) % 11; volumeVal = vClicks / 10; vid.volume = volumeVal; kAngle.kVol += 36; $('kVol').style.transform = `rotate(${kAngle.kVol}deg)`; $('volFill').style.width = `${vClicks * 10}%`; saveSettings(); });
-        $('kStatic').addEventListener('click', () => { sClicks = (sClicks + 1) % 8; staticIntensity = sClicks / 7; kAngle.kStatic += 45; $('kStatic').style.transform = `rotate(${kAngle.kStatic}deg)`; $('sbarFill').style.width = `${Math.round(staticIntensity * 100)}%`; $('lScan').style.opacity = staticIntensity * 0.8; $('lPhos').style.opacity = staticIntensity * 0.5; saveSettings(); });
-        $('kBright').addEventListener('click', () => { bClicks = (bClicks + 1) % 8; brightnessVal = 0.4 + bClicks * (0.85 / 7); kAngle.kBright += 45; $('kBright').style.transform = `rotate(${kAngle.kBright}deg)`; $('screenWrap').style.filter = `brightness(${brightnessVal})`; saveSettings(); });
+        $('kVol').addEventListener('click', () => { vClicks = (vClicks + 1) % 11; volumeVal = vClicks / 10; vid.volume = volumeVal; kAngle.kVol += 36; $('kVol').style.transform = `rotate(${kAngle.kVol}deg)`; $('volFill').style.width = `${vClicks * 10}%`; saveSettings(); showToast(`◈ VOLUME: ${vClicks * 10}% ◈`); });
+        $('kStatic').addEventListener('click', () => { sClicks = (sClicks + 1) % 8; staticIntensity = sClicks / 7; kAngle.kStatic += 45; $('kStatic').style.transform = `rotate(${kAngle.kStatic}deg)`; $('sbarFill').style.width = `${Math.round(staticIntensity * 100)}%`; $('lScan').style.opacity = staticIntensity * 0.8; $('lPhos').style.opacity = staticIntensity * 0.5; saveSettings(); showToast(`◈ STATIC: ${Math.round(staticIntensity * 100)}% ◈`); });
+        $('kBright').addEventListener('click', () => { bClicks = (bClicks + 1) % 8; brightnessVal = 0.4 + bClicks * (0.85 / 7); kAngle.kBright += 45; $('kBright').style.transform = `rotate(${kAngle.kBright}deg)`; $('screenWrap').style.filter = `brightness(${brightnessVal})`; saveSettings(); showToast(`◈ BRIGHTNESS: ${Math.round(brightnessVal * 100)}% ◈`); });
+
         const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'], months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']; $('gDate').textContent = `${days[new Date().getDay()]} ${new Date().getDate()} ${months[new Date().getMonth()]}`;
         buildCatTabs(); renderList(); screen('idle'); loadSettings(); updateWidget(); setInterval(updateWidget, 60000);
         window.liveNow = autoLiveNow;
