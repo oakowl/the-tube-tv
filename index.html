@@ -214,7 +214,7 @@
     <div class="modal-bg" id="modalDonate"><div class="modal-box"><h2>☕ BUY ME A COFFEE</h2><p>Enjoying The Tube? Help keep the archive running!</p><div class="modal-opts"><a class="dl dl-bmc" id="bmcLink" href="https://buymeacoffee.com/oakowltv" target="_blank">☕ BUYMEACOFFEE.COM/OAKOWLTV</a><a class="dl dl-em" href="mailto:oakowlrecords@gmail.com" target="_blank">✉ oakowlrecords@gmail.com</a></div><button class="modal-close" id="modalClose">✕ CLOSE</button></div></div>
     <div class="toast" id="toast"></div>
     <script>
-        // ===== MASTER SCHEDULE =====
+        // ===== MASTER SHOW LIST (44 shows, schedule order preserved) =====
         const shows = [
             { id: 1, ch: '01', time: '6:00 AM', name: 'Reading Rainbow', emoji: '🌈', cat: 'classic', year: '1983', badges: ['PLAYLIST', 'PBS'], desc: 'LeVar Burton takes you on a magical reading journey.', tickers: ['Take a look, it’s in a book'], archiveId: 'ReadingRainbowTVSeries', playlist: true },
             { id: 2, ch: '02', time: '6:30 AM', name: 'Popeye Collection', emoji: '💪', cat: 'animation', year: '1930s', badges: ['PLAYLIST', 'CLASSIC'], desc: "I yam what I yam! Classic Popeye cartoons.", tickers: ["I eats me spinach!"], archiveId: 'popeye-collection', playlist: true },
@@ -276,7 +276,31 @@
         const $ = id => document.getElementById(id);
         const vid = $('vid');
 
-        // ===== AUDIO CONTEXT AND SOUND EFFECTS (FULLY RESTORED) =====
+        // ===== PROGRESSIVE DAILY EPISODE TRACKING (FULLY RESTORED) =====
+        function getDailyEpisodeIndex(showId, totalEpisodes) {
+            const storageKey = `thetube_daily_episode_${showId}`;
+            const lastDateKey = `${storageKey}_date`;
+            const today = new Date().toDateString();
+            const lastPlayedDate = localStorage.getItem(lastDateKey);
+            let currentEpisode = localStorage.getItem(storageKey);
+            
+            if (currentEpisode === null) {
+                currentEpisode = 0;
+            } else {
+                currentEpisode = parseInt(currentEpisode);
+            }
+            
+            // If it's a new day, move to the next episode
+            if (lastPlayedDate !== today) {
+                currentEpisode = (currentEpisode + 1) % totalEpisodes;
+                localStorage.setItem(storageKey, currentEpisode);
+                localStorage.setItem(lastDateKey, today);
+                showToast(`📅 NEW DAY — EPISODE ${currentEpisode + 1}/${totalEpisodes}`);
+            }
+            return currentEpisode;
+        }
+
+        // ===== AUDIO CONTEXT AND SOUND EFFECTS =====
         function getAC() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); return audioCtx; }
         function makeTone(f0, f1, dur, type, vol) { try { const c = getAC(), o = c.createOscillator(), g = c.createGain(); o.connect(g); g.connect(c.destination); o.type = type || 'sine'; o.frequency.setValueAtTime(f0, c.currentTime); if (f1) o.frequency.exponentialRampToValueAtTime(f1, c.currentTime + dur); g.gain.setValueAtTime(vol || 0.15, c.currentTime); g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + dur); o.start(); o.stop(c.currentTime + dur); } catch (e) { } }
         function makeNoise(dur, f0, f1, q, vol) { try { const c = getAC(), bl = Math.floor(c.sampleRate * dur), b = c.createBuffer(1, bl, c.sampleRate), d = b.getChannelData(0); for (let i = 0; i < bl; i++) d[i] = Math.random() * 2 - 1; const s = c.createBufferSource(); s.buffer = b; const flt = c.createBiquadFilter(); flt.type = 'bandpass'; flt.frequency.setValueAtTime(f0, c.currentTime); if (f1) flt.frequency.exponentialRampToValueAtTime(f1, c.currentTime + dur * 0.85); flt.Q.value = q || 1; const g = c.createGain(); g.gain.setValueAtTime(vol || 0.25, c.currentTime); g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + dur); s.connect(flt); flt.connect(g); g.connect(c.destination); s.start(); s.stop(c.currentTime + dur); } catch (e) { } }
@@ -292,68 +316,13 @@
         function getCurrentShow() {
             const n = new Date(), m = (n.getHours() * 60) + n.getMinutes();
             const schedule = [
-                { startTime: 6*60, endTime: 6*60+30, id:1, name:"Reading Rainbow", emoji:"🌈" },
-                { startTime: 6*60+30, endTime:7*60, id:2, name:"Popeye Collection", emoji:"💪" },
-                { startTime:7*60, endTime:7*60+30, id:3, name:"Arthur — Season 1", emoji:"🐻" },
-                { startTime:7*60+30, endTime:8*60, id:4, name:"Brum", emoji:"🚗" },
-                { startTime:8*60, endTime:8*60+30, id:5, name:"90s Moomin", emoji:"🦛" },
-                { startTime:8*60+30, endTime:9*60, id:6, name:"Tracy Beaker", emoji:"📝" },
-                { startTime:9*60, endTime:9*60+30, id:7, name:"Horrid Henry", emoji:"😈" },
-                { startTime:9*60+30, endTime:10*60, id:8, name:"Even Stevens", emoji:"🍞" },
-                { startTime:10*60, endTime:10*60+30, id:9, name:"ALF", emoji:"👽" },
-                { startTime:10*60+30, endTime:11*60, id:10, name:"Saved by the Bell", emoji:"📣" },
-                { startTime:11*60, endTime:11*60+30, id:11, name:"Bonanza", emoji:"🤠" },
-                { startTime:11*60+30, endTime:12*60, id:12, name:"Steptoe & Son", emoji:"🗑️" },
-                { startTime:12*60, endTime:12*60+30, id:13, name:"Murder, She Wrote", emoji:"✍️" },
-                { startTime:12*60+30, endTime:13*60, id:14, name:"Survivors (1975)", emoji:"☣️" },
-                { startTime:13*60, endTime:13*60+30, id:15, name:"Sherlock Holmes", emoji:"🔍" },
-                { startTime:13*60+30, endTime:14*60, id:16, name:"It Takes a Thief", emoji:"🕵️" },
-                { startTime:14*60, endTime:14*60+30, id:17, name:"Batman: TAS", emoji:"🦇" },
-                { startTime:14*60+30, endTime:15*60, id:18, name:"Spider-Man TAS", emoji:"🕷️" },
-                { startTime:15*60, endTime:15*60+30, id:19, name:"Men in Black: TAS", emoji:"🕶️" },
-                { startTime:15*60+30, endTime:16*60, id:20, name:"Keeping Up Appearances", emoji:"🫅" },
-                { startTime:16*60, endTime:16*60+30, id:21, name:"Vicar of Dibley", emoji:"⛪" },
-                { startTime:16*60+30, endTime:17*60, id:22, name:"Robot Wars", emoji:"🤖" },
-                { startTime:17*60, endTime:17*60+30, id:23, name:"Goosebumps", emoji:"👻" },
-                { startTime:17*60+30, endTime:18*60, id:24, name:"Benny Hill Show", emoji:"🏃" },
-                { startTime:18*60, endTime:18*60+30, id:25, name:"Alfred Hitchcock Presents", emoji:"🎩" },
-                { startTime:18*60+30, endTime:19*60, id:26, name:"Scooby Doo", emoji:"🐕" },
-                { startTime:19*60, endTime:19*60+30, id:27, name:"Buffy", emoji:"🧛" },
-                { startTime:19*60+30, endTime:20*60, id:28, name:"Ally McBeal", emoji:"👗" },
-                { startTime:20*60, endTime:20*60+30, id:29, name:"The Young Ones", emoji:"🧠" },
-                { startTime:20*60+30, endTime:21*60, id:30, name:"Final Space Drama", emoji:"🌌" },
-                { startTime:21*60, endTime:21*60+30, id:31, name:"Beavis and Butt-Head", emoji:"🎸" },
-                { startTime:21*60+30, endTime:22*60, id:32, name:"90s MTV Block", emoji:"🎤" },
-                { startTime:22*60, endTime:22*60+30, id:33, name:"Viva La Bam", emoji:"🛹" },
-                { startTime:22*60+30, endTime:23*60, id:34, name:"Wildboyz", emoji:"🐊" },
-                { startTime:23*60, endTime:23*60+30, id:35, name:"Jackass", emoji:"💀" },
-                { startTime:23*60+30, endTime:24*60, id:36, name:"Jerry Springer", emoji:"🎙️" },
-                { startTime:0, endTime:0*60+30, id:37, name:"Perversions of Science", emoji:"🧬" },
-                { startTime:0*60+30, endTime:1*60, id:38, name:"Bottom", emoji:"💥" },
-                { startTime:1*60, endTime:2*60, id:39, name:"Popeye Collection (Overnight)", emoji:"💪" },
-                { startTime:2*60, endTime:3*60, id:40, name:"90s Nickelodeon VHS", emoji:"📼" },
-                { startTime:3*60, endTime:3*60+30, id:41, name:"Mickey & Donald", emoji:"🐭" },
-                { startTime:3*60+30, endTime:4*60, id:42, name:"90s MTV Block (Overnight)", emoji:"🎤" },
-                { startTime:4*60, endTime:5*60, id:43, name:"Drawn Together", emoji:"🏠" },
-                { startTime:5*60, endTime:6*60, id:44, name:"Classic TV Vault", emoji:"🎞️" }
+                { startTime: 6*60, endTime: 6*60+30, id:1, name:"Reading Rainbow", emoji:"🌈" }, { startTime: 6*60+30, endTime:7*60, id:2, name:"Popeye Collection", emoji:"💪" }, { startTime:7*60, endTime:7*60+30, id:3, name:"Arthur — Season 1", emoji:"🐻" }, { startTime:7*60+30, endTime:8*60, id:4, name:"Brum", emoji:"🚗" }, { startTime:8*60, endTime:8*60+30, id:5, name:"90s Moomin", emoji:"🦛" }, { startTime:8*60+30, endTime:9*60, id:6, name:"Tracy Beaker", emoji:"📝" }, { startTime:9*60, endTime:9*60+30, id:7, name:"Horrid Henry", emoji:"😈" }, { startTime:9*60+30, endTime:10*60, id:8, name:"Even Stevens", emoji:"🍞" }, { startTime:10*60, endTime:10*60+30, id:9, name:"ALF", emoji:"👽" }, { startTime:10*60+30, endTime:11*60, id:10, name:"Saved by the Bell", emoji:"📣" }, { startTime:11*60, endTime:11*60+30, id:11, name:"Bonanza", emoji:"🤠" }, { startTime:11*60+30, endTime:12*60, id:12, name:"Steptoe & Son", emoji:"🗑️" }, { startTime:12*60, endTime:12*60+30, id:13, name:"Murder, She Wrote", emoji:"✍️" }, { startTime:12*60+30, endTime:13*60, id:14, name:"Survivors (1975)", emoji:"☣️" }, { startTime:13*60, endTime:13*60+30, id:15, name:"Sherlock Holmes", emoji:"🔍" }, { startTime:13*60+30, endTime:14*60, id:16, name:"It Takes a Thief", emoji:"🕵️" }, { startTime:14*60, endTime:14*60+30, id:17, name:"Batman: TAS", emoji:"🦇" }, { startTime:14*60+30, endTime:15*60, id:18, name:"Spider-Man TAS", emoji:"🕷️" }, { startTime:15*60, endTime:15*60+30, id:19, name:"Men in Black: TAS", emoji:"🕶️" }, { startTime:15*60+30, endTime:16*60, id:20, name:"Keeping Up Appearances", emoji:"🫅" }, { startTime:16*60, endTime:16*60+30, id:21, name:"Vicar of Dibley", emoji:"⛪" }, { startTime:16*60+30, endTime:17*60, id:22, name:"Robot Wars", emoji:"🤖" }, { startTime:17*60, endTime:17*60+30, id:23, name:"Goosebumps", emoji:"👻" }, { startTime:17*60+30, endTime:18*60, id:24, name:"Benny Hill Show", emoji:"🏃" }, { startTime:18*60, endTime:18*60+30, id:25, name:"Alfred Hitchcock Presents", emoji:"🎩" }, { startTime:18*60+30, endTime:19*60, id:26, name:"Scooby Doo", emoji:"🐕" }, { startTime:19*60, endTime:19*60+30, id:27, name:"Buffy", emoji:"🧛" }, { startTime:19*60+30, endTime:20*60, id:28, name:"Ally McBeal", emoji:"👗" }, { startTime:20*60, endTime:20*60+30, id:29, name:"The Young Ones", emoji:"🧠" }, { startTime:20*60+30, endTime:21*60, id:30, name:"Final Space Drama", emoji:"🌌" }, { startTime:21*60, endTime:21*60+30, id:31, name:"Beavis and Butt-Head", emoji:"🎸" }, { startTime:21*60+30, endTime:22*60, id:32, name:"90s MTV Block", emoji:"🎤" }, { startTime:22*60, endTime:22*60+30, id:33, name:"Viva La Bam", emoji:"🛹" }, { startTime:22*60+30, endTime:23*60, id:34, name:"Wildboyz", emoji:"🐊" }, { startTime:23*60, endTime:23*60+30, id:35, name:"Jackass", emoji:"💀" }, { startTime:23*60+30, endTime:24*60, id:36, name:"Jerry Springer", emoji:"🎙️" }, { startTime:0, endTime:0*60+30, id:37, name:"Perversions of Science", emoji:"🧬" }, { startTime:0*60+30, endTime:1*60, id:38, name:"Bottom", emoji:"💥" }, { startTime:1*60, endTime:2*60, id:39, name:"Popeye Collection (Overnight)", emoji:"💪" }, { startTime:2*60, endTime:3*60, id:40, name:"90s Nickelodeon VHS", emoji:"📼" }, { startTime:3*60, endTime:3*60+30, id:41, name:"Mickey & Donald", emoji:"🐭" }, { startTime:3*60+30, endTime:4*60, id:42, name:"90s MTV Block (Overnight)", emoji:"🎤" }, { startTime:4*60, endTime:5*60, id:43, name:"Drawn Together", emoji:"🏠" }, { startTime:5*60, endTime:6*60, id:44, name:"Classic TV Vault", emoji:"🎞️" }
             ];
             for (const sh of schedule) if (m >= sh.startTime && m < sh.endTime) return sh;
             return { name: "The Tube", emoji: "📺", message: "Off Air" };
         }
 
-        function updateWidget() {
-            const w = document.getElementById('whatsOnWidget');
-            if (!w) return;
-            const c = getCurrentShow();
-            if (c.message) {
-                w.innerHTML = '<div style="background:#060800;border:1px solid #f5a623;border-radius:6px;padding:10px;margin-bottom:15px;"><div style="font-family:VT323;font-size:.7rem;color:#4a3015;">🔴 NOW PLAYING</div><div style="display:flex;align-items:center;gap:10px;"><div style="font-size:2rem;">📺</div><div><div style="font-family:Oswald;color:#f5a623;">Off Air</div><div style="font-family:VT323;font-size:.7rem;">Select a show from the guide</div></div></div></div>';
-            } else {
-                const showObj = shows.find(s => s.id === c.id);
-                const chNum = showObj ? showObj.ch : '--';
-                w.innerHTML = '<div style="background:#060800;border:1px solid #39ff14;border-radius:6px;padding:10px;margin-bottom:15px;cursor:pointer;" onclick="window.liveNow(' + c.id + ')"><div style="display:flex;justify-content:space-between;"><div style="font-family:VT323;font-size:.65rem;color:#39ff14;">🔴 LIVE NOW</div><div style="font-family:VT323;font-size:.6rem;color:#4a3015;">CH ' + chNum + '</div></div><div style="display:flex;align-items:center;gap:10px;margin-top:5px;"><div style="font-size:2rem;">' + c.emoji + '</div><div><div style="font-family:Oswald;font-size:1rem;font-weight:600;color:#d4b483;">' + c.name + '</div><div style="font-family:VT323;font-size:.65rem;color:#7a5a28;">▶ Click to watch</div></div></div></div>';
-            }
-        }
-
+        function updateWidget() { const w = document.getElementById('whatsOnWidget'); if (!w) return; const c = getCurrentShow(); if (c.message) { w.innerHTML = '<div style="background:#060800;border:1px solid #f5a623;border-radius:6px;padding:10px;margin-bottom:15px;"><div style="font-family:VT323;font-size:.7rem;color:#4a3015;">🔴 NOW PLAYING</div><div style="display:flex;align-items:center;gap:10px;"><div style="font-size:2rem;">📺</div><div><div style="font-family:Oswald;color:#f5a623;">Off Air</div><div style="font-family:VT323;font-size:.7rem;">Select a show from the guide</div></div></div></div>'; } else { const showObj = shows.find(s => s.id === c.id); const chNum = showObj ? showObj.ch : '--'; w.innerHTML = '<div style="background:#060800;border:1px solid #39ff14;border-radius:6px;padding:10px;margin-bottom:15px;cursor:pointer;" onclick="window.liveNow(' + c.id + ')"><div style="display:flex;justify-content:space-between;"><div style="font-family:VT323;font-size:.65rem;color:#39ff14;">🔴 LIVE NOW</div><div style="font-family:VT323;font-size:.6rem;color:#4a3015;">CH ' + chNum + '</div></div><div style="display:flex;align-items:center;gap:10px;margin-top:5px;"><div style="font-size:2rem;">' + c.emoji + '</div><div><div style="font-family:Oswald;font-size:1rem;font-weight:600;color:#d4b483;">' + c.name + '</div><div style="font-family:VT323;font-size:.65rem;color:#7a5a28;">▶ Click to watch</div></div></div></div>'; } }
         function screen(state) { $('lIdle').style.display = state === 'idle' ? 'flex' : 'none'; $('lVideo').classList[state === 'video' ? 'add' : 'remove']('show'); $('lVhs').classList[state === 'vhs' ? 'add' : 'remove']('show'); $('lStatic').classList[state === 'static' ? 'add' : 'remove']('show'); $('lSplash').classList[state === 'splash' ? 'add' : 'remove']('show'); $('lOff').classList[state === 'off' ? 'add' : 'remove']('show'); $('fsBtn').classList.toggle('show', state === 'video'); }
         function showOff(cb) { $('lOff').innerHTML = '<div class="off-line"></div>'; screen('off'); setTimeout(() => { $('lOff').innerHTML = ''; screen('idle'); if (cb) cb(); }, 550); }
         function showStaticAnim(label, cb) { $('staticLbl').textContent = label || 'TUNING...'; screen('static'); sndTune(); let f = 0, frames = 12; noiseTimer = setInterval(() => { drawNoise('noiseCanvas', 0.5); if (++f >= frames) { clearInterval(noiseTimer); if (cb) cb(); } }, 52); }
@@ -367,33 +336,7 @@
         function filterFiles(rawFiles) { const map = new Map(); rawFiles.forEach(f => { const name = f.name || '', nl = name.toLowerCase(); if (!nl.match(/\.(ia\.mp4|mp4|ogv)$/)) return; let base = nl.endsWith('.ia.mp4') ? name.slice(0,-7) : (nl.endsWith('.mp4') ? name.slice(0,-4) : name.slice(0,-4)); const score = nl.endsWith('.ia.mp4') ? 3 : (nl.endsWith('.mp4') ? 2 : 1); const existing = map.get(base); if (!existing || score > existing.score) map.set(base, { name: f.name, score, url: `https://archive.org/download/${f._archiveId}/${encodeURIComponent(f.name)}` }); }); return [...map.values()].map(f => ({ name: f.name.replace(/\.ia\.mp4$|\.mp4$|\.ogv$/i,'').replace(/[_\-]+/g,' ').trim(), url: f.url })); }
         function showResumeBadge(timestamp) { const badge = $('resumeBadge'); const minutes = Math.floor(timestamp / 60); const seconds = Math.floor(timestamp % 60); badge.textContent = `⏯ RESUMING AT ${minutes}:${seconds.toString().padStart(2, '0')}`; badge.classList.remove('show'); void badge.offsetWidth; badge.classList.add('show'); setTimeout(() => { badge.classList.remove('show'); }, 3500); }
         function playFile(show, files, idx, resumeTimestamp, autoPlay, liveSeekTime) { 
-            const f = files[idx]; if (!f) return; 
-            if (window._saveInterval) clearInterval(window._saveInterval); 
-            vid.src = f.url; vid.volume = volumeVal; vid.load(); 
-            window._saveInterval = setInterval(() => { if (vid.currentTime && vid.duration && !vid.paused && vid.currentTime < vid.duration-5) localStorage.setItem(`thetube_resume_${show.id}`, JSON.stringify({ episode: idx, timestamp: Math.floor(vid.currentTime) })); }, 10000); 
-            const onPause = () => { if (vid.currentTime && vid.duration && vid.currentTime < vid.duration-5) localStorage.setItem(`thetube_resume_${show.id}`, JSON.stringify({ episode: idx, timestamp: Math.floor(vid.currentTime) })); };
-            vid.addEventListener('pause', onPause);
-            vid.addEventListener('canplay', function onLoad() { 
-                vid.removeEventListener('canplay', onLoad); 
-                let targetTime = resumeTimestamp;
-                if (liveSeekTime !== null && liveSeekTime > 30 && liveSeekTime < vid.duration - 10) { targetTime = liveSeekTime; showToast(`🔴 LIVE — JOINED AT ${Math.floor(targetTime/60)}:${Math.floor(targetTime%60).toString().padStart(2,'0')}`); }
-                else if (resumeTimestamp > 0 && resumeTimestamp < vid.duration - 5 && liveSeekTime === null) { targetTime = resumeTimestamp; showResumeBadge(targetTime); showToast(`◈ RESUMING FROM ${Math.floor(targetTime/60)}:${Math.floor(targetTime%60).toString().padStart(2,'0')} ◈`); }
-                else if (liveSeekTime === null) { targetTime = 0; showToast(`◈ PLAYING FROM START ◈`); }
-                if (targetTime > 0 && targetTime < vid.duration) vid.currentTime = targetTime; else vid.currentTime = 0;
-                vid.play().catch(() => { if (!autoPlay) showToast('◈ CLICK THE VIDEO TO START ◈'); });
-            });
-            screen('video'); $('lTicker').classList.add('show'); $('tPlayIcon').textContent = '⏸'; 
-            $('vhsShowName').textContent = show.name.toUpperCase(); $('vhsEpName').textContent = f.name.length>18 ? f.name.slice(0,16)+'…' : f.name; $('vhsTime').textContent = '00:00'; startReels(); markEpActive(idx); 
-            $('spEp').textContent = f.name;
-            vid.onended = () => { 
-                stopReels(); if (window._saveInterval) clearInterval(window._saveInterval); vid.removeEventListener('pause', onPause); clearResumePosition(show.id); 
-                const nextEp = idx + 1; 
-                if (nextEp < files.length) { 
-                    showToast(`◈ NEXT EPISODE IN 3 SECONDS ◈`); 
-                    setTimeout(() => { if (active && active.id === show.id) { activeEp = nextEp; playFile(show, files, nextEp, 0, true, null); } }, 3000); 
-                } else { showToast(`◈ END OF EPISODES ◈`); }
-            };
-        }
+            const f = files[idx]; if (!f) return; if (window._saveInterval) clearInterval(window._saveInterval); vid.src = f.url; vid.volume = volumeVal; vid.load(); window._saveInterval = setInterval(() => { if (vid.currentTime && vid.duration && !vid.paused && vid.currentTime < vid.duration-5) localStorage.setItem(`thetube_resume_${show.id}`, JSON.stringify({ episode: idx, timestamp: Math.floor(vid.currentTime) })); }, 10000); const onPause = () => { if (vid.currentTime && vid.duration && vid.currentTime < vid.duration-5) localStorage.setItem(`thetube_resume_${show.id}`, JSON.stringify({ episode: idx, timestamp: Math.floor(vid.currentTime) })); }; vid.addEventListener('pause', onPause); vid.addEventListener('canplay', function onLoad() { vid.removeEventListener('canplay', onLoad); let targetTime = resumeTimestamp; if (liveSeekTime !== null && liveSeekTime > 30 && liveSeekTime < vid.duration - 10) { targetTime = liveSeekTime; showToast(`🔴 LIVE — JOINED AT ${Math.floor(targetTime/60)}:${Math.floor(targetTime%60).toString().padStart(2,'0')}`); } else if (resumeTimestamp > 0 && resumeTimestamp < vid.duration - 5 && liveSeekTime === null) { targetTime = resumeTimestamp; showResumeBadge(targetTime); showToast(`◈ RESUMING FROM ${Math.floor(targetTime/60)}:${Math.floor(targetTime%60).toString().padStart(2,'0')} ◈`); } else if (liveSeekTime === null) { targetTime = 0; showToast(`◈ PLAYING FROM START ◈`); } if (targetTime > 0 && targetTime < vid.duration) vid.currentTime = targetTime; else vid.currentTime = 0; vid.play().catch(() => { if (!autoPlay) showToast('◈ CLICK THE VIDEO TO START ◈'); }); }); screen('video'); $('lTicker').classList.add('show'); $('tPlayIcon').textContent = '⏸'; $('vhsShowName').textContent = show.name.toUpperCase(); $('vhsEpName').textContent = f.name.length>18 ? f.name.slice(0,16)+'…' : f.name; $('vhsTime').textContent = '00:00'; startReels(); markEpActive(idx); $('spEp').textContent = f.name; vid.onended = () => { stopReels(); if (window._saveInterval) clearInterval(window._saveInterval); vid.removeEventListener('pause', onPause); clearResumePosition(show.id); const nextEp = idx + 1; if (nextEp < files.length) { showToast(`◈ NEXT EPISODE IN 3 SECONDS ◈`); setTimeout(() => { if (active && active.id === show.id) { activeEp = nextEp; playFile(show, files, nextEp, 0, true, null); } }, 3000); } else { showToast(`◈ END OF EPISODES ◈`); } }; }
         function clearResumePosition(showId) { localStorage.removeItem(`thetube_resume_${showId}`); }
         function getResumePosition(showId) { const saved = localStorage.getItem(`thetube_resume_${showId}`); if (saved) try { return JSON.parse(saved); } catch(e) { return null; } return null; }
         function getScheduleEntryForShow(showId) { const cur = getCurrentShow(); return cur.id === showId ? cur : null; }
@@ -401,16 +344,12 @@
         async function autoLiveNow(showId, autoPlay = true, randomEpisode = false) { 
             if (!tvOn) return; const s = shows.find(x => x.id === showId); if (!s) return; const files = await fetchFiles(s.archiveId); if (!files || files.length === 0) return; 
             let episodeIndex = 0, resumeTimestamp = 0, liveSeekTime = null; 
-            if (randomEpisode) episodeIndex = Math.floor(Math.random() * files.length); 
-            else { const scheduleEntry = getScheduleEntryForShow(showId); 
-                if (scheduleEntry) episodeIndex = 0; 
-                else { const stored = localStorage.getItem(`thetube_episode_${showId}`); if (stored !== null) episodeIndex = parseInt(stored) || 0; const resumeData = getResumePosition(showId); if (resumeData && resumeData.episode === episodeIndex && resumeData.timestamp > 30) resumeTimestamp = resumeData.timestamp; } 
-                if (scheduleEntry) liveSeekTime = calculateLiveSeekTime(scheduleEntry); } 
+            if (randomEpisode) { episodeIndex = Math.floor(Math.random() * files.length); showToast(`🎲 RANDOM EPISODE ${episodeIndex+1}/${files.length}`); } else { const scheduleEntry = getScheduleEntryForShow(showId); if (scheduleEntry) { episodeIndex = getDailyEpisodeIndex(showId, files.length); showToast(`📺 DAILY EPISODE ${episodeIndex+1}/${files.length}`); } else { const stored = localStorage.getItem(`thetube_episode_${showId}`); if (stored !== null) episodeIndex = parseInt(stored) || 0; const resumeData = getResumePosition(showId); if (resumeData && resumeData.episode === episodeIndex && resumeData.timestamp > 30) resumeTimestamp = resumeData.timestamp; } if (scheduleEntry) liveSeekTime = calculateLiveSeekTime(scheduleEntry); } 
             if (window._saveInterval) clearInterval(window._saveInterval); clearInterval(noiseTimer); clearInterval(vhsTimer); vid.pause(); vid.src = ''; stopReels(); $('tPlayIcon').textContent = '▶'; $('lTicker').classList.remove('show'); $('lVideo').classList.remove('show'); active = s; activeEp = episodeIndex; $('vhsShowName').textContent = s.name.toUpperCase(); $('chDisp').textContent = `CH ${s.ch}`; $('npName').textContent = s.name; $('npCh').textContent = `CH ${s.ch}`; $('npBar').classList.add('show'); const tk = $('tickerTxt'); tk.textContent = `◈  ${s.tickers.join('   ◈   ')}  ◈  ${s.tickers.join('   ◈   ')}  ◈`; tk.style.animation = 'none'; void tk.offsetHeight; tk.style.animation = ''; $('spEmoji').textContent = s.emoji; $('spTitle').textContent = s.name; $('spYear').textContent = s.year; $('epShowName').textContent = s.name.toUpperCase(); buildSidebar(files, episodeIndex, s); showStaticAnim('TUNING...', async () => { screen('splash'); $('lTicker').classList.add('show'); renderList(); playFile(s, files, episodeIndex, resumeTimestamp, autoPlay, liveSeekTime); $('lSplash').classList.remove('show'); screen('video'); }); 
         }
         function powerOn(cb) { tvOn = true; $('pwrBtn').classList.add('on'); sndPwrOn(); const current = getCurrentShow(); if (current && current.id) { autoLiveNow(current.id, true, false); if (cb) cb(); } else { const pl = shows.filter(s => s.playlist); const pick = pl[Math.floor(Math.random() * pl.length)]; if (pick && tvOn) autoLiveNow(pick.id, true, false); if (cb) cb(); } }
         function powerOff() { sndPwrOff(); tvOn = false; active = null; activeEp = 0; $('pwrBtn').classList.remove('on'); clearInterval(noiseTimer); clearInterval(vhsTimer); vid.pause(); vid.src = ''; stopReels(); $('tPlayIcon').textContent = '▶'; $('lTicker').classList.remove('show'); $('npBar').classList.remove('show'); $('vhsShowName').textContent = '◈ NO TAPE LOADED ◈'; $('chDisp').textContent = '— —'; $('epList').innerHTML = '<div class="ep-empty">Power on & select<br>a show to see<br>episodes here</div>'; $('epShowName').textContent = '— SELECT A SHOW —'; showOff(() => renderList()); saveSettings(); }
-        function startLiveMode() { if (!tvOn) { showToast('◈ TURN TV ON FIRST ◈'); return; } liveMode = true; $('btnLiveMode').classList.add('active'); $('liveModeIndicator').style.display = 'inline-block'; showToast('🔴 LIVE MODE ACTIVATED'); checkAndSwitchLiveChannel(); if (liveCheckInterval) clearInterval(liveCheckInterval); liveCheckInterval = setInterval(() => { if (liveMode && tvOn) checkAndSwitchLiveChannel(); }, 30000); }
+        function startLiveMode() { if (!tvOn) { showToast('◈ TURN TV ON FIRST ◈'); return; } liveMode = true; $('btnLiveMode').classList.add('active'); $('liveModeIndicator').style.display = 'inline-block'; showToast('🔴 LIVE MODE ACTIVATED — AUTO-SWITCHING CHANNELS'); checkAndSwitchLiveChannel(); if (liveCheckInterval) clearInterval(liveCheckInterval); liveCheckInterval = setInterval(() => { if (liveMode && tvOn) checkAndSwitchLiveChannel(); }, 30000); }
         function stopLiveMode() { if (liveCheckInterval) clearInterval(liveCheckInterval); liveCheckInterval = null; liveMode = false; currentLiveShowId = null; $('btnLiveMode').classList.remove('active'); $('liveModeIndicator').style.display = 'none'; showToast('◈ LIVE MODE OFF ◈'); }
         async function checkAndSwitchLiveChannel() { const current = getCurrentShow(); if (!current || current.message) { if (currentLiveShowId !== null) { currentLiveShowId = null; showToast('◈ OFF AIR — WAITING FOR NEXT PROGRAM ◈'); } return; } if (currentLiveShowId !== current.id) { currentLiveShowId = current.id; setTimeout(() => { if (liveMode && tvOn) autoLiveNow(current.id, true, false); }, 500); } }
         function renderList() { const el = $('showList'); if (!el) return; const searchTerm = ($('searchBox').value || "").toLowerCase(); let filtered = activeCat === 'all' ? shows : shows.filter(s => s.cat === activeCat); if (searchTerm) filtered = filtered.filter(s => s.name.toLowerCase().includes(searchTerm) || s.desc.toLowerCase().includes(searchTerm) || s.year.toString().includes(searchTerm)); el.innerHTML = ''; filtered.forEach(s => { const card = document.createElement('div'); card.className = 'show-card' + (active?.id === s.id ? ' active' : ''); const bhtml = s.badges.map(b => `<span class="badge">${b}</span>`).join(''); card.innerHTML = `<span class="s-time">${s.time}</span><span class="s-emoji">${s.emoji}</span><div class="s-info"><div class="s-name">${s.name} <span class="s-yr">(${s.year})</span></div><div class="s-desc">${s.desc}</div><div class="s-badges">${bhtml}</div></div><div class="play-dot"></div>`; card.addEventListener('click', () => { sndClick(); if (liveMode) stopLiveMode(); if (tvOn) autoLiveNow(s.id, true, false); else powerOn(() => autoLiveNow(s.id, true, false)); }); el.appendChild(card); }); }
@@ -419,7 +358,6 @@
         function loadSettings() { const saved = localStorage.getItem('thetube_settings'); if (saved) try { const s = JSON.parse(saved); volumeVal = s.volume || 0.8; staticIntensity = s.staticIntensity || 0.4; brightnessVal = s.brightness || 1.0; vClicks = s.volClicks !== undefined ? s.volClicks : 7; sClicks = s.staticClicks !== undefined ? s.staticClicks : 0; bClicks = s.brightClicks !== undefined ? s.brightClicks : 4; if (vid) vid.volume = volumeVal; $('volFill').style.width = `${vClicks * 10}%`; $('sbarFill').style.width = `${Math.round(staticIntensity * 100)}%`; $('lScan').style.opacity = staticIntensity * 0.8; $('screenWrap').style.filter = `brightness(${brightnessVal})`; showToast(`◈ LOADED YOUR SAVED SETTINGS ◈`); } catch(e) {} }
         function showToast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2400); }
         
-        // Event listeners with sounds
         $('pwrBtn').addEventListener('click', () => { sndClick(); tvOn ? powerOff() : powerOn(); });
         $('btnLiveMode').addEventListener('click', () => { sndClick(); liveMode ? stopLiveMode() : startLiveMode(); });
         $('btnSurprise').addEventListener('click', () => { sndClick(); if (liveMode) stopLiveMode(); const pick = shows[Math.floor(Math.random() * shows.length)]; showToast(`🎲 SURPRISE: ${pick.name}`); setTimeout(() => { if (tvOn) autoLiveNow(pick.id, true, true); else powerOn(() => autoLiveNow(pick.id, true, true)); }, 500); });
