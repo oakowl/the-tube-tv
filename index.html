@@ -3,194 +3,1487 @@
 <head>
     <link href="https://fonts.googleapis.com/css2?family=VT323&family=Oswald:wght@400;600&family=Special+Elite&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0 }
-        body { background: radial-gradient(ellipse at center,#1a1408 0%,#080602 100%); font-family: 'Special Elite',cursive; color: #d4b483; padding: 10px 8px 28px; min-height: 100vh }
-        .site-header { text-align: center; padding: 10px 0 8px }
-        .logo { font-family: 'VT323',monospace; font-size: clamp(2rem,7vw,4.2rem); color: #f5a623; letter-spacing: .15em; line-height: 1 }
-        .logo span { color: #fff }
-        .tagline { font-family: 'VT323',monospace; font-size: .85rem; color: #6a5030; letter-spacing: .3em; margin-top: 3px }
-        .divider { width: 50%; height: 1px; background: linear-gradient(90deg,transparent,#c47d0e,transparent); margin: 7px auto 0 }
-        .header-actions { display: flex; justify-content: center; gap: 10px; margin-top: 10px; flex-wrap: wrap }
-        .hbtn { font-family: 'VT323',monospace; font-size: .82rem; padding: 5px 14px; border-radius: 3px; cursor: pointer; letter-spacing: .1em; transition: all .15s; border: none; display: flex; align-items: center; gap: 5px }
-        .hbtn:active { transform: scale(.96) }
-        .btn-share { background: #1a1200; color: #f5a623; border: 1px solid #3a2800 }
-        .btn-share:hover { background: #2a1e00 }
-        .btn-donate { background: #0d1a0d; color: #39ff14; border: 1px solid #1a3a1a }
-        .btn-donate:hover { background: #122012 }
-        .btn-surprise { background: #1a001a; color: #ff80ff; border: 1px solid #3a1a3a }
-        .btn-surprise:hover { background: #250025 }
-        .btn-live { background: #1a0000; color: #ff3333; border: 1px solid #ff3333; animation: livePulse 1.5s infinite; }
-        .btn-live:hover { background: #2a0000; }
-        .btn-live.active { background: #ff0000; color: #fff; border-color: #fff; animation: none; }
-        @keyframes livePulse { 0%,100%{opacity:0.8;box-shadow:0 0 0px #ff3333;} 50%{opacity:1;box-shadow:0 0 8px #ff3333;} }
-        .layout { display: grid; grid-template-columns: 190px 1fr 280px; gap: 14px; max-width: 1180px; margin: 0 auto; padding: 10px 6px 0; align-items: start }
-        @media(max-width:860px){ .layout { grid-template-columns: 1fr 260px } }
-        @media(max-width:580px){ .layout { grid-template-columns: 1fr } }
-        .ep-sidebar { background: #080700; border: 1px solid #1e1500; border-radius: 4px; overflow: hidden }
-        .ep-sidebar-hdr { font-family: 'VT323',monospace; font-size: .88rem; color: #f5a623; letter-spacing: .1em; padding: 6px 10px; background: #0d0a00; border-bottom: 1px solid #1e1500 }
-        .ep-show-name { font-family: 'VT323',monospace; font-size: .68rem; color: #5a4020; padding: 4px 10px 5px; border-bottom: 1px solid #140f00; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: .05em }
-        .ep-list { max-height: 65vh; overflow-y: auto; padding: 3px 0 }
-        .ep-list::-webkit-scrollbar { width: 6px }
-        .ep-list::-webkit-scrollbar-track { background: #080700 }
-        .ep-list::-webkit-scrollbar-thumb { background: #3a2008; border-radius: 3px }
-        .ep-item { font-family: 'VT323',monospace; font-size: .7rem; color: #5a4020; padding: 4px 10px; cursor: pointer; transition: all .1s; border-left: 2px solid transparent; line-height: 1.35; display: flex; gap: 5px }
-        .ep-item:hover { color: #f5a623; background: #120c00; border-left-color: #f5a623 }
-        .ep-item.ep-active { color: #39ff14; background: #060d00; border-left-color: #39ff14 }
-        .ep-num { color: #2a1e08; flex-shrink: 0; font-size: .62rem; padding-top: 1px }
-        .ep-empty { font-family: 'VT323',monospace; font-size: .68rem; color: #2a1e08; padding: 16px 10px; text-align: center; line-height: 1.7 }
-        @media(max-width:860px){ .ep-sidebar { display: none } }
-        .tv-shell { background: linear-gradient(160deg,#c8c8c0,#b0b0a8 30%,#989890 60%,#888880); border-radius: 12px 12px 16px 16px; padding: 14px 14px 12px; box-shadow: 4px 4px 0 #707068,8px 8px 0 #606058,0 20px 60px rgba(0,0,0,.88),inset 0 1px 0 rgba(255,255,255,.5),inset -2px -2px 0 rgba(0,0,0,.2); position: relative }
-        .tv-shell::before { content: ''; position: absolute; inset: 7px; border-radius: 7px; box-shadow: inset 0 2px 4px rgba(0,0,0,.3),inset 0 -1px 2px rgba(255,255,255,.2); pointer-events: none }
-        .tv-top-strip { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px }
-        .tv-brand-90s { font-family: 'VT323',monospace; font-size: .85rem; color: #3a3a32; letter-spacing: .3em; text-shadow: 0 1px 0 rgba(255,255,255,.4) }
-        .channel-area { display: flex; align-items: center; gap: 8px; }
-        .live-indicator { font-family: 'VT323',monospace; font-size: .7rem; color: #ff3333; background: #1a0000; padding: 2px 8px; border-radius: 3px; border: 1px solid #ff3333; letter-spacing: .1em; animation: liveBlink 1s infinite; }
-        @keyframes liveBlink { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
-        .ch-display { font-family: 'VT323',monospace; font-size: 1.1rem; color: #ff4400; background: #0a0200; padding: 2px 7px; border-radius: 3px; border: 2px solid #333; min-width: 50px; text-align: center; box-shadow: inset 0 2px 4px rgba(0,0,0,.8) }
-        .resume-badge { position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.8); color: #39ff14; font-family: 'VT323',monospace; font-size: .65rem; padding: 3px 8px; border-radius: 3px; border-left: 3px solid #39ff14; z-index: 20; pointer-events: none; display: none; letter-spacing: .05em; }
-        .resume-badge.show { display: block; animation: fadeOut 3s ease-out forwards; }
-        @keyframes fadeOut { 0%{opacity:1;} 70%{opacity:1;} 100%{opacity:0;display:none;} }
-        .screen-housing { background: #2a2a28; border-radius: 8px; padding: 8px 8px 12px; box-shadow: inset 0 4px 8px rgba(0,0,0,.8) }
-        .screen-bezel-90s { background: #1a1a18; border-radius: 5px; padding: 5px; box-shadow: inset 0 0 20px rgba(0,0,0,.9) }
-        .screen-wrap { position: relative; border-radius: 4px; overflow: hidden; aspect-ratio: 4/3; background: #000 }
-        .l-idle { position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #060600 }
-        .l-video { position: absolute; inset: 0; z-index: 2; display: none }
-        .l-video video { width: 100%; height: 100%; object-fit: contain; background: #000; display: block }
-        .l-video.show { display: block }
-        .l-vhsfx { position: absolute; inset: 0; z-index: 3; display: none; overflow: hidden; background: #030303 }
-        .l-vhsfx.show { display: block }
-        .l-static { position: absolute; inset: 0; z-index: 4; display: none; align-items: center; justify-content: center; background: #111 }
-        .l-static.show { display: flex }
-        .static-lbl { font-family: 'VT323',monospace; font-size: .9rem; color: rgba(255,255,255,.8); z-index: 2; letter-spacing: .2em; animation: flk .12s infinite; pointer-events: none }
-        canvas.noisecanvas { position: absolute; inset: 0; width: 100%; height: 100% }
-        .l-off { position: absolute; inset: 0; z-index: 5; background: #000; display: none; align-items: center; justify-content: center }
-        .l-off.show { display: flex }
-        .off-line { width: 100%; height: 2px; background: #fff; animation: offAnim .5s ease-out forwards }
-        .l-splash { position: absolute; inset: 0; z-index: 6; display: none; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,.8); padding: 10px }
-        .l-splash.show { display: flex }
-        .sp-emoji { font-size: 3rem }
-        .sp-title { font-family: 'VT323',monospace; font-size: 1.05rem; color: #f5a623; margin-top: 6px; text-align: center; line-height: 1.2 }
-        .sp-year { font-family: 'VT323',monospace; font-size: .68rem; color: #7a5a28; margin-top: 2px }
-        .sp-ep { font-family: 'Special Elite',cursive; font-size: .54rem; color: #bbb; margin-top: 4px; text-align: center; padding: 0 8px; line-height: 1.4 }
-        .sp-btn { margin-top: 10px; width: 42px; height: 42px; border-radius: 50%; background: rgba(245,166,35,.12); border: 2px solid #f5a623; display: flex; align-items: center; justify-content: center; flex-shrink: 0 }
-        .sp-btn::after { content: ''; width: 0; height: 0; border-top: 8px solid transparent; border-bottom: 8px solid transparent; border-left: 15px solid #f5a623; margin-left: 4px }
-        .sp-hint { font-family: 'VT323',monospace; font-size: .55rem; color: #4a3015; margin-top: 5px; letter-spacing: .1em }
-        .l-scan { position: absolute; inset: 0; z-index: 7; background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.2) 2px,rgba(0,0,0,.2) 4px); pointer-events: none }
-        .l-vig { position: absolute; inset: 0; z-index: 8; background: radial-gradient(ellipse at 50% 50%,transparent 48%,rgba(0,0,0,.65) 100%); pointer-events: none }
-        .l-phos { position: absolute; inset: 0; z-index: 9; background: radial-gradient(ellipse at 50% 40%,rgba(100,200,50,.03),transparent 70%); pointer-events: none }
-        .l-ticker { position: absolute; bottom: 0; left: 0; right: 0; z-index: 10; background: rgba(5,5,0,.93); border-top: 1px solid #1e1600; padding: 3px 8px; overflow: hidden; white-space: nowrap; pointer-events: none; display: none }
-        .l-ticker.show { display: block }
-        .ticker-inner { display: inline-block; font-family: 'VT323',monospace; font-size: .72rem; color: #f5a623; animation: ticker 28s linear infinite }
-        .fs-btn { position: absolute; top: 6px; right: 6px; z-index: 11; width: 22px; height: 22px; background: rgba(0,0,0,.5); border: 1px solid rgba(245,166,35,.3); border-radius: 2px; cursor: pointer; display: none; align-items: center; justify-content: center; font-size: .7rem; color: rgba(245,166,35,.7); transition: all .15s }
-        .fs-btn:hover { background: rgba(0,0,0,.8); border-color: #f5a623; color: #f5a623 }
-        .l-video.show ~ .fs-btn, .fs-btn.show { display: flex }
-        .vhs-stripe { position: absolute; width: 100%; height: 2px; background: rgba(255,255,255,.75); animation: vhsScan .07s linear infinite }
-        .vhs-band { position: absolute; width: 100%; height: 22px; background: rgba(255,255,255,.07); animation: vhsBand .13s steps(1) infinite }
-        .vhs-lbl { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-family: 'VT323',monospace; font-size: 1.3rem; color: #fff; letter-spacing: .2em; animation: flk .15s infinite; z-index: 2 }
-        .idle-icon { font-size: 2.4rem }
-        .idle-title { font-family: 'VT323',monospace; font-size: 1.8rem; color: #f5a623; margin-top: 3px }
-        .idle-sub { font-family: 'VT323',monospace; font-size: .68rem; color: #4a3a20; letter-spacing: .2em; margin-top: 3px }
-        .test-bars { display: flex; width: 100%; height: 14px; margin-top: 12px }
-        .test-bar { flex: 1 }
-        .vhs-deck { background: linear-gradient(180deg,#6a6a62,#585850); padding: 8px 14px 8px; border-radius: 0 0 4px 4px; display: flex; align-items: center; gap: 10px; box-shadow: inset 0 2px 4px rgba(0,0,0,.4),0 2px 4px rgba(0,0,0,.3); }
-        .vhs-cassette-housing { flex: 1; background: linear-gradient(160deg,#222220,#111110,#1a1a18); border-radius: 4px; padding: 6px 10px 5px; border: 2px solid #0a0a08; box-shadow: inset 0 2px 6px rgba(0,0,0,.9),0 1px 0 rgba(255,255,255,.08); position: relative; }
-        .vhs-label-strip { background: linear-gradient(90deg,#1a0e04,#2a1a08,#1a0e04); border-radius: 2px 2px 0 0; padding: 2px 6px; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #0a0800; }
-        .vhs-show-name { font-family: 'VT323',monospace; font-size: .62rem; color: #f5a623; letter-spacing: .08em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 70% }
-        .vhs-ep-name { font-family: 'VT323',monospace; font-size: .52rem; color: #5a3a18; letter-spacing: .05em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 28%; text-align: right }
-        .vhs-window { display: flex; align-items: center; gap: 6px; background: #050504; border-radius: 2px; padding: 4px 8px; border: 1px solid #1a1a18; }
-        .vhs-reel { width: 22px; height: 22px; border-radius: 50%; background: radial-gradient(circle at 40% 40%,#2a2a28,#0a0a08); border: 2px solid #222; position: relative; flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,.8); }
-        .vhs-reel::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 6px; height: 6px; border-radius: 50%; background: #3a3a38; border: 1px solid #0a0a08 }
-        .vhs-reel.spinning { animation: reelSpin 1.5s linear infinite }
-        .vhs-tape-stretch { flex: 1; height: 6px; background: linear-gradient(90deg,#0a0806,#1a1208 30%,#0e0a06 60%,#1a1208 80%,#0a0806); border-radius: 1px; box-shadow: 0 0 3px rgba(245,166,35,.15) }
-        .vhs-time { font-family: 'VT323',monospace; font-size: .58rem; color: #3a2808; letter-spacing: .05em; white-space: nowrap; flex-shrink: 0 }
-        .transport { display: flex; gap: 4px; align-items: center; flex-shrink: 0 }
-        .tbtn { width: 36px; height: 28px; background: linear-gradient(180deg,#5a5a52,#383830); border: 1px solid #1a1a12; border-radius: 3px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0; box-shadow: 0 2px 4px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.12); user-select: none; transition: all .1s; }
-        .tbtn:hover { background: linear-gradient(180deg,#686860,#484840) }
-        .tbtn:active, .tbtn.lit { background: linear-gradient(180deg,#8a3300,#4a1500); box-shadow: 0 0 6px rgba(255,80,0,.4),inset 0 1px 0 rgba(255,150,50,.2) }
-        .tbtn-icon { font-size: .85rem; line-height: 1; color: #bbb }
-        .tbtn.lit .tbtn-icon, .tbtn:active .tbtn-icon { color: #ffaa44 }
-        .tbtn-lbl { font-family: 'VT323',monospace; font-size: .4rem; color: rgba(200,200,180,.4); letter-spacing: .04em; line-height: 1; margin-top: 1px }
-        .controls-panel { display: flex; align-items: center; justify-content: space-between; gap: 6px; background: linear-gradient(180deg,#a8a8a0,#989890); padding: 7px 10px 6px; border-radius: 0 0 6px 6px; box-shadow: inset 0 2px 3px rgba(0,0,0,.2); margin-top: -2px }
-        .knob-group { display: flex; gap: 8px; align-items: flex-start }
-        .knob-unit { display: flex; flex-direction: column; align-items: center; gap: 2px }
-        .knob90 { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; position: relative; transition: transform .12s; box-shadow: 2px 2px 4px rgba(0,0,0,.5),-1px -1px 2px rgba(255,255,255,.3),inset 0 2px 3px rgba(255,255,255,.2),inset 0 -2px 3px rgba(0,0,0,.4) }
-        .k-vol { background: radial-gradient(circle at 38% 35%,#888,#444) }
-        .k-static { background: radial-gradient(circle at 38% 35%,#666,#333) }
-        .k-bright { background: radial-gradient(circle at 38% 35%,#777,#3a3a3a) }
-        .knob90:active { box-shadow: 1px 1px 2px rgba(0,0,0,.5),inset 0 2px 4px rgba(0,0,0,.5) }
-        .knob90::after { content: ''; position: absolute; width: 3px; height: 9px; background: rgba(255,255,255,.7); border-radius: 2px; top: 3px; left: 50%; transform: translateX(-50%); transform-origin: 50% 11px }
-        .kl90 { font-family: 'VT323',monospace; font-size: .52rem; color: #4a4a40; letter-spacing: .07em }
-        .sbar { width: 50px; height: 4px; background: #444; border-radius: 2px; overflow: hidden; border: 1px solid #2a2a2a; margin-top: 1px }
-        .sbar-fill { height: 100%; background: linear-gradient(90deg,#39ff14,#f5a623); width: 40%; transition: width .1s }
-        .vol-ring { width: 50px; height: 4px; background: #444; border-radius: 2px; overflow: hidden; border: 1px solid #2a2a2a; margin-top: 1px }
-        .vol-ring-fill { height: 100%; background: linear-gradient(90deg,#4af,#f5a623); width: 70%; transition: width .15s }
-        .pwr-area { display: flex; flex-direction: column; align-items: center; gap: 3px }
-        .pwr90 { width: 26px; height: 26px; border-radius: 4px; background: linear-gradient(160deg,#cc3300,#881100); border: 2px solid #551100; cursor: pointer; transition: all .15s; box-shadow: 2px 2px 4px rgba(0,0,0,.5); display: flex; align-items: center; justify-content: center }
-        .pwr90::after { content: '⏻'; font-size: .85rem; color: rgba(255,255,255,.5) }
-        .pwr90.on { background: linear-gradient(160deg,#ff4400,#cc2200); box-shadow: 0 0 12px rgba(255,60,0,.6) }
-        .pwr90.on::after { color: #fff }
-        .pwr-lbl { font-family: 'VT323',monospace; font-size: .5rem; color: #4a4a40; letter-spacing: .07em }
-        .spkr90 { display: flex; flex-direction: column; gap: 3px; width: 34px }
-        .spkr-slot { height: 3px; background: #555; border-radius: 1px }
-        .tv-base { width: 70%; margin: 0 auto; height: 10px; background: linear-gradient(160deg,#b0b0a8,#888880); border-radius: 0 0 8px 8px; box-shadow: 0 4px 8px rgba(0,0,0,.5) }
-        .src-note { font-family: 'VT323',monospace; font-size: .56rem; color: #2a1a08; text-align: center; margin-top: 4px; letter-spacing: .07em }
-        .guide-hdr { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; border-bottom: 1px solid #1e1600; padding-bottom: 7px }
-        .guide-title { font-family: 'VT323',monospace; font-size: 1.5rem; color: #f5a623; letter-spacing: .08em }
-        .guide-date { font-family: 'VT323',monospace; font-size: .72rem; color: #4a3015; letter-spacing: .1em }
-        .cat-tabs { display: flex; gap: 3px; flex-wrap: wrap; margin-bottom: 8px }
-        .cat-btn { font-family: 'VT323',monospace; font-size: .65rem; padding: 2px 6px; border: 1px solid #2a1e0a; background: transparent; color: #7a5a2a; cursor: pointer; letter-spacing: .05em; border-radius: 2px; transition: all .12s; white-space: nowrap }
-        .cat-btn:hover, .cat-btn.active { background: #120c00; color: #f5a623; border-color: #c47d0e }
-        .show-list { display: flex; flex-direction: column; gap: 4px; max-height: 62vh; overflow-y: auto; padding-right: 3px }
-        .show-list::-webkit-scrollbar { width: 10px }
-        .show-list::-webkit-scrollbar-track { background: #0a0800; border-radius: 4px; border: 1px solid #1a1200 }
-        .show-list::-webkit-scrollbar-thumb { background: linear-gradient(180deg,#5a3a10,#3a2008); border-radius: 4px; border: 1px solid #7a5020 }
-        .show-list::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg,#8a5a20,#5a3a10) }
-        .show-card { display: flex; gap: 6px; align-items: center; background: #0c0900; border: 1px solid #1a1400; border-left: 3px solid #1e1600; padding: 5px 7px; cursor: pointer; transition: all .12s; user-select: none }
-        .show-card:hover { border-left-color: #f5a623; background: #110d00 }
-        .show-card:active { transform: scale(.98) }
-        .show-card.active { border-left-color: #39ff14; background: #060d00 }
-        .s-time { font-family: 'VT323',monospace; font-size: .76rem; color: #4a3015; min-width: 38px; flex-shrink: 0 }
-        .show-card.active .s-time { color: #39ff14 }
-        .s-emoji { font-size: 1.15rem; width: 24px; text-align: center; flex-shrink: 0 }
-        .s-info { flex: 1; min-width: 0 }
-        .s-name { font-family: 'Oswald',sans-serif; font-size: .74rem; font-weight: 600; color: #d4b483; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
-        .show-card.active .s-name { color: #39ff14 }
-        .s-yr { font-size: .52rem; color: #3a2a10; font-family: 'VT323',monospace }
-        .s-desc { font-family: 'Special Elite',cursive; font-size: .56rem; color: #4a3015; margin-top: 1px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden }
-        .s-badges { display: flex; gap: 2px; margin-top: 2px; flex-wrap: wrap }
-        .badge { font-family: 'VT323',monospace; font-size: .52rem; padding: 1px 3px; border: 1px solid #1e1600; color: #6a4a20; letter-spacing: .04em }
-        .badge.live { border-color: #39ff14; color: #39ff14; animation: flk 2s infinite }
-        .badge.playlist { border-color: #4a8cff; color: #6aacff }
-        .badge.hot { border-color: #ff6a00; color: #ff8c2a }
-        .play-dot { width: 0; height: 0; border-top: 4px solid transparent; border-bottom: 4px solid transparent; border-left: 7px solid #39ff14; flex-shrink: 0; opacity: 0; transition: opacity .2s }
-        .show-card:hover .play-dot { opacity: .35 }
-        .show-card.active .play-dot { opacity: 1 }
-        .np-bar { display: none; gap: 7px; align-items: center; margin-top: 8px; padding: 5px 8px; background: #060800; border: 1px solid #1a1400 }
-        .np-bar.show { display: flex }
-        .np-live { font-family: 'VT323',monospace; font-size: .62rem; color: #39ff14; letter-spacing: .15em; flex-shrink: 0; animation: flk 2s infinite }
-        .np-name { font-family: 'Oswald',sans-serif; font-size: .68rem; color: #d4b483; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
-        .np-ch { font-family: 'VT323',monospace; font-size: .68rem; color: #f5a623; flex-shrink: 0 }
-        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(60px); background: #1a1200; border: 1px solid #f5a623; color: #f5a623; font-family: 'VT323',monospace; font-size: .88rem; padding: 7px 18px; border-radius: 3px; z-index: 9999; opacity: 0; transition: all .3s; letter-spacing: .1em; pointer-events: none; white-space: nowrap }
-        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0) }
-        .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.85); z-index: 10000; display: none; align-items: center; justify-content: center }
-        .modal-bg.show { display: flex }
-        .modal-box { background: linear-gradient(160deg,#0f0c04,#1a1408); border: 1px solid #3a2800; border-radius: 6px; padding: 24px 28px; max-width: 310px; width: 90%; text-align: center }
-        .modal-box h2 { font-family: 'VT323',monospace; font-size: 1.6rem; color: #f5a623; letter-spacing: .1em; margin-bottom: 5px }
-        .modal-box p { font-family: 'Special Elite',cursive; font-size: .74rem; color: #9a7a45; line-height: 1.5; margin-bottom: 16px }
-        .modal-opts { display: flex; flex-direction: column; gap: 8px }
-        .dl { display: block; font-family: 'VT323',monospace; font-size: .85rem; padding: 9px 14px; border-radius: 3px; cursor: pointer; letter-spacing: .1em; text-decoration: none; transition: all .14s; border: none; width: 100%; text-align: center }
-        .dl-bmc { background: #0a1a0a; color: #39ff14; border: 1px solid #1a3a1a }
-        .dl-bmc:hover { background: #112211 }
-        .dl-em { background: #1a1200; color: #f5a623; border: 1px solid #3a2800; font-size: .7rem }
-        .dl-em:hover { background: #251a00 }
-        .modal-close { margin-top: 12px; font-family: 'VT323',monospace; font-size: .74rem; color: #4a3015; background: transparent; border: none; cursor: pointer; letter-spacing: .1em }
-        .modal-close:hover { color: #f5a623 }
-        @keyframes flk { 0%,90%,100%{opacity:1} 95%{opacity:.2} }
-        @keyframes ticker { 0%{transform:translateX(60%)} 100%{transform:translateX(-100%)} }
-        @keyframes vhsScan { 0%{top:-4%} 100%{top:104%} }
-        @keyframes vhsBand { 0%{top:5%} 33%{top:60%} 66%{top:25%} 100%{top:75%} }
-        @keyframes offAnim { 0%{opacity:1;transform:scaleX(1) scaleY(8)} 60%{opacity:1;transform:scaleX(.5) scaleY(1)} 100%{opacity:0;transform:scaleX(0) scaleY(0)} }
-        @keyframes reelSpin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        body {
+            background: radial-gradient(ellipse at center,#1a1408 0%,#080602 100%);
+            font-family: 'Special Elite',cursive;
+            color: #d4b483;
+            padding: 10px 8px 28px;
+            min-height: 100vh
+        }
+
+        .site-header {
+            text-align: center;
+            padding: 10px 0 8px
+        }
+
+        .logo {
+            font-family: 'VT323',monospace;
+            font-size: clamp(2rem,7vw,4.2rem);
+            color: #f5a623;
+            letter-spacing: .15em;
+            line-height: 1
+        }
+
+            .logo span {
+                color: #fff
+            }
+
+        .tagline {
+            font-family: 'VT323',monospace;
+            font-size: .85rem;
+            color: #6a5030;
+            letter-spacing: .3em;
+            margin-top: 3px
+        }
+
+        .divider {
+            width: 50%;
+            height: 1px;
+            background: linear-gradient(90deg,transparent,#c47d0e,transparent);
+            margin: 7px auto 0
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap
+        }
+
+        .hbtn {
+            font-family: 'VT323',monospace;
+            font-size: .82rem;
+            padding: 5px 14px;
+            border-radius: 3px;
+            cursor: pointer;
+            letter-spacing: .1em;
+            transition: all .15s;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 5px
+        }
+
+            .hbtn:active {
+                transform: scale(.96)
+            }
+
+        .btn-share {
+            background: #1a1200;
+            color: #f5a623;
+            border: 1px solid #3a2800
+        }
+
+            .btn-share:hover {
+                background: #2a1e00
+            }
+
+        .btn-donate {
+            background: #0d1a0d;
+            color: #39ff14;
+            border: 1px solid #1a3a1a
+        }
+
+            .btn-donate:hover {
+                background: #122012
+            }
+
+        .btn-surprise {
+            background: #1a001a;
+            color: #ff80ff;
+            border: 1px solid #3a1a3a
+        }
+
+            .btn-surprise:hover {
+                background: #250025
+            }
+
+        .btn-live {
+            background: #1a0000;
+            color: #ff3333;
+            border: 1px solid #ff3333;
+            animation: livePulse 1.5s infinite;
+        }
+
+            .btn-live:hover {
+                background: #2a0000;
+            }
+
+            .btn-live.active {
+                background: #ff0000;
+                color: #fff;
+                border-color: #fff;
+                animation: none;
+            }
+
+        @keyframes livePulse {
+            0%,100% {
+                opacity: 0.8;
+                box-shadow: 0 0 0px #ff3333;
+            }
+
+            50% {
+                opacity: 1;
+                box-shadow: 0 0 8px #ff3333;
+            }
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 190px 1fr 280px;
+            gap: 14px;
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 10px 6px 0;
+            align-items: start
+        }
+
+        @media(max-width:860px) {
+            .layout {
+                grid-template-columns: 1fr 260px
+            }
+        }
+
+        @media(max-width:580px) {
+            .layout {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .ep-sidebar {
+            background: #080700;
+            border: 1px solid #1e1500;
+            border-radius: 4px;
+            overflow: hidden
+        }
+
+        .ep-sidebar-hdr {
+            font-family: 'VT323',monospace;
+            font-size: .88rem;
+            color: #f5a623;
+            letter-spacing: .1em;
+            padding: 6px 10px;
+            background: #0d0a00;
+            border-bottom: 1px solid #1e1500
+        }
+
+        .ep-show-name {
+            font-family: 'VT323',monospace;
+            font-size: .68rem;
+            color: #5a4020;
+            padding: 4px 10px 5px;
+            border-bottom: 1px solid #140f00;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            letter-spacing: .05em
+        }
+
+        .ep-list {
+            max-height: 65vh;
+            overflow-y: auto;
+            padding: 3px 0
+        }
+
+            .ep-list::-webkit-scrollbar {
+                width: 6px
+            }
+
+            .ep-list::-webkit-scrollbar-track {
+                background: #080700
+            }
+
+            .ep-list::-webkit-scrollbar-thumb {
+                background: #3a2008;
+                border-radius: 3px
+            }
+
+        .ep-item {
+            font-family: 'VT323',monospace;
+            font-size: .7rem;
+            color: #5a4020;
+            padding: 4px 10px;
+            cursor: pointer;
+            transition: all .1s;
+            border-left: 2px solid transparent;
+            line-height: 1.35;
+            display: flex;
+            gap: 5px
+        }
+
+            .ep-item:hover {
+                color: #f5a623;
+                background: #120c00;
+                border-left-color: #f5a623
+            }
+
+            .ep-item.ep-active {
+                color: #39ff14;
+                background: #060d00;
+                border-left-color: #39ff14
+            }
+
+        .ep-num {
+            color: #2a1e08;
+            flex-shrink: 0;
+            font-size: .62rem;
+            padding-top: 1px
+        }
+
+        .ep-empty {
+            font-family: 'VT323',monospace;
+            font-size: .68rem;
+            color: #2a1e08;
+            padding: 16px 10px;
+            text-align: center;
+            line-height: 1.7
+        }
+
+        @media(max-width:860px) {
+            .ep-sidebar {
+                display: none
+            }
+        }
+
+        .tv-shell {
+            background: linear-gradient(160deg,#c8c8c0,#b0b0a8 30%,#989890 60%,#888880);
+            border-radius: 12px 12px 16px 16px;
+            padding: 14px 14px 12px;
+            box-shadow: 4px 4px 0 #707068,8px 8px 0 #606058,0 20px 60px rgba(0,0,0,.88),inset 0 1px 0 rgba(255,255,255,.5),inset -2px -2px 0 rgba(0,0,0,.2);
+            position: relative
+        }
+
+            .tv-shell::before {
+                content: '';
+                position: absolute;
+                inset: 7px;
+                border-radius: 7px;
+                box-shadow: inset 0 2px 4px rgba(0,0,0,.3),inset 0 -1px 2px rgba(255,255,255,.2);
+                pointer-events: none
+            }
+
+        .tv-top-strip {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px
+        }
+
+        .tv-brand-90s {
+            font-family: 'VT323',monospace;
+            font-size: .85rem;
+            color: #3a3a32;
+            letter-spacing: .3em;
+            text-shadow: 0 1px 0 rgba(255,255,255,.4)
+        }
+
+        .channel-area {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .live-indicator {
+            font-family: 'VT323',monospace;
+            font-size: .7rem;
+            color: #ff3333;
+            background: #1a0000;
+            padding: 2px 8px;
+            border-radius: 3px;
+            border: 1px solid #ff3333;
+            letter-spacing: .1em;
+            animation: liveBlink 1s infinite;
+        }
+
+        @keyframes liveBlink {
+            0%,100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        .ch-display {
+            font-family: 'VT323',monospace;
+            font-size: 1.1rem;
+            color: #ff4400;
+            background: #0a0200;
+            padding: 2px 7px;
+            border-radius: 3px;
+            border: 2px solid #333;
+            min-width: 50px;
+            text-align: center;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,.8)
+        }
+
+        .resume-badge {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: #39ff14;
+            font-family: 'VT323',monospace;
+            font-size: .65rem;
+            padding: 3px 8px;
+            border-radius: 3px;
+            border-left: 3px solid #39ff14;
+            z-index: 20;
+            pointer-events: none;
+            display: none;
+            letter-spacing: .05em;
+        }
+
+            .resume-badge.show {
+                display: block;
+                animation: fadeOut 3s ease-out forwards;
+            }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+            }
+
+            70% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+                display: none;
+            }
+        }
+
+        .screen-housing {
+            background: #2a2a28;
+            border-radius: 8px;
+            padding: 8px 8px 12px;
+            box-shadow: inset 0 4px 8px rgba(0,0,0,.8)
+        }
+
+        .screen-bezel-90s {
+            background: #1a1a18;
+            border-radius: 5px;
+            padding: 5px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,.9)
+        }
+
+        .screen-wrap {
+            position: relative;
+            border-radius: 4px;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            background: #000
+        }
+
+        .l-idle {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #060600
+        }
+
+        .l-video {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            display: none
+        }
+
+            .l-video video {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                background: #000;
+                display: block
+            }
+
+            .l-video.show {
+                display: block
+            }
+
+        .l-vhsfx {
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            display: none;
+            overflow: hidden;
+            background: #030303
+        }
+
+            .l-vhsfx.show {
+                display: block
+            }
+
+        .l-static {
+            position: absolute;
+            inset: 0;
+            z-index: 4;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: #111
+        }
+
+            .l-static.show {
+                display: flex
+            }
+
+        .static-lbl {
+            font-family: 'VT323',monospace;
+            font-size: .9rem;
+            color: rgba(255,255,255,.8);
+            z-index: 2;
+            letter-spacing: .2em;
+            animation: flk .12s infinite;
+            pointer-events: none
+        }
+
+        canvas.noisecanvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%
+        }
+
+        .l-off {
+            position: absolute;
+            inset: 0;
+            z-index: 5;
+            background: #000;
+            display: none;
+            align-items: center;
+            justify-content: center
+        }
+
+            .l-off.show {
+                display: flex
+            }
+
+        .off-line {
+            width: 100%;
+            height: 2px;
+            background: #fff;
+            animation: offAnim .5s ease-out forwards
+        }
+
+        .l-splash {
+            position: absolute;
+            inset: 0;
+            z-index: 6;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,.8);
+            padding: 10px
+        }
+
+            .l-splash.show {
+                display: flex
+            }
+
+        .sp-emoji {
+            font-size: 3rem
+        }
+
+        .sp-title {
+            font-family: 'VT323',monospace;
+            font-size: 1.05rem;
+            color: #f5a623;
+            margin-top: 6px;
+            text-align: center;
+            line-height: 1.2
+        }
+
+        .sp-year {
+            font-family: 'VT323',monospace;
+            font-size: .68rem;
+            color: #7a5a28;
+            margin-top: 2px
+        }
+
+        .sp-ep {
+            font-family: 'Special Elite',cursive;
+            font-size: .54rem;
+            color: #bbb;
+            margin-top: 4px;
+            text-align: center;
+            padding: 0 8px;
+            line-height: 1.4
+        }
+
+        .sp-btn {
+            margin-top: 10px;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(245,166,35,.12);
+            border: 2px solid #f5a623;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0
+        }
+
+            .sp-btn::after {
+                content: '';
+                width: 0;
+                height: 0;
+                border-top: 8px solid transparent;
+                border-bottom: 8px solid transparent;
+                border-left: 15px solid #f5a623;
+                margin-left: 4px
+            }
+
+        .sp-hint {
+            font-family: 'VT323',monospace;
+            font-size: .55rem;
+            color: #4a3015;
+            margin-top: 5px;
+            letter-spacing: .1em
+        }
+
+        .l-scan {
+            position: absolute;
+            inset: 0;
+            z-index: 7;
+            background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.2) 2px,rgba(0,0,0,.2) 4px);
+            pointer-events: none
+        }
+
+        .l-vig {
+            position: absolute;
+            inset: 0;
+            z-index: 8;
+            background: radial-gradient(ellipse at 50% 50%,transparent 48%,rgba(0,0,0,.65) 100%);
+            pointer-events: none
+        }
+
+        .l-phos {
+            position: absolute;
+            inset: 0;
+            z-index: 9;
+            background: radial-gradient(ellipse at 50% 40%,rgba(100,200,50,.03),transparent 70%);
+            pointer-events: none
+        }
+
+        .l-ticker {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            background: rgba(5,5,0,.93);
+            border-top: 1px solid #1e1600;
+            padding: 3px 8px;
+            overflow: hidden;
+            white-space: nowrap;
+            pointer-events: none;
+            display: none
+        }
+
+            .l-ticker.show {
+                display: block
+            }
+
+        .ticker-inner {
+            display: inline-block;
+            font-family: 'VT323',monospace;
+            font-size: .72rem;
+            color: #f5a623;
+            animation: ticker 28s linear infinite
+        }
+
+        .fs-btn {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            z-index: 11;
+            width: 22px;
+            height: 22px;
+            background: rgba(0,0,0,.5);
+            border: 1px solid rgba(245,166,35,.3);
+            border-radius: 2px;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: .7rem;
+            color: rgba(245,166,35,.7);
+            transition: all .15s
+        }
+
+            .fs-btn:hover {
+                background: rgba(0,0,0,.8);
+                border-color: #f5a623;
+                color: #f5a623
+            }
+
+            .l-video.show ~ .fs-btn, .fs-btn.show {
+                display: flex
+            }
+
+        .vhs-stripe {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: rgba(255,255,255,.75);
+            animation: vhsScan .07s linear infinite
+        }
+
+        .vhs-band {
+            position: absolute;
+            width: 100%;
+            height: 22px;
+            background: rgba(255,255,255,.07);
+            animation: vhsBand .13s steps(1) infinite
+        }
+
+        .vhs-lbl {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            font-family: 'VT323',monospace;
+            font-size: 1.3rem;
+            color: #fff;
+            letter-spacing: .2em;
+            animation: flk .15s infinite;
+            z-index: 2
+        }
+
+        .idle-icon {
+            font-size: 2.4rem
+        }
+
+        .idle-title {
+            font-family: 'VT323',monospace;
+            font-size: 1.8rem;
+            color: #f5a623;
+            margin-top: 3px
+        }
+
+        .idle-sub {
+            font-family: 'VT323',monospace;
+            font-size: .68rem;
+            color: #4a3a20;
+            letter-spacing: .2em;
+            margin-top: 3px
+        }
+
+        .test-bars {
+            display: flex;
+            width: 100%;
+            height: 14px;
+            margin-top: 12px
+        }
+
+        .test-bar {
+            flex: 1
+        }
+
+        .vhs-deck {
+            background: linear-gradient(180deg,#6a6a62,#585850);
+            padding: 8px 14px 8px;
+            border-radius: 0 0 4px 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,.4),0 2px 4px rgba(0,0,0,.3);
+        }
+
+        .vhs-cassette-housing {
+            flex: 1;
+            background: linear-gradient(160deg,#222220,#111110,#1a1a18);
+            border-radius: 4px;
+            padding: 6px 10px 5px;
+            border: 2px solid #0a0a08;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,.9),0 1px 0 rgba(255,255,255,.08);
+            position: relative;
+        }
+
+        .vhs-label-strip {
+            background: linear-gradient(90deg,#1a0e04,#2a1a08,#1a0e04);
+            border-radius: 2px 2px 0 0;
+            padding: 2px 6px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #0a0800;
+        }
+
+        .vhs-show-name {
+            font-family: 'VT323',monospace;
+            font-size: .62rem;
+            color: #f5a623;
+            letter-spacing: .08em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 70%
+        }
+
+        .vhs-ep-name {
+            font-family: 'VT323',monospace;
+            font-size: .52rem;
+            color: #5a3a18;
+            letter-spacing: .05em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 28%;
+            text-align: right
+        }
+
+        .vhs-window {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #050504;
+            border-radius: 2px;
+            padding: 4px 8px;
+            border: 1px solid #1a1a18;
+        }
+
+        .vhs-reel {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 40% 40%,#2a2a28,#0a0a08);
+            border: 2px solid #222;
+            position: relative;
+            flex-shrink: 0;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,.8);
+        }
+
+            .vhs-reel::after {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: #3a3a38;
+                border: 1px solid #0a0a08
+            }
+
+            .vhs-reel.spinning {
+                animation: reelSpin 1.5s linear infinite
+            }
+
+        .vhs-tape-stretch {
+            flex: 1;
+            height: 6px;
+            background: linear-gradient(90deg,#0a0806,#1a1208 30%,#0e0a06 60%,#1a1208 80%,#0a0806);
+            border-radius: 1px;
+            box-shadow: 0 0 3px rgba(245,166,35,.15)
+        }
+
+        .vhs-time {
+            font-family: 'VT323',monospace;
+            font-size: .58rem;
+            color: #3a2808;
+            letter-spacing: .05em;
+            white-space: nowrap;
+            flex-shrink: 0
+        }
+
+        .transport {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            flex-shrink: 0
+        }
+
+        .tbtn {
+            width: 36px;
+            height: 28px;
+            background: linear-gradient(180deg,#5a5a52,#383830);
+            border: 1px solid #1a1a12;
+            border-radius: 3px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.12);
+            user-select: none;
+            transition: all .1s;
+        }
+
+            .tbtn:hover {
+                background: linear-gradient(180deg,#686860,#484840)
+            }
+
+            .tbtn:active, .tbtn.lit {
+                background: linear-gradient(180deg,#8a3300,#4a1500);
+                box-shadow: 0 0 6px rgba(255,80,0,.4),inset 0 1px 0 rgba(255,150,50,.2)
+            }
+
+        .tbtn-icon {
+            font-size: .85rem;
+            line-height: 1;
+            color: #bbb
+        }
+
+        .tbtn.lit .tbtn-icon, .tbtn:active .tbtn-icon {
+            color: #ffaa44
+        }
+
+        .tbtn-lbl {
+            font-family: 'VT323',monospace;
+            font-size: .4rem;
+            color: rgba(200,200,180,.4);
+            letter-spacing: .04em;
+            line-height: 1;
+            margin-top: 1px
+        }
+
+        .controls-panel {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+            background: linear-gradient(180deg,#a8a8a0,#989890);
+            padding: 7px 10px 6px;
+            border-radius: 0 0 6px 6px;
+            box-shadow: inset 0 2px 3px rgba(0,0,0,.2);
+            margin-top: -2px
+        }
+
+        .knob-group {
+            display: flex;
+            gap: 8px;
+            align-items: flex-start
+        }
+
+        .knob-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px
+        }
+
+        .knob90 {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+            transition: transform .12s;
+            box-shadow: 2px 2px 4px rgba(0,0,0,.5),-1px -1px 2px rgba(255,255,255,.3),inset 0 2px 3px rgba(255,255,255,.2),inset 0 -2px 3px rgba(0,0,0,.4)
+        }
+
+        .k-vol {
+            background: radial-gradient(circle at 38% 35%,#888,#444)
+        }
+
+        .k-static {
+            background: radial-gradient(circle at 38% 35%,#666,#333)
+        }
+
+        .k-bright {
+            background: radial-gradient(circle at 38% 35%,#777,#3a3a3a)
+        }
+
+        .knob90:active {
+            box-shadow: 1px 1px 2px rgba(0,0,0,.5),inset 0 2px 4px rgba(0,0,0,.5)
+        }
+
+        .knob90::after {
+            content: '';
+            position: absolute;
+            width: 3px;
+            height: 9px;
+            background: rgba(255,255,255,.7);
+            border-radius: 2px;
+            top: 3px;
+            left: 50%;
+            transform: translateX(-50%);
+            transform-origin: 50% 11px
+        }
+
+        .kl90 {
+            font-family: 'VT323',monospace;
+            font-size: .52rem;
+            color: #4a4a40;
+            letter-spacing: .07em
+        }
+
+        .sbar {
+            width: 50px;
+            height: 4px;
+            background: #444;
+            border-radius: 2px;
+            overflow: hidden;
+            border: 1px solid #2a2a2a;
+            margin-top: 1px
+        }
+
+        .sbar-fill {
+            height: 100%;
+            background: linear-gradient(90deg,#39ff14,#f5a623);
+            width: 40%;
+            transition: width .1s
+        }
+
+        .vol-ring {
+            width: 50px;
+            height: 4px;
+            background: #444;
+            border-radius: 2px;
+            overflow: hidden;
+            border: 1px solid #2a2a2a;
+            margin-top: 1px
+        }
+
+        .vol-ring-fill {
+            height: 100%;
+            background: linear-gradient(90deg,#4af,#f5a623);
+            width: 70%;
+            transition: width .15s
+        }
+
+        .pwr-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px
+        }
+
+        .pwr90 {
+            width: 26px;
+            height: 26px;
+            border-radius: 4px;
+            background: linear-gradient(160deg,#cc3300,#881100);
+            border: 2px solid #551100;
+            cursor: pointer;
+            transition: all .15s;
+            box-shadow: 2px 2px 4px rgba(0,0,0,.5);
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+            .pwr90::after {
+                content: '⏻';
+                font-size: .85rem;
+                color: rgba(255,255,255,.5)
+            }
+
+            .pwr90.on {
+                background: linear-gradient(160deg,#ff4400,#cc2200);
+                box-shadow: 0 0 12px rgba(255,60,0,.6)
+            }
+
+                .pwr90.on::after {
+                    color: #fff
+                }
+
+        .pwr-lbl {
+            font-family: 'VT323',monospace;
+            font-size: .5rem;
+            color: #4a4a40;
+            letter-spacing: .07em
+        }
+
+        .spkr90 {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            width: 34px
+        }
+
+        .spkr-slot {
+            height: 3px;
+            background: #555;
+            border-radius: 1px
+        }
+
+        .tv-base {
+            width: 70%;
+            margin: 0 auto;
+            height: 10px;
+            background: linear-gradient(160deg,#b0b0a8,#888880);
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,.5)
+        }
+
+        .src-note {
+            font-family: 'VT323',monospace;
+            font-size: .56rem;
+            color: #2a1a08;
+            text-align: center;
+            margin-top: 4px;
+            letter-spacing: .07em
+        }
+
+        .guide-hdr {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #1e1600;
+            padding-bottom: 7px
+        }
+
+        .guide-title {
+            font-family: 'VT323',monospace;
+            font-size: 1.5rem;
+            color: #f5a623;
+            letter-spacing: .08em
+        }
+
+        .guide-date {
+            font-family: 'VT323',monospace;
+            font-size: .72rem;
+            color: #4a3015;
+            letter-spacing: .1em
+        }
+
+        .cat-tabs {
+            display: flex;
+            gap: 3px;
+            flex-wrap: wrap;
+            margin-bottom: 8px
+        }
+
+        .cat-btn {
+            font-family: 'VT323',monospace;
+            font-size: .65rem;
+            padding: 2px 6px;
+            border: 1px solid #2a1e0a;
+            background: transparent;
+            color: #7a5a2a;
+            cursor: pointer;
+            letter-spacing: .05em;
+            border-radius: 2px;
+            transition: all .12s;
+            white-space: nowrap
+        }
+
+            .cat-btn:hover, .cat-btn.active {
+                background: #120c00;
+                color: #f5a623;
+                border-color: #c47d0e
+            }
+
+        .show-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            max-height: 62vh;
+            overflow-y: auto;
+            padding-right: 3px
+        }
+
+            .show-list::-webkit-scrollbar {
+                width: 10px
+            }
+
+            .show-list::-webkit-scrollbar-track {
+                background: #0a0800;
+                border-radius: 4px;
+                border: 1px solid #1a1200
+            }
+
+            .show-list::-webkit-scrollbar-thumb {
+                background: linear-gradient(180deg,#5a3a10,#3a2008);
+                border-radius: 4px;
+                border: 1px solid #7a5020
+            }
+
+                .show-list::-webkit-scrollbar-thumb:hover {
+                    background: linear-gradient(180deg,#8a5a20,#5a3a10)
+                }
+
+        .show-card {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            background: #0c0900;
+            border: 1px solid #1a1400;
+            border-left: 3px solid #1e1600;
+            padding: 5px 7px;
+            cursor: pointer;
+            transition: all .12s;
+            user-select: none
+        }
+
+            .show-card:hover {
+                border-left-color: #f5a623;
+                background: #110d00
+            }
+
+            .show-card:active {
+                transform: scale(.98)
+            }
+
+            .show-card.active {
+                border-left-color: #39ff14;
+                background: #060d00
+            }
+
+        .s-time {
+            font-family: 'VT323',monospace;
+            font-size: .76rem;
+            color: #4a3015;
+            min-width: 38px;
+            flex-shrink: 0
+        }
+
+        .show-card.active .s-time {
+            color: #39ff14
+        }
+
+        .s-emoji {
+            font-size: 1.15rem;
+            width: 24px;
+            text-align: center;
+            flex-shrink: 0
+        }
+
+        .s-info {
+            flex: 1;
+            min-width: 0
+        }
+
+        .s-name {
+            font-family: 'Oswald',sans-serif;
+            font-size: .74rem;
+            font-weight: 600;
+            color: #d4b483;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis
+        }
+
+        .show-card.active .s-name {
+            color: #39ff14
+        }
+
+        .s-yr {
+            font-size: .52rem;
+            color: #3a2a10;
+            font-family: 'VT323',monospace
+        }
+
+        .s-desc {
+            font-family: 'Special Elite',cursive;
+            font-size: .56rem;
+            color: #4a3015;
+            margin-top: 1px;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden
+        }
+
+        .s-badges {
+            display: flex;
+            gap: 2px;
+            margin-top: 2px;
+            flex-wrap: wrap
+        }
+
+        .badge {
+            font-family: 'VT323',monospace;
+            font-size: .52rem;
+            padding: 1px 3px;
+            border: 1px solid #1e1600;
+            color: #6a4a20;
+            letter-spacing: .04em
+        }
+
+            .badge.live {
+                border-color: #39ff14;
+                color: #39ff14;
+                animation: flk 2s infinite
+            }
+
+            .badge.playlist {
+                border-color: #4a8cff;
+                color: #6aacff
+            }
+
+            .badge.hot {
+                border-color: #ff6a00;
+                color: #ff8c2a
+            }
+
+        .play-dot {
+            width: 0;
+            height: 0;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+            border-left: 7px solid #39ff14;
+            flex-shrink: 0;
+            opacity: 0;
+            transition: opacity .2s
+        }
+
+        .show-card:hover .play-dot {
+            opacity: .35
+        }
+
+        .show-card.active .play-dot {
+            opacity: 1
+        }
+
+        .np-bar {
+            display: none;
+            gap: 7px;
+            align-items: center;
+            margin-top: 8px;
+            padding: 5px 8px;
+            background: #060800;
+            border: 1px solid #1a1400
+        }
+
+            .np-bar.show {
+                display: flex
+            }
+
+        .np-live {
+            font-family: 'VT323',monospace;
+            font-size: .62rem;
+            color: #39ff14;
+            letter-spacing: .15em;
+            flex-shrink: 0;
+            animation: flk 2s infinite
+        }
+
+        .np-name {
+            font-family: 'Oswald',sans-serif;
+            font-size: .68rem;
+            color: #d4b483;
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis
+        }
+
+        .np-ch {
+            font-family: 'VT323',monospace;
+            font-size: .68rem;
+            color: #f5a623;
+            flex-shrink: 0
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(60px);
+            background: #1a1200;
+            border: 1px solid #f5a623;
+            color: #f5a623;
+            font-family: 'VT323',monospace;
+            font-size: .88rem;
+            padding: 7px 18px;
+            border-radius: 3px;
+            z-index: 9999;
+            opacity: 0;
+            transition: all .3s;
+            letter-spacing: .1em;
+            pointer-events: none;
+            white-space: nowrap
+        }
+
+            .toast.show {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0)
+            }
+
+        .modal-bg {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.85);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center
+        }
+
+            .modal-bg.show {
+                display: flex
+            }
+
+        .modal-box {
+            background: linear-gradient(160deg,#0f0c04,#1a1408);
+            border: 1px solid #3a2800;
+            border-radius: 6px;
+            padding: 24px 28px;
+            max-width: 310px;
+            width: 90%;
+            text-align: center
+        }
+
+            .modal-box h2 {
+                font-family: 'VT323',monospace;
+                font-size: 1.6rem;
+                color: #f5a623;
+                letter-spacing: .1em;
+                margin-bottom: 5px
+            }
+
+            .modal-box p {
+                font-family: 'Special Elite',cursive;
+                font-size: .74rem;
+                color: #9a7a45;
+                line-height: 1.5;
+                margin-bottom: 16px
+            }
+
+        .modal-opts {
+            display: flex;
+            flex-direction: column;
+            gap: 8px
+        }
+
+        .dl {
+            display: block;
+            font-family: 'VT323',monospace;
+            font-size: .85rem;
+            padding: 9px 14px;
+            border-radius: 3px;
+            cursor: pointer;
+            letter-spacing: .1em;
+            text-decoration: none;
+            transition: all .14s;
+            border: none;
+            width: 100%;
+            text-align: center
+        }
+
+        .dl-bmc {
+            background: #0a1a0a;
+            color: #39ff14;
+            border: 1px solid #1a3a1a
+        }
+
+            .dl-bmc:hover {
+                background: #112211
+            }
+
+        .dl-em {
+            background: #1a1200;
+            color: #f5a623;
+            border: 1px solid #3a2800;
+            font-size: .7rem
+        }
+
+            .dl-em:hover {
+                background: #251a00
+            }
+
+        .modal-close {
+            margin-top: 12px;
+            font-family: 'VT323',monospace;
+            font-size: .74rem;
+            color: #4a3015;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            letter-spacing: .1em
+        }
+
+            .modal-close:hover {
+                color: #f5a623
+            }
+
+        @keyframes flk {
+            0%,90%,100% {
+                opacity: 1
+            }
+
+            95% {
+                opacity: .2
+            }
+        }
+
+        @keyframes ticker {
+            0% {
+                transform: translateX(60%)
+            }
+
+            100% {
+                transform: translateX(-100%)
+            }
+        }
+
+        @keyframes vhsScan {
+            0% {
+                top: -4%
+            }
+
+            100% {
+                top: 104%
+            }
+        }
+
+        @keyframes vhsBand {
+            0% {
+                top: 5%
+            }
+
+            33% {
+                top: 60%
+            }
+
+            66% {
+                top: 25%
+            }
+
+            100% {
+                top: 75%
+            }
+        }
+
+        @keyframes offAnim {
+            0% {
+                opacity: 1;
+                transform: scaleX(1) scaleY(8)
+            }
+
+            60% {
+                opacity: 1;
+                transform: scaleX(.5) scaleY(1)
+            }
+
+            100% {
+                opacity: 0;
+                transform: scaleX(0) scaleY(0)
+            }
+        }
+
+        @keyframes reelSpin {
+            0% {
+                transform: rotate(0deg)
+            }
+
+            100% {
+                transform: rotate(360deg)
+            }
+        }
     </style>
 </head>
 <body>
@@ -214,8 +1507,8 @@
     <div class="modal-bg" id="modalDonate"><div class="modal-box"><h2>☕ BUY ME A COFFEE</h2><p>Enjoying The Tube? Help keep the archive running!</p><div class="modal-opts"><a class="dl dl-bmc" id="bmcLink" href="https://buymeacoffee.com/oakowltv" target="_blank">☕ BUYMEACOFFEE.COM/OAKOWLTV</a><a class="dl dl-em" href="mailto:oakowlrecords@gmail.com" target="_blank">✉ oakowlrecords@gmail.com</a></div><button class="modal-close" id="modalClose">✕ CLOSE</button></div></div>
     <div class="toast" id="toast"></div>
     <script>
-        // ===== MASTER SHOW LIST (44 shows, schedule order preserved) =====
-        const shows = [
+// ===== MASTER SHOW LIST (44 shows, schedule order preserved) =====
+const shows = [
             { id: 1, ch: '01', time: '6:00 AM', name: 'Reading Rainbow', emoji: '🌈', cat: 'classic', year: '1983', badges: ['PLAYLIST', 'PBS'], desc: 'LeVar Burton takes you on a magical reading journey.', tickers: ['Take a look, it’s in a book'], archiveId: 'ReadingRainbowTVSeries', playlist: true },
             { id: 2, ch: '02', time: '6:30 AM', name: 'Popeye Collection', emoji: '💪', cat: 'animation', year: '1930s', badges: ['PLAYLIST', 'CLASSIC'], desc: "I yam what I yam! Classic Popeye cartoons.", tickers: ["I eats me spinach!"], archiveId: 'popeye-collection', playlist: true },
             { id: 3, ch: '03', time: '7:00 AM', name: 'Arthur — Season 1', emoji: '🐻', cat: 'animation', year: '1996', badges: ['PLAYLIST', 'PBS'], desc: 'The beloved aardvark and his friends.', tickers: ['Having fun isn’t hard'], archiveId: 'arthurs01iso', playlist: true },
@@ -260,36 +1553,36 @@
             { id: 42, ch: '42', time: '3:30 AM', name: '90s MTV Block (Overnight)', emoji: '🎤', cat: 'mtv', year: '1990s', badges: ['OVERNIGHT', 'MTV'], desc: 'Late night MTV reruns.', tickers: ['Alternative Nation'], archiveId: '1-5-2025-mtv-block-part-2', playlist: true },
             { id: 43, ch: '43', time: '4:00 AM', name: 'Drawn Together', emoji: '🏠', cat: 'animation', year: '2004', badges: ['OVERNIGHT', 'ADULT'], desc: 'Animated reality TV parody.', tickers: ['The first animated reality show'], archiveId: 'DrawnTogetherComplete', playlist: true },
             { id: 44, ch: '44', time: '5:00 AM', name: 'Classic TV Vault', emoji: '🎞️', cat: 'classic', year: '1950s', badges: ['OVERNIGHT', 'ARCHIVE'], desc: 'Burns & Allen, Car 54 and more.', tickers: ['Burns and Allen: Kleebob'], archiveId: 'classic-tv-shows-vol.1', playlist: true }
-        ];
+];
 
-        const cats = [{ key: 'all', label: 'All Channels' }, { key: 'mtv', label: '📺 MTV' }, { key: 'british', label: '🇬🇧 British' }, { key: 'horror', label: '👁 Horror' }, { key: 'scifi', label: '🚀 Sci-Fi' }, { key: 'classic', label: '🎞 Classic' }, { key: 'animation', label: '🎨 Animation' }, { key: 'drama', label: '🎭 Drama' }];
+const cats = [{ key: 'all', label: 'All Channels' }, { key: 'mtv', label: '📺 MTV' }, { key: 'british', label: '🇬🇧 British' }, { key: 'horror', label: '👁 Horror' }, { key: 'scifi', label: '🚀 Sci-Fi' }, { key: 'classic', label: '🎞 Classic' }, { key: 'animation', label: '🎨 Animation' }, { key: 'drama', label: '🎭 Drama' }];
 
-        let active = null, activeEp = 0, tvOn = false, activeCat = 'all';
-        let noiseTimer = null, vhsTimer = null, timeTimer = null;
-        let staticIntensity = 0.4, brightnessVal = 1.0, volumeVal = 0.8;
-        let kAngle = { kVol: 0, kStatic: 0, kBright: 0 };
-        let audioCtx = null;
-        let liveMode = false;
-        let liveCheckInterval = null;
-        let currentLiveShowId = null;
-        const fileCache = {};
-        const $ = id => document.getElementById(id);
-        const vid = $('vid');
+let active = null, activeEp = 0, tvOn = false, activeCat = 'all';
+let noiseTimer = null, vhsTimer = null, timeTimer = null;
+let staticIntensity = 0.4, brightnessVal = 1.0, volumeVal = 0.8;
+let kAngle = { kVol: 0, kStatic: 0, kBright: 0 };
+let audioCtx = null;
+let liveMode = false;
+let liveCheckInterval = null;
+let currentLiveShowId = null;
+const fileCache = {};
+const $ = id => document.getElementById(id);
+const vid = $('vid');
 
-        // ===== PROGRESSIVE DAILY EPISODE TRACKING (FULLY RESTORED) =====
-        function getDailyEpisodeIndex(showId, totalEpisodes) {
+// ===== PROGRESSIVE DAILY EPISODE TRACKING (FULLY RESTORED) =====
+function getDailyEpisodeIndex(showId, totalEpisodes) {
             const storageKey = `thetube_daily_episode_${showId}`;
             const lastDateKey = `${storageKey}_date`;
             const today = new Date().toDateString();
             const lastPlayedDate = localStorage.getItem(lastDateKey);
             let currentEpisode = localStorage.getItem(storageKey);
-            
+
             if (currentEpisode === null) {
                 currentEpisode = 0;
             } else {
                 currentEpisode = parseInt(currentEpisode);
             }
-            
+
             // If it's a new day, move to the next episode
             if (lastPlayedDate !== today) {
                 currentEpisode = (currentEpisode + 1) % totalEpisodes;
@@ -298,87 +1591,88 @@
                 showToast(`📅 NEW DAY — EPISODE ${currentEpisode + 1}/${totalEpisodes}`);
             }
             return currentEpisode;
-        }
+}
 
-        // ===== AUDIO CONTEXT AND SOUND EFFECTS =====
-        function getAC() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); return audioCtx; }
-        function makeTone(f0, f1, dur, type, vol) { try { const c = getAC(), o = c.createOscillator(), g = c.createGain(); o.connect(g); g.connect(c.destination); o.type = type || 'sine'; o.frequency.setValueAtTime(f0, c.currentTime); if (f1) o.frequency.exponentialRampToValueAtTime(f1, c.currentTime + dur); g.gain.setValueAtTime(vol || 0.15, c.currentTime); g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + dur); o.start(); o.stop(c.currentTime + dur); } catch (e) { } }
-        function makeNoise(dur, f0, f1, q, vol) { try { const c = getAC(), bl = Math.floor(c.sampleRate * dur), b = c.createBuffer(1, bl, c.sampleRate), d = b.getChannelData(0); for (let i = 0; i < bl; i++) d[i] = Math.random() * 2 - 1; const s = c.createBufferSource(); s.buffer = b; const flt = c.createBiquadFilter(); flt.type = 'bandpass'; flt.frequency.setValueAtTime(f0, c.currentTime); if (f1) flt.frequency.exponentialRampToValueAtTime(f1, c.currentTime + dur * 0.85); flt.Q.value = q || 1; const g = c.createGain(); g.gain.setValueAtTime(vol || 0.25, c.currentTime); g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + dur); s.connect(flt); flt.connect(g); g.connect(c.destination); s.start(); s.stop(c.currentTime + dur); } catch (e) { } }
-        const sndClick = () => { makeTone(160, 55, 0.09, 'sine', 0.18); makeNoise(0.015, 3000, null, 0.5, 0.09); };
-        const sndKnob = () => { makeTone(220, 90, 0.05, 'sine', 0.1); };
-        const sndPwrOn = () => { makeNoise(1.4, 2000, 180, 0.8, 0.35); };
-        const sndPwrOff = () => { makeNoise(0.5, 400, null, 1.5, 0.28); makeTone(800, 40, 0.4, 'sine', 0.18); };
-        const sndTune = () => { makeNoise(0.9, 4000, 400, 1.2, 0.28 * (staticIntensity + 0.35)); };
-        const sndSeek = (ff) => { makeTone(ff ? 700 : 350, ff ? 180 : 90, 0.1, 'sine', 0.07); makeNoise(0.1, ff ? 2500 : 800, null, 1.5, 0.05); };
-        const sndVHS = (ff) => { try { const c = getAC(), bl = Math.floor(c.sampleRate * 1.0), b = c.createBuffer(1, bl, c.sampleRate), d = b.getChannelData(0); for (let i = 0; i < bl; i++) d[i] = (Math.random() * 2 - 1) * 0.9; const s = c.createBufferSource(); s.buffer = b; s.playbackRate.value = ff ? 2.1 : 0.45; const flt = c.createBiquadFilter(); flt.type = 'bandpass'; flt.frequency.value = ff ? 2800 : 700; flt.Q.value = 1.4; const g = c.createGain(); g.gain.setValueAtTime(0.22, c.currentTime); g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 1.0); s.connect(flt); flt.connect(g); g.connect(c.destination); s.start(); s.stop(c.currentTime + 1.0); makeTone(ff ? 140 : 50, ff ? 50 : 18, 0.9, 'sawtooth', 0.035); } catch (e) { } };
+// ===== AUDIO CONTEXT AND SOUND EFFECTS =====
+function getAC() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); return audioCtx; }
+function makeTone(f0, f1, dur, type, vol) { try { const c = getAC(), o = c.createOscillator(), g = c.createGain(); o.connect(g); g.connect(c.destination); o.type = type || 'sine'; o.frequency.setValueAtTime(f0, c.currentTime); if (f1) o.frequency.exponentialRampToValueAtTime(f1, c.currentTime + dur); g.gain.setValueAtTime(vol || 0.15, c.currentTime); g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + dur); o.start(); o.stop(c.currentTime + dur); } catch (e) { } }
+function makeNoise(dur, f0, f1, q, vol) { try { const c = getAC(), bl = Math.floor(c.sampleRate * dur), b = c.createBuffer(1, bl, c.sampleRate), d = b.getChannelData(0); for (let i = 0; i < bl; i++) d[i] = Math.random() * 2 - 1; const s = c.createBufferSource(); s.buffer = b; const flt = c.createBiquadFilter(); flt.type = 'bandpass'; flt.frequency.setValueAtTime(f0, c.currentTime); if (f1) flt.frequency.exponentialRampToValueAtTime(f1, c.currentTime + dur * 0.85); flt.Q.value = q || 1; const g = c.createGain(); g.gain.setValueAtTime(vol || 0.25, c.currentTime); g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + dur); s.connect(flt); flt.connect(g); g.connect(c.destination); s.start(); s.stop(c.currentTime + dur); } catch (e) { } }
+const sndClick = () => { makeTone(160, 55, 0.09, 'sine', 0.18); makeNoise(0.015, 3000, null, 0.5, 0.09); };
+const sndKnob = () => { makeTone(220, 90, 0.05, 'sine', 0.1); };
+const sndPwrOn = () => { makeNoise(1.4, 2000, 180, 0.8, 0.35); };
+const sndPwrOff = () => { makeNoise(0.5, 400, null, 1.5, 0.28); makeTone(800, 40, 0.4, 'sine', 0.18); };
+const sndTune = () => { makeNoise(0.9, 4000, 400, 1.2, 0.28 * (staticIntensity + 0.35)); };
+const sndSeek = (ff) => { makeTone(ff ? 700 : 350, ff ? 180 : 90, 0.1, 'sine', 0.07); makeNoise(0.1, ff ? 2500 : 800, null, 1.5, 0.05); };
+const sndVHS = (ff) => { try { const c = getAC(), bl = Math.floor(c.sampleRate * 1.0), b = c.createBuffer(1, bl, c.sampleRate), d = b.getChannelData(0); for (let i = 0; i < bl; i++) d[i] = (Math.random() * 2 - 1) * 0.9; const s = c.createBufferSource(); s.buffer = b; s.playbackRate.value = ff ? 2.1 : 0.45; const flt = c.createBiquadFilter(); flt.type = 'bandpass'; flt.frequency.value = ff ? 2800 : 700; flt.Q.value = 1.4; const g = c.createGain(); g.gain.setValueAtTime(0.22, c.currentTime); g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 1.0); s.connect(flt); flt.connect(g); g.connect(c.destination); s.start(); s.stop(c.currentTime + 1.0); makeTone(ff ? 140 : 50, ff ? 50 : 18, 0.9, 'sawtooth', 0.035); } catch (e) { } };
 
-        // ===== LIVE SCHEDULE =====
-        function getCurrentShow() {
+// ===== LIVE SCHEDULE =====
+function getCurrentShow() {
             const n = new Date(), m = (n.getHours() * 60) + n.getMinutes();
             const schedule = [
-                { startTime: 6*60, endTime: 6*60+30, id:1, name:"Reading Rainbow", emoji:"🌈" }, { startTime: 6*60+30, endTime:7*60, id:2, name:"Popeye Collection", emoji:"💪" }, { startTime:7*60, endTime:7*60+30, id:3, name:"Arthur — Season 1", emoji:"🐻" }, { startTime:7*60+30, endTime:8*60, id:4, name:"Brum", emoji:"🚗" }, { startTime:8*60, endTime:8*60+30, id:5, name:"90s Moomin", emoji:"🦛" }, { startTime:8*60+30, endTime:9*60, id:6, name:"Tracy Beaker", emoji:"📝" }, { startTime:9*60, endTime:9*60+30, id:7, name:"Horrid Henry", emoji:"😈" }, { startTime:9*60+30, endTime:10*60, id:8, name:"Even Stevens", emoji:"🍞" }, { startTime:10*60, endTime:10*60+30, id:9, name:"ALF", emoji:"👽" }, { startTime:10*60+30, endTime:11*60, id:10, name:"Saved by the Bell", emoji:"📣" }, { startTime:11*60, endTime:11*60+30, id:11, name:"Bonanza", emoji:"🤠" }, { startTime:11*60+30, endTime:12*60, id:12, name:"Steptoe & Son", emoji:"🗑️" }, { startTime:12*60, endTime:12*60+30, id:13, name:"Murder, She Wrote", emoji:"✍️" }, { startTime:12*60+30, endTime:13*60, id:14, name:"Survivors (1975)", emoji:"☣️" }, { startTime:13*60, endTime:13*60+30, id:15, name:"Sherlock Holmes", emoji:"🔍" }, { startTime:13*60+30, endTime:14*60, id:16, name:"It Takes a Thief", emoji:"🕵️" }, { startTime:14*60, endTime:14*60+30, id:17, name:"Batman: TAS", emoji:"🦇" }, { startTime:14*60+30, endTime:15*60, id:18, name:"Spider-Man TAS", emoji:"🕷️" }, { startTime:15*60, endTime:15*60+30, id:19, name:"Men in Black: TAS", emoji:"🕶️" }, { startTime:15*60+30, endTime:16*60, id:20, name:"Keeping Up Appearances", emoji:"🫅" }, { startTime:16*60, endTime:16*60+30, id:21, name:"Vicar of Dibley", emoji:"⛪" }, { startTime:16*60+30, endTime:17*60, id:22, name:"Robot Wars", emoji:"🤖" }, { startTime:17*60, endTime:17*60+30, id:23, name:"Goosebumps", emoji:"👻" }, { startTime:17*60+30, endTime:18*60, id:24, name:"Benny Hill Show", emoji:"🏃" }, { startTime:18*60, endTime:18*60+30, id:25, name:"Alfred Hitchcock Presents", emoji:"🎩" }, { startTime:18*60+30, endTime:19*60, id:26, name:"Scooby Doo", emoji:"🐕" }, { startTime:19*60, endTime:19*60+30, id:27, name:"Buffy", emoji:"🧛" }, { startTime:19*60+30, endTime:20*60, id:28, name:"Ally McBeal", emoji:"👗" }, { startTime:20*60, endTime:20*60+30, id:29, name:"The Young Ones", emoji:"🧠" }, { startTime:20*60+30, endTime:21*60, id:30, name:"Final Space Drama", emoji:"🌌" }, { startTime:21*60, endTime:21*60+30, id:31, name:"Beavis and Butt-Head", emoji:"🎸" }, { startTime:21*60+30, endTime:22*60, id:32, name:"90s MTV Block", emoji:"🎤" }, { startTime:22*60, endTime:22*60+30, id:33, name:"Viva La Bam", emoji:"🛹" }, { startTime:22*60+30, endTime:23*60, id:34, name:"Wildboyz", emoji:"🐊" }, { startTime:23*60, endTime:23*60+30, id:35, name:"Jackass", emoji:"💀" }, { startTime:23*60+30, endTime:24*60, id:36, name:"Jerry Springer", emoji:"🎙️" }, { startTime:0, endTime:0*60+30, id:37, name:"Perversions of Science", emoji:"🧬" }, { startTime:0*60+30, endTime:1*60, id:38, name:"Bottom", emoji:"💥" }, { startTime:1*60, endTime:2*60, id:39, name:"Popeye Collection (Overnight)", emoji:"💪" }, { startTime:2*60, endTime:3*60, id:40, name:"90s Nickelodeon VHS", emoji:"📼" }, { startTime:3*60, endTime:3*60+30, id:41, name:"Mickey & Donald", emoji:"🐭" }, { startTime:3*60+30, endTime:4*60, id:42, name:"90s MTV Block (Overnight)", emoji:"🎤" }, { startTime:4*60, endTime:5*60, id:43, name:"Drawn Together", emoji:"🏠" }, { startTime:5*60, endTime:6*60, id:44, name:"Classic TV Vault", emoji:"🎞️" }
+                { startTime: 6 * 60, endTime: 6 * 60 + 30, id: 1, name: "Reading Rainbow", emoji: "🌈" }, { startTime: 6 * 60 + 30, endTime: 7 * 60, id: 2, name: "Popeye Collection", emoji: "💪" }, { startTime: 7 * 60, endTime: 7 * 60 + 30, id: 3, name: "Arthur — Season 1", emoji: "🐻" }, { startTime: 7 * 60 + 30, endTime: 8 * 60, id: 4, name: "Brum", emoji: "🚗" }, { startTime: 8 * 60, endTime: 8 * 60 + 30, id: 5, name: "90s Moomin", emoji: "🦛" }, { startTime: 8 * 60 + 30, endTime: 9 * 60, id: 6, name: "Tracy Beaker", emoji: "📝" }, { startTime: 9 * 60, endTime: 9 * 60 + 30, id: 7, name: "Horrid Henry", emoji: "😈" }, { startTime: 9 * 60 + 30, endTime: 10 * 60, id: 8, name: "Even Stevens", emoji: "🍞" }, { startTime: 10 * 60, endTime: 10 * 60 + 30, id: 9, name: "ALF", emoji: "👽" }, { startTime: 10 * 60 + 30, endTime: 11 * 60, id: 10, name: "Saved by the Bell", emoji: "📣" }, { startTime: 11 * 60, endTime: 11 * 60 + 30, id: 11, name: "Bonanza", emoji: "🤠" }, { startTime: 11 * 60 + 30, endTime: 12 * 60, id: 12, name: "Steptoe & Son", emoji: "🗑️" }, { startTime: 12 * 60, endTime: 12 * 60 + 30, id: 13, name: "Murder, She Wrote", emoji: "✍️" }, { startTime: 12 * 60 + 30, endTime: 13 * 60, id: 14, name: "Survivors (1975)", emoji: "☣️" }, { startTime: 13 * 60, endTime: 13 * 60 + 30, id: 15, name: "Sherlock Holmes", emoji: "🔍" }, { startTime: 13 * 60 + 30, endTime: 14 * 60, id: 16, name: "It Takes a Thief", emoji: "🕵️" }, { startTime: 14 * 60, endTime: 14 * 60 + 30, id: 17, name: "Batman: TAS", emoji: "🦇" }, { startTime: 14 * 60 + 30, endTime: 15 * 60, id: 18, name: "Spider-Man TAS", emoji: "🕷️" }, { startTime: 15 * 60, endTime: 15 * 60 + 30, id: 19, name: "Men in Black: TAS", emoji: "🕶️" }, { startTime: 15 * 60 + 30, endTime: 16 * 60, id: 20, name: "Keeping Up Appearances", emoji: "🫅" }, { startTime: 16 * 60, endTime: 16 * 60 + 30, id: 21, name: "Vicar of Dibley", emoji: "⛪" }, { startTime: 16 * 60 + 30, endTime: 17 * 60, id: 22, name: "Robot Wars", emoji: "🤖" }, { startTime: 17 * 60, endTime: 17 * 60 + 30, id: 23, name: "Goosebumps", emoji: "👻" }, { startTime: 17 * 60 + 30, endTime: 18 * 60, id: 24, name: "Benny Hill Show", emoji: "🏃" }, { startTime: 18 * 60, endTime: 18 * 60 + 30, id: 25, name: "Alfred Hitchcock Presents", emoji: "🎩" }, { startTime: 18 * 60 + 30, endTime: 19 * 60, id: 26, name: "Scooby Doo", emoji: "🐕" }, { startTime: 19 * 60, endTime: 19 * 60 + 30, id: 27, name: "Buffy", emoji: "🧛" }, { startTime: 19 * 60 + 30, endTime: 20 * 60, id: 28, name: "Ally McBeal", emoji: "👗" }, { startTime: 20 * 60, endTime: 20 * 60 + 30, id: 29, name: "The Young Ones", emoji: "🧠" }, { startTime: 20 * 60 + 30, endTime: 21 * 60, id: 30, name: "Final Space Drama", emoji: "🌌" }, { startTime: 21 * 60, endTime: 21 * 60 + 30, id: 31, name: "Beavis and Butt-Head", emoji: "🎸" }, { startTime: 21 * 60 + 30, endTime: 22 * 60, id: 32, name: "90s MTV Block", emoji: "🎤" }, { startTime: 22 * 60, endTime: 22 * 60 + 30, id: 33, name: "Viva La Bam", emoji: "🛹" }, { startTime: 22 * 60 + 30, endTime: 23 * 60, id: 34, name: "Wildboyz", emoji: "🐊" }, { startTime: 23 * 60, endTime: 23 * 60 + 30, id: 35, name: "Jackass", emoji: "💀" }, { startTime: 23 * 60 + 30, endTime: 24 * 60, id: 36, name: "Jerry Springer", emoji: "🎙️" }, { startTime: 0, endTime: 0 * 60 + 30, id: 37, name: "Perversions of Science", emoji: "🧬" }, { startTime: 0 * 60 + 30, endTime: 1 * 60, id: 38, name: "Bottom", emoji: "💥" }, { startTime: 1 * 60, endTime: 2 * 60, id: 39, name: "Popeye Collection (Overnight)", emoji: "💪" }, { startTime: 2 * 60, endTime: 3 * 60, id: 40, name: "90s Nickelodeon VHS", emoji: "📼" }, { startTime: 3 * 60, endTime: 3 * 60 + 30, id: 41, name: "Mickey & Donald", emoji: "🐭" }, { startTime: 3 * 60 + 30, endTime: 4 * 60, id: 42, name: "90s MTV Block (Overnight)", emoji: "🎤" }, { startTime: 4 * 60, endTime: 5 * 60, id: 43, name: "Drawn Together", emoji: "🏠" }, { startTime: 5 * 60, endTime: 6 * 60, id: 44, name: "Classic TV Vault", emoji: "🎞️" }
             ];
             for (const sh of schedule) if (m >= sh.startTime && m < sh.endTime) return sh;
             return { name: "The Tube", emoji: "📺", message: "Off Air" };
-        }
+}
 
-        function updateWidget() { const w = document.getElementById('whatsOnWidget'); if (!w) return; const c = getCurrentShow(); if (c.message) { w.innerHTML = '<div style="background:#060800;border:1px solid #f5a623;border-radius:6px;padding:10px;margin-bottom:15px;"><div style="font-family:VT323;font-size:.7rem;color:#4a3015;">🔴 NOW PLAYING</div><div style="display:flex;align-items:center;gap:10px;"><div style="font-size:2rem;">📺</div><div><div style="font-family:Oswald;color:#f5a623;">Off Air</div><div style="font-family:VT323;font-size:.7rem;">Select a show from the guide</div></div></div></div>'; } else { const showObj = shows.find(s => s.id === c.id); const chNum = showObj ? showObj.ch : '--'; w.innerHTML = '<div style="background:#060800;border:1px solid #39ff14;border-radius:6px;padding:10px;margin-bottom:15px;cursor:pointer;" onclick="window.liveNow(' + c.id + ')"><div style="display:flex;justify-content:space-between;"><div style="font-family:VT323;font-size:.65rem;color:#39ff14;">🔴 LIVE NOW</div><div style="font-family:VT323;font-size:.6rem;color:#4a3015;">CH ' + chNum + '</div></div><div style="display:flex;align-items:center;gap:10px;margin-top:5px;"><div style="font-size:2rem;">' + c.emoji + '</div><div><div style="font-family:Oswald;font-size:1rem;font-weight:600;color:#d4b483;">' + c.name + '</div><div style="font-family:VT323;font-size:.65rem;color:#7a5a28;">▶ Click to watch</div></div></div></div>'; } }
-        function screen(state) { $('lIdle').style.display = state === 'idle' ? 'flex' : 'none'; $('lVideo').classList[state === 'video' ? 'add' : 'remove']('show'); $('lVhs').classList[state === 'vhs' ? 'add' : 'remove']('show'); $('lStatic').classList[state === 'static' ? 'add' : 'remove']('show'); $('lSplash').classList[state === 'splash' ? 'add' : 'remove']('show'); $('lOff').classList[state === 'off' ? 'add' : 'remove']('show'); $('fsBtn').classList.toggle('show', state === 'video'); }
-        function showOff(cb) { $('lOff').innerHTML = '<div class="off-line"></div>'; screen('off'); setTimeout(() => { $('lOff').innerHTML = ''; screen('idle'); if (cb) cb(); }, 550); }
-        function showStaticAnim(label, cb) { $('staticLbl').textContent = label || 'TUNING...'; screen('static'); sndTune(); let f = 0, frames = 12; noiseTimer = setInterval(() => { drawNoise('noiseCanvas', 0.5); if (++f >= frames) { clearInterval(noiseTimer); if (cb) cb(); } }, 52); }
-        function drawNoise(cid, intensity) { const c = $(cid); if (!c) return; c.width = c.offsetWidth || 300; c.height = c.offsetHeight || 225; const ctx = c.getContext('2d'), img = ctx.createImageData(c.width, c.height); const iv = (intensity || 0.5) * 255; for (let i = 0; i < img.data.length; i += 4) { let v = Math.random() * iv; img.data[i] = v; img.data[i+1] = v; img.data[i+2] = v; img.data[i+3] = 255; } ctx.putImageData(img,0,0); }
-        function showVHSAnim(isFF, cb) { $('vhsLbl').textContent = isFF ? '⏩ FF' : '⏮ REW'; screen('vhs'); sndVHS(isFF); let f = 0; vhsTimer = setInterval(() => { drawNoise('vhsCanvas', 0.6); if (++f >= 20) { clearInterval(vhsTimer); if (cb) cb(); } }, 52); }
-        function startReels() { $('reelL').classList.add('spinning'); $('reelR').classList.add('spinning'); clearInterval(timeTimer); timeTimer = setInterval(() => { if (vid.duration && isFinite(vid.duration)) { const t = vid.currentTime; $('vhsTime').textContent = `${String(Math.floor(t/60)).padStart(2,'0')}:${String(Math.floor(t%60)).padStart(2,'0')}`; } }, 1000); }
-        function stopReels() { $('reelL').classList.remove('spinning'); $('reelR').classList.remove('spinning'); clearInterval(timeTimer); }
-        function markEpActive(idx) { document.querySelectorAll('.ep-item').forEach(el => { const epIndex = parseInt(el.getAttribute('data-index')); if (epIndex === idx) el.classList.add('ep-active'); else el.classList.remove('ep-active'); }); }
-        function buildSidebar(files, curIdx, show) { const list = $('epList'); list.innerHTML = ''; if (!files.length) { list.innerHTML = '<div class="ep-empty">No streamable files</div>'; return; } files.forEach((f,i) => { const el = document.createElement('div'); el.className = 'ep-item' + (i === curIdx ? ' ep-active' : ''); el.setAttribute('data-index', i); el.innerHTML = `<span class="ep-num">${String(i+1).padStart(2,'0')}.</span><span>${f.name}</span>`; el.addEventListener('click', () => { if (!tvOn) return; sndClick(); vid.pause(); stopReels(); showVHSAnim(i > curIdx, () => { activeEp = i; playFile(show, files, i, 0, true, null); }); }); list.appendChild(el); }); }
-        async function fetchFiles(archiveId) { if (fileCache[archiveId]) return fileCache[archiveId]; try { const r = await fetch(`https://archive.org/metadata/${archiveId}/files`); const j = await r.json(); const raw = (j.result || []).map(f => ({ ...f, _archiveId: archiveId })); const videos = filterFiles(raw); fileCache[archiveId] = videos; return videos; } catch(e) { return []; } }
-        function filterFiles(rawFiles) { const map = new Map(); rawFiles.forEach(f => { const name = f.name || '', nl = name.toLowerCase(); if (!nl.match(/\.(ia\.mp4|mp4|ogv)$/)) return; let base = nl.endsWith('.ia.mp4') ? name.slice(0,-7) : (nl.endsWith('.mp4') ? name.slice(0,-4) : name.slice(0,-4)); const score = nl.endsWith('.ia.mp4') ? 3 : (nl.endsWith('.mp4') ? 2 : 1); const existing = map.get(base); if (!existing || score > existing.score) map.set(base, { name: f.name, score, url: `https://archive.org/download/${f._archiveId}/${encodeURIComponent(f.name)}` }); }); return [...map.values()].map(f => ({ name: f.name.replace(/\.ia\.mp4$|\.mp4$|\.ogv$/i,'').replace(/[_\-]+/g,' ').trim(), url: f.url })); }
-        function showResumeBadge(timestamp) { const badge = $('resumeBadge'); const minutes = Math.floor(timestamp / 60); const seconds = Math.floor(timestamp % 60); badge.textContent = `⏯ RESUMING AT ${minutes}:${seconds.toString().padStart(2, '0')}`; badge.classList.remove('show'); void badge.offsetWidth; badge.classList.add('show'); setTimeout(() => { badge.classList.remove('show'); }, 3500); }
-        function playFile(show, files, idx, resumeTimestamp, autoPlay, liveSeekTime) { 
-            const f = files[idx]; if (!f) return; if (window._saveInterval) clearInterval(window._saveInterval); vid.src = f.url; vid.volume = volumeVal; vid.load(); window._saveInterval = setInterval(() => { if (vid.currentTime && vid.duration && !vid.paused && vid.currentTime < vid.duration-5) localStorage.setItem(`thetube_resume_${show.id}`, JSON.stringify({ episode: idx, timestamp: Math.floor(vid.currentTime) })); }, 10000); const onPause = () => { if (vid.currentTime && vid.duration && vid.currentTime < vid.duration-5) localStorage.setItem(`thetube_resume_${show.id}`, JSON.stringify({ episode: idx, timestamp: Math.floor(vid.currentTime) })); }; vid.addEventListener('pause', onPause); vid.addEventListener('canplay', function onLoad() { vid.removeEventListener('canplay', onLoad); let targetTime = resumeTimestamp; if (liveSeekTime !== null && liveSeekTime > 30 && liveSeekTime < vid.duration - 10) { targetTime = liveSeekTime; showToast(`🔴 LIVE — JOINED AT ${Math.floor(targetTime/60)}:${Math.floor(targetTime%60).toString().padStart(2,'0')}`); } else if (resumeTimestamp > 0 && resumeTimestamp < vid.duration - 5 && liveSeekTime === null) { targetTime = resumeTimestamp; showResumeBadge(targetTime); showToast(`◈ RESUMING FROM ${Math.floor(targetTime/60)}:${Math.floor(targetTime%60).toString().padStart(2,'0')} ◈`); } else if (liveSeekTime === null) { targetTime = 0; showToast(`◈ PLAYING FROM START ◈`); } if (targetTime > 0 && targetTime < vid.duration) vid.currentTime = targetTime; else vid.currentTime = 0; vid.play().catch(() => { if (!autoPlay) showToast('◈ CLICK THE VIDEO TO START ◈'); }); }); screen('video'); $('lTicker').classList.add('show'); $('tPlayIcon').textContent = '⏸'; $('vhsShowName').textContent = show.name.toUpperCase(); $('vhsEpName').textContent = f.name.length>18 ? f.name.slice(0,16)+'…' : f.name; $('vhsTime').textContent = '00:00'; startReels(); markEpActive(idx); $('spEp').textContent = f.name; vid.onended = () => { stopReels(); if (window._saveInterval) clearInterval(window._saveInterval); vid.removeEventListener('pause', onPause); clearResumePosition(show.id); const nextEp = idx + 1; if (nextEp < files.length) { showToast(`◈ NEXT EPISODE IN 3 SECONDS ◈`); setTimeout(() => { if (active && active.id === show.id) { activeEp = nextEp; playFile(show, files, nextEp, 0, true, null); } }, 3000); } else { showToast(`◈ END OF EPISODES ◈`); } }; }
-        function clearResumePosition(showId) { localStorage.removeItem(`thetube_resume_${showId}`); }
-        function getResumePosition(showId) { const saved = localStorage.getItem(`thetube_resume_${showId}`); if (saved) try { return JSON.parse(saved); } catch(e) { return null; } return null; }
-        function getScheduleEntryForShow(showId) { const cur = getCurrentShow(); return cur.id === showId ? cur : null; }
-        function calculateLiveSeekTime(scheduleEntry) { if (!scheduleEntry) return 0; const now = new Date(), currentMinutes = (now.getHours() * 60) + now.getMinutes(), minutesAired = currentMinutes - scheduleEntry.startTime; return Math.max(0, Math.min(minutesAired * 60, 3600)); }
-        async function autoLiveNow(showId, autoPlay = true, randomEpisode = false) { 
-            if (!tvOn) return; const s = shows.find(x => x.id === showId); if (!s) return; const files = await fetchFiles(s.archiveId); if (!files || files.length === 0) return; 
-            let episodeIndex = 0, resumeTimestamp = 0, liveSeekTime = null; 
-            if (randomEpisode) { episodeIndex = Math.floor(Math.random() * files.length); showToast(`🎲 RANDOM EPISODE ${episodeIndex+1}/${files.length}`); } else { const scheduleEntry = getScheduleEntryForShow(showId); if (scheduleEntry) { episodeIndex = getDailyEpisodeIndex(showId, files.length); showToast(`📺 DAILY EPISODE ${episodeIndex+1}/${files.length}`); } else { const stored = localStorage.getItem(`thetube_episode_${showId}`); if (stored !== null) episodeIndex = parseInt(stored) || 0; const resumeData = getResumePosition(showId); if (resumeData && resumeData.episode === episodeIndex && resumeData.timestamp > 30) resumeTimestamp = resumeData.timestamp; } if (scheduleEntry) liveSeekTime = calculateLiveSeekTime(scheduleEntry); } 
-            if (window._saveInterval) clearInterval(window._saveInterval); clearInterval(noiseTimer); clearInterval(vhsTimer); vid.pause(); vid.src = ''; stopReels(); $('tPlayIcon').textContent = '▶'; $('lTicker').classList.remove('show'); $('lVideo').classList.remove('show'); active = s; activeEp = episodeIndex; $('vhsShowName').textContent = s.name.toUpperCase(); $('chDisp').textContent = `CH ${s.ch}`; $('npName').textContent = s.name; $('npCh').textContent = `CH ${s.ch}`; $('npBar').classList.add('show'); const tk = $('tickerTxt'); tk.textContent = `◈  ${s.tickers.join('   ◈   ')}  ◈  ${s.tickers.join('   ◈   ')}  ◈`; tk.style.animation = 'none'; void tk.offsetHeight; tk.style.animation = ''; $('spEmoji').textContent = s.emoji; $('spTitle').textContent = s.name; $('spYear').textContent = s.year; $('epShowName').textContent = s.name.toUpperCase(); buildSidebar(files, episodeIndex, s); showStaticAnim('TUNING...', async () => { screen('splash'); $('lTicker').classList.add('show'); renderList(); playFile(s, files, episodeIndex, resumeTimestamp, autoPlay, liveSeekTime); $('lSplash').classList.remove('show'); screen('video'); }); 
-        }
-        function powerOn(cb) { tvOn = true; $('pwrBtn').classList.add('on'); sndPwrOn(); const current = getCurrentShow(); if (current && current.id) { autoLiveNow(current.id, true, false); if (cb) cb(); } else { const pl = shows.filter(s => s.playlist); const pick = pl[Math.floor(Math.random() * pl.length)]; if (pick && tvOn) autoLiveNow(pick.id, true, false); if (cb) cb(); } }
-        function powerOff() { sndPwrOff(); tvOn = false; active = null; activeEp = 0; $('pwrBtn').classList.remove('on'); clearInterval(noiseTimer); clearInterval(vhsTimer); vid.pause(); vid.src = ''; stopReels(); $('tPlayIcon').textContent = '▶'; $('lTicker').classList.remove('show'); $('npBar').classList.remove('show'); $('vhsShowName').textContent = '◈ NO TAPE LOADED ◈'; $('chDisp').textContent = '— —'; $('epList').innerHTML = '<div class="ep-empty">Power on & select<br>a show to see<br>episodes here</div>'; $('epShowName').textContent = '— SELECT A SHOW —'; showOff(() => renderList()); saveSettings(); }
-        function startLiveMode() { if (!tvOn) { showToast('◈ TURN TV ON FIRST ◈'); return; } liveMode = true; $('btnLiveMode').classList.add('active'); $('liveModeIndicator').style.display = 'inline-block'; showToast('🔴 LIVE MODE ACTIVATED — AUTO-SWITCHING CHANNELS'); checkAndSwitchLiveChannel(); if (liveCheckInterval) clearInterval(liveCheckInterval); liveCheckInterval = setInterval(() => { if (liveMode && tvOn) checkAndSwitchLiveChannel(); }, 30000); }
-        function stopLiveMode() { if (liveCheckInterval) clearInterval(liveCheckInterval); liveCheckInterval = null; liveMode = false; currentLiveShowId = null; $('btnLiveMode').classList.remove('active'); $('liveModeIndicator').style.display = 'none'; showToast('◈ LIVE MODE OFF ◈'); }
-        async function checkAndSwitchLiveChannel() { const current = getCurrentShow(); if (!current || current.message) { if (currentLiveShowId !== null) { currentLiveShowId = null; showToast('◈ OFF AIR — WAITING FOR NEXT PROGRAM ◈'); } return; } if (currentLiveShowId !== current.id) { currentLiveShowId = current.id; setTimeout(() => { if (liveMode && tvOn) autoLiveNow(current.id, true, false); }, 500); } }
-        function renderList() { const el = $('showList'); if (!el) return; const searchTerm = ($('searchBox').value || "").toLowerCase(); let filtered = activeCat === 'all' ? shows : shows.filter(s => s.cat === activeCat); if (searchTerm) filtered = filtered.filter(s => s.name.toLowerCase().includes(searchTerm) || s.desc.toLowerCase().includes(searchTerm) || s.year.toString().includes(searchTerm)); el.innerHTML = ''; filtered.forEach(s => { const card = document.createElement('div'); card.className = 'show-card' + (active?.id === s.id ? ' active' : ''); const bhtml = s.badges.map(b => `<span class="badge">${b}</span>`).join(''); card.innerHTML = `<span class="s-time">${s.time}</span><span class="s-emoji">${s.emoji}</span><div class="s-info"><div class="s-name">${s.name} <span class="s-yr">(${s.year})</span></div><div class="s-desc">${s.desc}</div><div class="s-badges">${bhtml}</div></div><div class="play-dot"></div>`; card.addEventListener('click', () => { sndClick(); if (liveMode) stopLiveMode(); if (tvOn) autoLiveNow(s.id, true, false); else powerOn(() => autoLiveNow(s.id, true, false)); }); el.appendChild(card); }); }
-        function buildCatTabs() { const el = $('catTabs'); cats.forEach(c => { const b = document.createElement('button'); b.className = 'cat-btn' + (c.key === 'all' ? ' active' : ''); b.textContent = c.label; b.addEventListener('click', () => { sndClick(); document.querySelectorAll('.cat-btn').forEach(x => x.classList.remove('active')); b.classList.add('active'); activeCat = c.key; renderList(); }); el.appendChild(b); }); }
-        function saveSettings() { localStorage.setItem('thetube_settings', JSON.stringify({ volume: volumeVal, staticIntensity, brightness: brightnessVal, volClicks: vClicks, staticClicks: sClicks, brightClicks: bClicks })); }
-        function loadSettings() { const saved = localStorage.getItem('thetube_settings'); if (saved) try { const s = JSON.parse(saved); volumeVal = s.volume || 0.8; staticIntensity = s.staticIntensity || 0.4; brightnessVal = s.brightness || 1.0; vClicks = s.volClicks !== undefined ? s.volClicks : 7; sClicks = s.staticClicks !== undefined ? s.staticClicks : 0; bClicks = s.brightClicks !== undefined ? s.brightClicks : 4; if (vid) vid.volume = volumeVal; $('volFill').style.width = `${vClicks * 10}%`; $('sbarFill').style.width = `${Math.round(staticIntensity * 100)}%`; $('lScan').style.opacity = staticIntensity * 0.8; $('screenWrap').style.filter = `brightness(${brightnessVal})`; showToast(`◈ LOADED YOUR SAVED SETTINGS ◈`); } catch(e) {} }
-        function showToast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2400); }
-        
-        $('pwrBtn').addEventListener('click', () => { sndClick(); tvOn ? powerOff() : powerOn(); });
-        $('btnLiveMode').addEventListener('click', () => { sndClick(); liveMode ? stopLiveMode() : startLiveMode(); });
-        $('btnSurprise').addEventListener('click', () => { sndClick(); if (liveMode) stopLiveMode(); const pick = shows[Math.floor(Math.random() * shows.length)]; showToast(`🎲 SURPRISE: ${pick.name}`); setTimeout(() => { if (tvOn) autoLiveNow(pick.id, true, true); else powerOn(() => autoLiveNow(pick.id, true, true)); }, 500); });
-        $('btnShare').addEventListener('click', () => { sndClick(); if (navigator.share) navigator.share({ title: 'The Tube', text: 'Classic TV', url: location.href }); else showToast('◈ LINK COPIED ◈'); });
-        $('btnDonate').addEventListener('click', () => { sndClick(); $('modalDonate').classList.add('show'); });
-        $('modalClose').addEventListener('click', () => { sndClick(); $('modalDonate').classList.remove('show'); });
-        $('searchBox').addEventListener('input', () => renderList());
-        $('tPlay').addEventListener('click', () => { sndClick(); if (!active) return; if (vid.paused) { vid.play(); $('tPlayIcon').textContent = '⏸'; startReels(); } else { vid.pause(); $('tPlayIcon').textContent = '▶'; stopReels(); } });
-        $('tFF').addEventListener('click', () => { sndClick(); if (vid.duration) { vid.currentTime = Math.min(vid.currentTime + 15, vid.duration - 0.5); sndSeek(true); showToast(`◈ +15s ◈`); } });
-        $('tRew').addEventListener('click', () => { sndClick(); if (vid.duration) { vid.currentTime = Math.max(0, vid.currentTime - 15); sndSeek(false); showToast(`◈ -15s ◈`); } });
-        $('fsBtn').addEventListener('click', () => { sndClick(); const wrap = $('screenWrap'); if (!document.fullscreenElement) { (wrap.requestFullscreen || wrap.webkitRequestFullscreen || wrap.mozRequestFullScreen || wrap.msRequestFullscreen).call(wrap).catch(e=>{}); $('fsBtn').textContent = '✕'; } else { (document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen).call(document).catch(e=>{}); $('fsBtn').textContent = '⛶'; } });
-        document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement) $('fsBtn').textContent = '⛶'; });
-        
-        let vClicks = 7, sClicks = 0, bClicks = 4;
-        $('kVol').addEventListener('click', () => { sndKnob(); vClicks = (vClicks + 1) % 11; volumeVal = vClicks / 10; vid.volume = volumeVal; kAngle.kVol += 36; $('kVol').style.transform = `rotate(${kAngle.kVol}deg)`; $('volFill').style.width = `${vClicks * 10}%`; showToast(`◈ VOLUME: ${vClicks * 10}% ◈`); saveSettings(); });
-        $('kStatic').addEventListener('click', () => { sndKnob(); sClicks = (sClicks + 1) % 8; staticIntensity = sClicks / 7; kAngle.kStatic += 45; $('kStatic').style.transform = `rotate(${kAngle.kStatic}deg)`; $('sbarFill').style.width = `${Math.round(staticIntensity * 100)}%`; $('lScan').style.opacity = staticIntensity * 0.8; $('lPhos').style.opacity = staticIntensity * 0.5; showToast(`◈ STATIC: ${Math.round(staticIntensity * 100)}% ◈`); saveSettings(); });
-        $('kBright').addEventListener('click', () => { sndKnob(); bClicks = (bClicks + 1) % 8; brightnessVal = 0.4 + bClicks * (0.85 / 7); kAngle.kBright += 45; $('kBright').style.transform = `rotate(${kAngle.kBright}deg)`; $('screenWrap').style.filter = `brightness(${brightnessVal})`; showToast(`◈ BRIGHTNESS: ${Math.round(brightnessVal * 100)}% ◈`); saveSettings(); });
-        
-        const days = ['SUN','MON','TUE','WED','THU','FRI','SAT'], months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC']; $('gDate').textContent = `${days[new Date().getDay()]} ${new Date().getDate()} ${months[new Date().getMonth()]}`;
-        buildCatTabs(); renderList(); screen('idle'); loadSettings(); updateWidget(); setInterval(updateWidget, 60000);
-        window.liveNow = autoLiveNow;
+function updateWidget() { const w = document.getElementById('whatsOnWidget'); if (!w) return; const c = getCurrentShow(); if (c.message) { w.innerHTML = '<div style="background:#060800;border:1px solid #f5a623;border-radius:6px;padding:10px;margin-bottom:15px;"><div style="font-family:VT323;font-size:.7rem;color:#4a3015;">🔴 NOW PLAYING</div><div style="display:flex;align-items:center;gap:10px;"><div style="font-size:2rem;">📺</div><div><div style="font-family:Oswald;color:#f5a623;">Off Air</div><div style="font-family:VT323;font-size:.7rem;">Select a show from the guide</div></div></div></div>'; } else { const showObj = shows.find(s => s.id === c.id); const chNum = showObj ? showObj.ch : '--'; w.innerHTML = '<div style="background:#060800;border:1px solid #39ff14;border-radius:6px;padding:10px;margin-bottom:15px;cursor:pointer;" onclick="window.liveNow(' + c.id + ')"><div style="display:flex;justify-content:space-between;"><div style="font-family:VT323;font-size:.65rem;color:#39ff14;">🔴 LIVE NOW</div><div style="font-family:VT323;font-size:.6rem;color:#4a3015;">CH ' + chNum + '</div></div><div style="display:flex;align-items:center;gap:10px;margin-top:5px;"><div style="font-size:2rem;">' + c.emoji + '</div><div><div style="font-family:Oswald;font-size:1rem;font-weight:600;color:#d4b483;">' + c.name + '</div><div style="font-family:VT323;font-size:.65rem;color:#7a5a28;">▶ Click to watch</div></div></div></div>'; } }
+function screen(state) { $('lIdle').style.display = state === 'idle' ? 'flex' : 'none'; $('lVideo').classList[state === 'video' ? 'add' : 'remove']('show'); $('lVhs').classList[state === 'vhs' ? 'add' : 'remove']('show'); $('lStatic').classList[state === 'static' ? 'add' : 'remove']('show'); $('lSplash').classList[state === 'splash' ? 'add' : 'remove']('show'); $('lOff').classList[state === 'off' ? 'add' : 'remove']('show'); $('fsBtn').classList.toggle('show', state === 'video'); }
+function showOff(cb) { $('lOff').innerHTML = '<div class="off-line"></div>'; screen('off'); setTimeout(() => { $('lOff').innerHTML = ''; screen('idle'); if (cb) cb(); }, 550); }
+function showStaticAnim(label, cb) { $('staticLbl').textContent = label || 'TUNING...'; screen('static'); sndTune(); let f = 0, frames = 12; noiseTimer = setInterval(() => { drawNoise('noiseCanvas', 0.5); if (++f >= frames) { clearInterval(noiseTimer); if (cb) cb(); } }, 52); }
+function drawNoise(cid, intensity) { const c = $(cid); if (!c) return; c.width = c.offsetWidth || 300; c.height = c.offsetHeight || 225; const ctx = c.getContext('2d'), img = ctx.createImageData(c.width, c.height); const iv = (intensity || 0.5) * 255; for (let i = 0; i < img.data.length; i += 4) { let v = Math.random() * iv; img.data[i] = v; img.data[i + 1] = v; img.data[i + 2] = v; img.data[i + 3] = 255; } ctx.putImageData(img, 0, 0); }
+function showVHSAnim(isFF, cb) { $('vhsLbl').textContent = isFF ? '⏩ FF' : '⏮ REW'; screen('vhs'); sndVHS(isFF); let f = 0; vhsTimer = setInterval(() => { drawNoise('vhsCanvas', 0.6); if (++f >= 20) { clearInterval(vhsTimer); if (cb) cb(); } }, 52); }
+function startReels() { $('reelL').classList.add('spinning'); $('reelR').classList.add('spinning'); clearInterval(timeTimer); timeTimer = setInterval(() => { if (vid.duration && isFinite(vid.duration)) { const t = vid.currentTime; $('vhsTime').textContent = `${String(Math.floor(t / 60)).padStart(2, '0')}:${String(Math.floor(t % 60)).padStart(2, '0')}`; } }, 1000); }
+function stopReels() { $('reelL').classList.remove('spinning'); $('reelR').classList.remove('spinning'); clearInterval(timeTimer); }
+function markEpActive(idx) { document.querySelectorAll('.ep-item').forEach(el => { const epIndex = parseInt(el.getAttribute('data-index')); if (epIndex === idx) el.classList.add('ep-active'); else el.classList.remove('ep-active'); }); }
+function buildSidebar(files, curIdx, show) { const list = $('epList'); list.innerHTML = ''; if (!files.length) { list.innerHTML = '<div class="ep-empty">No streamable files</div>'; return; } files.forEach((f, i) => { const el = document.createElement('div'); el.className = 'ep-item' + (i === curIdx ? ' ep-active' : ''); el.setAttribute('data-index', i); el.innerHTML = `<span class="ep-num">${String(i + 1).padStart(2, '0')}.</span><span>${f.name}</span>`; el.addEventListener('click', () => { if (!tvOn) return; sndClick(); vid.pause(); stopReels(); showVHSAnim(i > curIdx, () => { activeEp = i; playFile(show, files, i, 0, true, null); }); }); list.appendChild(el); }); }
+async function fetchFiles(archiveId) { if (fileCache[archiveId]) return fileCache[archiveId]; try { const r = await fetch(`https://archive.org/metadata/${archiveId}/files`); const j = await r.json(); const raw = (j.result || []).map(f => ({ ...f, _archiveId: archiveId })); const videos = filterFiles(raw); fileCache[archiveId] = videos; return videos; } catch (e) { return []; } }
+function filterFiles(rawFiles) { const map = new Map(); rawFiles.forEach(f => { const name = f.name || '', nl = name.toLowerCase(); if (!nl.match(/\.(ia\.mp4|mp4|ogv)$/)) return; let base = nl.endsWith('.ia.mp4') ? name.slice(0, -7) : (nl.endsWith('.mp4') ? name.slice(0, -4) : name.slice(0, -4)); const score = nl.endsWith('.ia.mp4') ? 3 : (nl.endsWith('.mp4') ? 2 : 1); const existing = map.get(base); if (!existing || score > existing.score) map.set(base, { name: f.name, score, url: `https://archive.org/download/${f._archiveId}/${encodeURIComponent(f.name)}` }); }); return [...map.values()].map(f => ({ name: f.name.replace(/\.ia\.mp4$|\.mp4$|\.ogv$/i, '').replace(/[_\-]+/g, ' ').trim(), url: f.url })); }
+function showResumeBadge(timestamp) { const badge = $('resumeBadge'); const minutes = Math.floor(timestamp / 60); const seconds = Math.floor(timestamp % 60); badge.textContent = `⏯ RESUMING AT ${minutes}:${seconds.toString().padStart(2, '0')}`; badge.classList.remove('show'); void badge.offsetWidth; badge.classList.add('show'); setTimeout(() => { badge.classList.remove('show'); }, 3500); }
+function playFile(show, files, idx, resumeTimestamp, autoPlay, liveSeekTime) {
+            const f = files[idx]; if (!f) return; if (window._saveInterval) clearInterval(window._saveInterval); vid.src = f.url; vid.volume = volumeVal; vid.load(); window._saveInterval = setInterval(() => { if (vid.currentTime && vid.duration && !vid.paused && vid.currentTime < vid.duration - 5) localStorage.setItem(`thetube_resume_${show.id}`, JSON.stringify({ episode: idx, timestamp: Math.floor(vid.currentTime) })); }, 10000); const onPause = () => { if (vid.currentTime && vid.duration && vid.currentTime < vid.duration - 5) localStorage.setItem(`thetube_resume_${show.id}`, JSON.stringify({ episode: idx, timestamp: Math.floor(vid.currentTime) })); }; vid.addEventListener('pause', onPause); vid.addEventListener('canplay', function onLoad() { vid.removeEventListener('canplay', onLoad); let targetTime = resumeTimestamp; if (liveSeekTime !== null && liveSeekTime > 30 && liveSeekTime < vid.duration - 10) { targetTime = liveSeekTime; showToast(`🔴 LIVE — JOINED AT ${Math.floor(targetTime / 60)}:${Math.floor(targetTime % 60).toString().padStart(2, '0')}`); } else if (resumeTimestamp > 0 && resumeTimestamp < vid.duration - 5 && liveSeekTime === null) { targetTime = resumeTimestamp; showResumeBadge(targetTime); showToast(`◈ RESUMING FROM ${Math.floor(targetTime / 60)}:${Math.floor(targetTime % 60).toString().padStart(2, '0')} ◈`); } else if (liveSeekTime === null) { targetTime = 0; showToast(`◈ PLAYING FROM START ◈`); } if (targetTime > 0 && targetTime < vid.duration) vid.currentTime = targetTime; else vid.currentTime = 0; vid.play().catch(() => { if (!autoPlay) showToast('◈ CLICK THE VIDEO TO START ◈'); }); }); screen('video'); $('lTicker').classList.add('show'); $('tPlayIcon').textContent = '⏸'; $('vhsShowName').textContent = show.name.toUpperCase(); $('vhsEpName').textContent = f.name.length > 18 ? f.name.slice(0, 16) + '…' : f.name; $('vhsTime').textContent = '00:00'; startReels(); markEpActive(idx); $('spEp').textContent = f.name; vid.onended = () => { stopReels(); if (window._saveInterval) clearInterval(window._saveInterval); vid.removeEventListener('pause', onPause); clearResumePosition(show.id); const nextEp = idx + 1; if (nextEp < files.length) { showToast(`◈ NEXT EPISODE IN 3 SECONDS ◈`); setTimeout(() => { if (active && active.id === show.id) { activeEp = nextEp; playFile(show, files, nextEp, 0, true, null); } }, 3000); } else { showToast(`◈ END OF EPISODES ◈`); } };
+}
+function clearResumePosition(showId) { localStorage.removeItem(`thetube_resume_${showId}`); }
+function getResumePosition(showId) { const saved = localStorage.getItem(`thetube_resume_${showId}`); if (saved) try { return JSON.parse(saved); } catch (e) { return null; } return null; }
+function getScheduleEntryForShow(showId) { const cur = getCurrentShow(); return cur.id === showId ? cur : null; }
+function calculateLiveSeekTime(scheduleEntry) { if (!scheduleEntry) return 0; const now = new Date(), currentMinutes = (now.getHours() * 60) + now.getMinutes(), minutesAired = currentMinutes - scheduleEntry.startTime; return Math.max(0, Math.min(minutesAired * 60, 3600)); }
+async function autoLiveNow(showId, autoPlay = true, randomEpisode = false) {
+            if (!tvOn) return; const s = shows.find(x => x.id === showId); if (!s) return; const files = await fetchFiles(s.archiveId); if (!files || files.length === 0) return;
+            let episodeIndex = 0, resumeTimestamp = 0, liveSeekTime = null;
+            if (randomEpisode) { episodeIndex = Math.floor(Math.random() * files.length); showToast(`🎲 RANDOM EPISODE ${episodeIndex + 1}/${files.length}`); } else { const scheduleEntry = getScheduleEntryForShow(showId); if (scheduleEntry) { episodeIndex = getDailyEpisodeIndex(showId, files.length); showToast(`📺 DAILY EPISODE ${episodeIndex + 1}/${files.length}`); } else { const stored = localStorage.getItem(`thetube_episode_${showId}`); if (stored !== null) episodeIndex = parseInt(stored) || 0; const resumeData = getResumePosition(showId); if (resumeData && resumeData.episode === episodeIndex && resumeData.timestamp > 30) resumeTimestamp = resumeData.timestamp; } if (scheduleEntry) liveSeekTime = calculateLiveSeekTime(scheduleEntry); }
+            if (window._saveInterval) clearInterval(window._saveInterval); clearInterval(noiseTimer); clearInterval(vhsTimer); vid.pause(); vid.src = ''; stopReels(); $('tPlayIcon').textContent = '▶'; $('lTicker').classList.remove('show'); $('lVideo').classList.remove('show'); active = s; activeEp = episodeIndex; $('vhsShowName').textContent = s.name.toUpperCase(); $('chDisp').textContent = `CH ${s.ch}`; $('npName').textContent = s.name; $('npCh').textContent = `CH ${s.ch}`; $('npBar').classList.add('show'); const tk = $('tickerTxt'); tk.textContent = `◈  ${s.tickers.join('   ◈   ')}  ◈  ${s.tickers.join('   ◈   ')}  ◈`; tk.style.animation = 'none'; void tk.offsetHeight; tk.style.animation = ''; $('spEmoji').textContent = s.emoji; $('spTitle').textContent = s.name; $('spYear').textContent = s.year; $('epShowName').textContent = s.name.toUpperCase(); buildSidebar(files, episodeIndex, s); showStaticAnim('TUNING...', async () => { screen('splash'); $('lTicker').classList.add('show'); renderList(); playFile(s, files, episodeIndex, resumeTimestamp, autoPlay, liveSeekTime); $('lSplash').classList.remove('show'); screen('video'); });
+}
+function powerOn(cb) { tvOn = true; $('pwrBtn').classList.add('on'); sndPwrOn(); const current = getCurrentShow(); if (current && current.id) { autoLiveNow(current.id, true, false); if (cb) cb(); } else { const pl = shows.filter(s => s.playlist); const pick = pl[Math.floor(Math.random() * pl.length)]; if (pick && tvOn) autoLiveNow(pick.id, true, false); if (cb) cb(); } }
+function powerOff() { sndPwrOff(); tvOn = false; active = null; activeEp = 0; $('pwrBtn').classList.remove('on'); clearInterval(noiseTimer); clearInterval(vhsTimer); vid.pause(); vid.src = ''; stopReels(); $('tPlayIcon').textContent = '▶'; $('lTicker').classList.remove('show'); $('npBar').classList.remove('show'); $('vhsShowName').textContent = '◈ NO TAPE LOADED ◈'; $('chDisp').textContent = '— —'; $('epList').innerHTML = '<div class="ep-empty">Power on & select<br>a show to see<br>episodes here</div>'; $('epShowName').textContent = '— SELECT A SHOW —'; showOff(() => renderList()); saveSettings(); }
+function startLiveMode() { if (!tvOn) { showToast('◈ TURN TV ON FIRST ◈'); return; } liveMode = true; $('btnLiveMode').classList.add('active'); $('liveModeIndicator').style.display = 'inline-block'; showToast('🔴 LIVE MODE ACTIVATED — AUTO-SWITCHING CHANNELS'); checkAndSwitchLiveChannel(); if (liveCheckInterval) clearInterval(liveCheckInterval); liveCheckInterval = setInterval(() => { if (liveMode && tvOn) checkAndSwitchLiveChannel(); }, 30000); }
+function stopLiveMode() { if (liveCheckInterval) clearInterval(liveCheckInterval); liveCheckInterval = null; liveMode = false; currentLiveShowId = null; $('btnLiveMode').classList.remove('active'); $('liveModeIndicator').style.display = 'none'; showToast('◈ LIVE MODE OFF ◈'); }
+async function checkAndSwitchLiveChannel() { const current = getCurrentShow(); if (!current || current.message) { if (currentLiveShowId !== null) { currentLiveShowId = null; showToast('◈ OFF AIR — WAITING FOR NEXT PROGRAM ◈'); } return; } if (currentLiveShowId !== current.id) { currentLiveShowId = current.id; setTimeout(() => { if (liveMode && tvOn) autoLiveNow(current.id, true, false); }, 500); } }
+function renderList() { const el = $('showList'); if (!el) return; const searchTerm = ($('searchBox').value || "").toLowerCase(); let filtered = activeCat === 'all' ? shows : shows.filter(s => s.cat === activeCat); if (searchTerm) filtered = filtered.filter(s => s.name.toLowerCase().includes(searchTerm) || s.desc.toLowerCase().includes(searchTerm) || s.year.toString().includes(searchTerm)); el.innerHTML = ''; filtered.forEach(s => { const card = document.createElement('div'); card.className = 'show-card' + (active?.id === s.id ? ' active' : ''); const bhtml = s.badges.map(b => `<span class="badge">${b}</span>`).join(''); card.innerHTML = `<span class="s-time">${s.time}</span><span class="s-emoji">${s.emoji}</span><div class="s-info"><div class="s-name">${s.name} <span class="s-yr">(${s.year})</span></div><div class="s-desc">${s.desc}</div><div class="s-badges">${bhtml}</div></div><div class="play-dot"></div>`; card.addEventListener('click', () => { sndClick(); if (liveMode) stopLiveMode(); if (tvOn) autoLiveNow(s.id, true, false); else powerOn(() => autoLiveNow(s.id, true, false)); }); el.appendChild(card); }); }
+function buildCatTabs() { const el = $('catTabs'); cats.forEach(c => { const b = document.createElement('button'); b.className = 'cat-btn' + (c.key === 'all' ? ' active' : ''); b.textContent = c.label; b.addEventListener('click', () => { sndClick(); document.querySelectorAll('.cat-btn').forEach(x => x.classList.remove('active')); b.classList.add('active'); activeCat = c.key; renderList(); }); el.appendChild(b); }); }
+function saveSettings() { localStorage.setItem('thetube_settings', JSON.stringify({ volume: volumeVal, staticIntensity, brightness: brightnessVal, volClicks: vClicks, staticClicks: sClicks, brightClicks: bClicks })); }
+function loadSettings() { const saved = localStorage.getItem('thetube_settings'); if (saved) try { const s = JSON.parse(saved); volumeVal = s.volume || 0.8; staticIntensity = s.staticIntensity || 0.4; brightnessVal = s.brightness || 1.0; vClicks = s.volClicks !== undefined ? s.volClicks : 7; sClicks = s.staticClicks !== undefined ? s.staticClicks : 0; bClicks = s.brightClicks !== undefined ? s.brightClicks : 4; if (vid) vid.volume = volumeVal; $('volFill').style.width = `${vClicks * 10}%`; $('sbarFill').style.width = `${Math.round(staticIntensity * 100)}%`; $('lScan').style.opacity = staticIntensity * 0.8; $('screenWrap').style.filter = `brightness(${brightnessVal})`; showToast(`◈ LOADED YOUR SAVED SETTINGS ◈`); } catch (e) { } }
+function showToast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2400); }
+
+$('pwrBtn').addEventListener('click', () => { sndClick(); tvOn ? powerOff() : powerOn(); });
+$('btnLiveMode').addEventListener('click', () => { sndClick(); liveMode ? stopLiveMode() : startLiveMode(); });
+$('btnSurprise').addEventListener('click', () => { sndClick(); if (liveMode) stopLiveMode(); const pick = shows[Math.floor(Math.random() * shows.length)]; showToast(`🎲 SURPRISE: ${pick.name}`); setTimeout(() => { if (tvOn) autoLiveNow(pick.id, true, true); else powerOn(() => autoLiveNow(pick.id, true, true)); }, 500); });
+$('btnShare').addEventListener('click', () => { sndClick(); if (navigator.share) navigator.share({ title: 'The Tube', text: 'Classic TV', url: location.href }); else showToast('◈ LINK COPIED ◈'); });
+$('btnDonate').addEventListener('click', () => { sndClick(); $('modalDonate').classList.add('show'); });
+$('modalClose').addEventListener('click', () => { sndClick(); $('modalDonate').classList.remove('show'); });
+$('searchBox').addEventListener('input', () => renderList());
+$('tPlay').addEventListener('click', () => { sndClick(); if (!active) return; if (vid.paused) { vid.play(); $('tPlayIcon').textContent = '⏸'; startReels(); } else { vid.pause(); $('tPlayIcon').textContent = '▶'; stopReels(); } });
+$('tFF').addEventListener('click', () => { sndClick(); if (vid.duration) { vid.currentTime = Math.min(vid.currentTime + 15, vid.duration - 0.5); sndSeek(true); showToast(`◈ +15s ◈`); } });
+$('tRew').addEventListener('click', () => { sndClick(); if (vid.duration) { vid.currentTime = Math.max(0, vid.currentTime - 15); sndSeek(false); showToast(`◈ -15s ◈`); } });
+$('fsBtn').addEventListener('click', () => { sndClick(); const wrap = $('screenWrap'); if (!document.fullscreenElement) { (wrap.requestFullscreen || wrap.webkitRequestFullscreen || wrap.mozRequestFullScreen || wrap.msRequestFullscreen).call(wrap).catch(e => { }); $('fsBtn').textContent = '✕'; } else { (document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen).call(document).catch(e => { }); $('fsBtn').textContent = '⛶'; } });
+document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement) $('fsBtn').textContent = '⛶'; });
+
+let vClicks = 7, sClicks = 0, bClicks = 4;
+$('kVol').addEventListener('click', () => { sndKnob(); vClicks = (vClicks + 1) % 11; volumeVal = vClicks / 10; vid.volume = volumeVal; kAngle.kVol += 36; $('kVol').style.transform = `rotate(${kAngle.kVol}deg)`; $('volFill').style.width = `${vClicks * 10}%`; showToast(`◈ VOLUME: ${vClicks * 10}% ◈`); saveSettings(); });
+$('kStatic').addEventListener('click', () => { sndKnob(); sClicks = (sClicks + 1) % 8; staticIntensity = sClicks / 7; kAngle.kStatic += 45; $('kStatic').style.transform = `rotate(${kAngle.kStatic}deg)`; $('sbarFill').style.width = `${Math.round(staticIntensity * 100)}%`; $('lScan').style.opacity = staticIntensity * 0.8; $('lPhos').style.opacity = staticIntensity * 0.5; showToast(`◈ STATIC: ${Math.round(staticIntensity * 100)}% ◈`); saveSettings(); });
+$('kBright').addEventListener('click', () => { sndKnob(); bClicks = (bClicks + 1) % 8; brightnessVal = 0.4 + bClicks * (0.85 / 7); kAngle.kBright += 45; $('kBright').style.transform = `rotate(${kAngle.kBright}deg)`; $('screenWrap').style.filter = `brightness(${brightnessVal})`; showToast(`◈ BRIGHTNESS: ${Math.round(brightnessVal * 100)}% ◈`); saveSettings(); });
+
+const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'], months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']; $('gDate').textContent = `${days[new Date().getDay()]} ${new Date().getDate()} ${months[new Date().getMonth()]}`;
+buildCatTabs(); renderList(); screen('idle'); loadSettings(); updateWidget(); setInterval(updateWidget, 60000);
+window.liveNow = autoLiveNow;
     </script>
 </body>
 </html>
