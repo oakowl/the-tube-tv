@@ -2320,6 +2320,7 @@
         $('tRew').addEventListener('click', () => { sndClick(); stopCommercial(); if (vid.duration) { vid.currentTime = Math.max(0, vid.currentTime - 15); sndSeek(false); showToast(`◈ -15s ◈`); } });
         $('fsBtn').addEventListener('click', () => { sndClick(); const wrap = $('screenWrap'); if (!document.fullscreenElement) { (wrap.requestFullscreen || wrap.webkitRequestFullscreen || wrap.mozRequestFullScreen || wrap.msRequestFullscreen).call(wrap).catch(e => { }); $('fsBtn').textContent = '✕'; } else { (document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen).call(document).catch(e => { }); $('fsBtn').textContent = '⛶'; } });
         document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement) $('fsBtn').textContent = '⛶'; });
+        document.addEventListener('keydown', e => { if (e.key === 'f' || e.key === 'F') { if (document.activeElement.tagName === 'INPUT') return; $('fsBtn').click(); } });
 
         let vClicks = 7, sClicks = 0, bClicks = 4;
         $('kVol').addEventListener('click', () => { sndKnob(); vClicks = (vClicks + 1) % 11; volumeVal = vClicks / 10; vid.volume = volumeVal; kAngle.kVol += 36; $('kVol').style.transform = `rotate(${kAngle.kVol}deg)`; $('volFill').style.width = `${vClicks * 10}%`; showToast(`◈ VOLUME: ${vClicks * 10}% ◈`); saveSettings(); });
