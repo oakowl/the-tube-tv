@@ -1849,8 +1849,10 @@
                     commVid.ontimeupdate = null; commVid.onended = null; commVid.onerror = null;
                     commVid.src = ad.url;
                     if (ad.start !== undefined) commVid.currentTime = ad.start;
-                    commVid.play().catch(() => { if (isPlayingCommercials) loadNextAd(); });
-                    commVid.onerror = () => { commVid.onerror = null; if (isPlayingCommercials) loadNextAd(); };
+                    let watchdog = setTimeout(() => { if (commVid.paused || commVid.readyState < 2) loadNextAd(); }, 5000);
+                    commVid.play().catch(() => { clearTimeout(watchdog); if (isPlayingCommercials) loadNextAd(); });
+                    commVid.onended = () => { clearTimeout(watchdog); loadNextAd(); };
+                    commVid.onerror = () => { clearTimeout(watchdog); commVid.onerror = null; if (isPlayingCommercials) loadNextAd(); };
                 }
                 loadNextAd();
                 commercialTimeout = setTimeout(() => {
@@ -1880,13 +1882,23 @@
                 commVid.ontimeupdate = null; commVid.onended = null; commVid.onerror = null;
                 commVid.src = ad.url;
                 if (ad.start !== undefined) commVid.currentTime = ad.start;
-                commVid.play().catch(() => { if (isPlayingCommercials) loadNextAd(); });
+
+                // Watchdog: if nothing is playing within 5s, skip to next ad
+                let watchdog = setTimeout(() => {
+                    if (commVid.paused || commVid.readyState < 2) loadNextAd();
+                }, 5000);
+                const clearWatchdog = () => clearTimeout(watchdog);
+
+                commVid.play().catch(() => { clearWatchdog(); if (isPlayingCommercials) loadNextAd(); });
                 if (ad.start !== undefined && ad.end !== undefined) {
-                    commVid.ontimeupdate = () => { if (commVid.currentTime >= ad.end) { commVid.ontimeupdate = null; loadNextAd(); } };
+                    commVid.ontimeupdate = () => {
+                        clearWatchdog();
+                        if (commVid.currentTime >= ad.end) { commVid.ontimeupdate = null; loadNextAd(); }
+                    };
                 } else {
-                    commVid.onended = loadNextAd;
+                    commVid.onended = () => { clearWatchdog(); loadNextAd(); };
                 }
-                commVid.onerror = () => { commVid.onerror = null; if (isPlayingCommercials) loadNextAd(); };
+                commVid.onerror = () => { clearWatchdog(); commVid.onerror = null; if (isPlayingCommercials) loadNextAd(); };
             }
             loadNextAd();
             const todayBase = new Date(); todayBase.setHours(0, 0, 0, 0);
