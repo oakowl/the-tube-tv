@@ -1828,7 +1828,7 @@
             const slotLengthSeconds = scheduleEndTimeMinutes != null
                 ? (() => { const s = getCurrentScheduleTimes(); return s ? (s.endTime - s.startTime) * 60 : 1800; })()
                 : remainingSeconds;
-            const earlySlot = remainingSeconds > (slotLengthSeconds - 600); // within first 10 mins
+            const earlySlot = remainingSeconds > (slotLengthSeconds - 600) || (active && active.id === 39);
             if (earlySlot) {
                 showToast(`📺 SHORT BREAK — NEXT EPISODE IN 60s`);
                 vid.pause(); vid.src = ''; vid.style.display = 'none';
@@ -2064,6 +2064,19 @@
                                 showToast(`🎸 UH HUH HUH — ONE MORE EPISODE`);
                                 activeEp = nextEpIdx;
                                 playFile(show, files, nextEpIdx, 0, true, null, true);
+                                return;
+                            }
+                            // Popeye Overnight: episodes are ~7 mins — keep chaining all hour,
+                            // with a 60s ad break between each one
+                            if (show.id === 39 && remainingSeconds > 60 && nextEpIdx < files.length) {
+                                showToast(`🌙 POPEYE — NEXT EPISODE IN 60s`);
+                                if (nextScheduledShowTimeout) { clearTimeout(nextScheduledShowTimeout); nextScheduledShowTimeout = null; }
+                                playCommercials(remainingSeconds, () => {
+                                    if (liveMode && tvOn) {
+                                        activeEp = nextEpIdx;
+                                        playFile(show, files, nextEpIdx, 0, true, null, false);
+                                    }
+                                }, scheduleTimes.endTime);
                                 return;
                             }
                             if (nextScheduledShowTimeout) { clearTimeout(nextScheduledShowTimeout); nextScheduledShowTimeout = null; }
