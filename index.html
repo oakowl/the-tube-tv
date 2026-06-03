@@ -648,10 +648,10 @@
         }
 
         function getDailyEpisodeIndex(showId, totalEpisodes) {
-            // Use UTC date so every device on earth gets the same episode on the same day
+            // Advance one episode per UTC day, sequentially from ep 1
+            // Same calculation on every device = always in sync
             const msPerDay = 86400000;
             const daysSinceEpoch = Math.floor(Date.now() / msPerDay);
-            // Offset by showId so different shows don't all advance in lockstep
             const idx = (daysSinceEpoch + showId) % totalEpisodes;
             showToast(`📅 TODAY'S EPISODE — ${idx + 1}/${totalEpisodes}`);
             return idx;
