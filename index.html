@@ -2575,7 +2575,14 @@
                 const card = document.createElement('div'); card.className = 'cat-card';
                 const bhtml = (s.badges || []).map(b => `<span class="cat-badge">${b}</span>`).join('');
                 card.innerHTML = `<div class="cat-card-top"><span class="cat-card-emoji">${s.emoji}</span><span class="cat-card-name">${s.name}</span></div><div class="cat-card-meta"><span class="cat-card-ch">CH ${s.ch}</span><span>${s.time}</span><span>${s.year}</span></div><div class="cat-card-desc">${s.desc}</div><div class="cat-card-badges">${bhtml}</div>`;
-                card.addEventListener('click', () => { sndClick(); catModalBg.classList.remove('show'); tuneShow(s.id, false); });
+                card.addEventListener('click', () => {
+                    sndClick();
+                    catModalBg.classList.remove('show');
+                    if (liveMode) stopLiveMode();
+                    stopCommercial();
+                    if (tvOn) autoLiveNow(s.id, true, false);
+                    else powerOn(() => autoLiveNow(s.id, true, false));
+                });
                 catGridEl.appendChild(card);
             });
         }
