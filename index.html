@@ -195,6 +195,7 @@
             font-family: 'VT323',monospace; font-size: .52rem;
             padding: 1px 3px; border: 1px solid #1e1600; color: #6a4a20;
         }
+        .btn-live {
             background: #1a0000;
             color: #ff3333;
             border: 1px solid #ff3333;
@@ -2188,6 +2189,64 @@
         function buildSidebar(files, curIdx, show) { const list = $('epList'); list.innerHTML = ''; if (!files.length) { list.innerHTML = '<div class="ep-empty">No streamable files</div>'; return; } files.forEach((f, i) => { const el = document.createElement('div'); el.className = 'ep-item' + (i === curIdx ? ' ep-active' : ''); el.setAttribute('data-index', i); el.innerHTML = `<span class="ep-num">${String(i + 1).padStart(2, '0')}.</span><span>${f.name}</span>`; el.addEventListener('click', () => { if (!tvOn) return; sndClick(); stopCommercial(); vid.pause(); stopReels(); showVHSAnim(i > curIdx, () => { activeEp = i; playFile(show, files, i, 0, true, null); }); }); list.appendChild(el); }); }
         function showResumeBadge(timestamp) { const badge = $('resumeBadge'); const minutes = Math.floor(timestamp / 60); const seconds = Math.floor(timestamp % 60); badge.textContent = `⏯ RESUMING AT ${minutes}:${seconds.toString().padStart(2, '0')}`; badge.classList.remove('show'); void badge.offsetWidth; badge.classList.add('show'); setTimeout(() => { badge.classList.remove('show'); }, 3500); }
 
+        // ===== NEW: playShowFromCatalogue function for proper resume support =====
+        async function playShowFromCatalogue(showId) {
+            const show = shows.find(s => s.id === showId);
+            if (!show) return;
+            
+            const files = await fetchFiles(show.archiveId);
+            if (!files || files.length === 0) {
+                showToast(`❌ No episodes found for ${show.name}`);
+                return;
+            }
+            
+            // Check for saved resume position
+            const resumeData = getResumePosition(showId);
+            let episodeIndex = 0;
+            let resumeTimestamp = 0;
+            
+            if (resumeData && resumeData.episode !== undefined && resumeData.episode < files.length) {
+                episodeIndex = resumeData.episode;
+                resumeTimestamp = resumeData.timestamp || 0;
+                showToast(`📺 RESUMING ${show.name} — Episode ${episodeIndex + 1}`);
+            } else {
+                // Default to first episode if no saved progress
+                episodeIndex = 0;
+                showToast(`📺 PLAYING ${show.name} — Episode 1`);
+            }
+            
+            active = show;
+            activeEp = episodeIndex;
+            
+            // Update UI elements
+            $('vhsShowName').textContent = show.name.toUpperCase();
+            $('chDisp').textContent = `CH ${show.ch}`;
+            $('npName').textContent = show.name;
+            $('npCh').textContent = `CH ${show.ch}`;
+            $('npBar').classList.add('show');
+            $('epShowName').textContent = show.name.toUpperCase();
+            
+            // Set ticker text
+            const tk = $('tickerTxt');
+            tk.textContent = `◈  ${show.tickers.join('   ◈   ')}  ◈  ${show.tickers.join('   ◈   ')}  ◈`;
+            tk.style.animation = 'none';
+            void tk.offsetHeight;
+            tk.style.animation = '';
+            
+            // Build episode sidebar
+            buildSidebar(files, episodeIndex, show);
+            
+            // Show tuning animation then play
+            showStaticAnim('TUNING...', async () => {
+                screen('splash');
+                $('lTicker').classList.add('show');
+                renderList(); // Refresh guide to show active state
+                playFile(show, files, episodeIndex, resumeTimestamp, true, null);
+                $('lSplash').classList.remove('show');
+                screen('video');
+            });
+        }
+
         function playFile(show, files, idx, resumeTimestamp, autoPlay, liveSeekTime, isBonusEp) {
             const f = files[idx]; if (!f) return;
             window._activeFiles = files;
@@ -2204,7 +2263,6 @@
                 vid.oncanplay = null;
                 let targetTime = 0;
                 if (liveSeekTime !== null && typeof liveSeekTime === 'object') {
-                    // liveSeekTime is a scheduleEntry — recalculate seek right now for freshness
                     const freshSeek = calculateLiveSeekTime(liveSeekTime);
                     if (freshSeek && !freshSeek.tooLate && freshSeek.seekTime > 30 && freshSeek.seekTime < vid.duration - 10) {
                         targetTime = freshSeek.seekTime;
@@ -2236,7 +2294,10 @@
                 stopReels();
                 if (window._saveInterval) clearInterval(window._saveInterval);
                 vid.removeEventListener('pause', onPause);
-                clearResumePosition(show.id);
+                // Only clear resume position if we're NOT in live mode (manual catalogue viewing)
+                if (!liveMode) {
+                    clearResumePosition(show.id);
+                }
                 if (liveMode) {
                     const scheduleTimes = getCurrentScheduleTimes();
                     if (scheduleTimes && scheduleTimes.showId === show.id) {
@@ -2328,15 +2389,12 @@
                 const scheduleEntry = getScheduleEntryForShow(showId);
                 if (scheduleEntry) {
                     episodeIndex = getDailyEpisodeIndex(showId, files.length);
-                    // Check tooLate now, but defer actual seekTime calculation to oncanplay
-                    // so the seek is fresh and not stale from before the static animation
                     const seekData = calculateLiveSeekTime(scheduleEntry);
                     if (seekData && seekData.tooLate) {
                         isLateJoin = true;
                         remainingSlotSeconds = seekData.remainingSeconds;
                         showToast(`◈ JOINING LATE — COMMERCIALS UNTIL NEXT SHOW ◈`);
                     } else {
-                        // Pass scheduleEntry so playFile can recalculate seek at the right moment
                         liveSeekTime = scheduleEntry;
                         showToast(`📺 DAILY EPISODE ${episodeIndex + 1}/${files.length}`);
                     }
@@ -2407,7 +2465,6 @@
                 });
             }
             scheduleNextShowAtTime();
-            // Force widget update immediately after changing show
             updateWidget();
         }
 
@@ -2550,7 +2607,8 @@
 
         const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'], months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
         $('gDate').textContent = `${days[new Date().getDay()]} ${new Date().getDate()} ${months[new Date().getMonth()]}`;
-        // ── CATALOGUE MODAL ──
+        
+        // ── CATALOGUE MODAL with fixed resume support ──
         const catModalBg = $('catModal');
         const catGridEl = $('catGrid');
         const catModalCount = $('catModalCount');
@@ -2575,13 +2633,17 @@
                 const card = document.createElement('div'); card.className = 'cat-card';
                 const bhtml = (s.badges || []).map(b => `<span class="cat-badge">${b}</span>`).join('');
                 card.innerHTML = `<div class="cat-card-top"><span class="cat-card-emoji">${s.emoji}</span><span class="cat-card-name">${s.name}</span></div><div class="cat-card-meta"><span class="cat-card-ch">CH ${s.ch}</span><span>${s.time}</span><span>${s.year}</span></div><div class="cat-card-desc">${s.desc}</div><div class="cat-card-badges">${bhtml}</div>`;
+                // FIXED: Use playShowFromCatalogue instead of autoLiveNow
                 card.addEventListener('click', () => {
                     sndClick();
                     catModalBg.classList.remove('show');
                     if (liveMode) stopLiveMode();
                     stopCommercial();
-                    if (tvOn) autoLiveNow(s.id, true, false);
-                    else powerOn(() => autoLiveNow(s.id, true, false));
+                    if (!tvOn) {
+                        powerOn(() => playShowFromCatalogue(s.id));
+                    } else {
+                        playShowFromCatalogue(s.id);
+                    }
                 });
                 catGridEl.appendChild(card);
             });
@@ -2592,7 +2654,6 @@
         // ── END CATALOGUE MODAL ──
 
         buildCatTabs(); renderList(); screen('idle'); loadSettings(); updateWidget();
-        // Update widget every second to catch time changes instantly
         setInterval(updateWidget, 1000);
 
         let volOverlayTimeout = null;
@@ -2601,7 +2662,7 @@
             const barsEl = document.getElementById('volOverlayBars');
             if (!overlay || !barsEl) { console.warn('volOverlay not found'); return; }
             const total = 20;
-            const filled = Math.round(level * 2); // 0-10 clicks → 0-20 segments
+            const filled = Math.round(level * 2);
             barsEl.innerHTML = '';
             for (let i = 0; i < total; i++) {
                 const seg = document.createElement('div');
