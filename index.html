@@ -116,6 +116,90 @@
                 box-shadow: 0 0 8px rgba(120,120,255,.2);
             }
 
+        /* ── HELP BUTTON ── */
+        .help-btn {
+            position: fixed;
+            top: 14px;
+            left: 14px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #1a1200;
+            border: 1px solid #3a2800;
+            color: #f5a623;
+            font-family: 'VT323',monospace;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 9000;
+            transition: all .15s;
+        }
+        .help-btn:hover { background: #2a1e00; box-shadow: 0 0 8px rgba(245,166,35,.25); }
+        .help-btn:active { transform: scale(.94); }
+
+        .help-modal-bg {
+            position: fixed; inset: 0; background: rgba(0,0,0,.85);
+            z-index: 10001; display: none; align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .help-modal-bg.show { display: flex; }
+        .help-modal {
+            background: linear-gradient(160deg,#0f0c04,#1a1408);
+            border: 1px solid #3a2800; border-radius: 6px;
+            width: 100%; max-width: 480px; max-height: 85vh;
+            display: flex; flex-direction: column; overflow: hidden;
+        }
+        .help-modal-hdr {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 18px; border-bottom: 1px solid #2a1e00;
+            background: #0d0a00;
+        }
+        .help-modal-title {
+            font-family: 'VT323',monospace; font-size: 1.3rem;
+            color: #f5a623; letter-spacing: .1em;
+        }
+        .help-modal-close {
+            font-family: 'VT323',monospace; font-size: .85rem;
+            color: #5a4020; background: transparent; border: none;
+            cursor: pointer; letter-spacing: .1em; padding: 2px 6px;
+        }
+        .help-modal-close:hover { color: #f5a623; }
+        .help-modal-body {
+            overflow-y: auto; padding: 14px 18px 18px;
+        }
+        .help-modal-body::-webkit-scrollbar { width: 8px; }
+        .help-modal-body::-webkit-scrollbar-track { background: #080700; }
+        .help-modal-body::-webkit-scrollbar-thumb { background: #3a2008; border-radius: 3px; }
+        .help-section {
+            margin-bottom: 14px;
+        }
+        .help-section-title {
+            font-family: 'VT323',monospace; font-size: .85rem;
+            color: #f5a623; letter-spacing: .08em; margin-bottom: 6px;
+            border-bottom: 1px solid #1e1600; padding-bottom: 4px;
+        }
+        .help-row {
+            display: flex; align-items: flex-start; gap: 10px;
+            padding: 4px 0;
+        }
+        .help-key {
+            font-family: 'VT323',monospace; font-size: .8rem;
+            color: #39ff14; background: #060d00; border: 1px solid #1a3a1a;
+            border-radius: 3px; padding: 2px 8px; min-width: 60px;
+            text-align: center; flex-shrink: 0; letter-spacing: .05em;
+        }
+        .help-desc {
+            font-family: 'Special Elite',cursive; font-size: .72rem;
+            color: #b8a070; line-height: 1.5; padding-top: 2px;
+        }
+        .help-desc b { color: #f5a623; }
+
+        @media(max-width:580px) {
+            .help-btn { top: 10px; left: 10px; width: 30px; height: 30px; font-size: 1rem; }
+        }
+
         /* ── CATALOGUE MODAL ── */
         .cat-modal-bg {
             position: fixed;
@@ -1861,6 +1945,7 @@
     </style>
 </head>
 <body>
+    <div class="help-btn" id="helpBtn" title="How to use The Tube">?</div>
     <div class="site-header">
         <div class="logo">THE <span>TUBE</span></div>
         <div class="tagline">◈ Classic Television Archive ◈</div>
@@ -1879,6 +1964,50 @@
         <div><div class="tv-shell"><div class="tv-top-strip"><div class="tv-brand-block"><span class="tv-brand-90s">NOSTALGIVISION™</span><div class="live-widget-inline" id="liveModeIndicator"><span class="live-indicator">🔴 LIVE</span></div></div><div class="ch-display" id="chDisp">— —</div></div><div class="screen-housing"><div class="screen-bezel-90s"><div class="screen-wrap" id="screenWrap"><div class="l-idle" id="lIdle"><div class="idle-icon">📺</div><div class="idle-title">THE TUBE</div><div class="idle-sub">◈ SELECT A PROGRAMME ◈</div><div class="test-bars"><div class="test-bar" style="background:#fff"></div><div class="test-bar" style="background:#ff0"></div><div class="test-bar" style="background:#0ff"></div><div class="test-bar" style="background:#0f0"></div><div class="test-bar" style="background:#f0f"></div><div class="test-bar" style="background:#f00"></div><div class="test-bar" style="background:#00f"></div><div class="test-bar" style="background:#000"></div></div></div><div class="l-video" id="lVideo"><video id="vid" playsinline preload="auto"></video><div id="resumeBadge" class="resume-badge"></div></div><div class="l-vhsfx" id="lVhs"><canvas class="noisecanvas" id="vhsCanvas"></canvas><div class="vhs-stripe"></div><div class="vhs-band"></div><div class="vhs-lbl" id="vhsLbl">⏩ FF</div></div><div class="l-static" id="lStatic"><canvas class="noisecanvas" id="noiseCanvas"></canvas><div class="static-lbl" id="staticLbl">TUNING...</div></div><div class="l-off" id="lOff"></div><div class="l-splash" id="lSplash"><div class="sp-emoji" id="spEmoji"></div><div class="sp-title" id="spTitle"></div><div class="sp-year" id="spYear"></div><div class="sp-ep" id="spEp"></div><div class="sp-btn"></div><div class="sp-hint">▶ CLICK TO WATCH</div><div class="sp-loading" id="spLoading" style="display:none">LOADING EPISODES...</div></div><div class="l-scan" id="lScan"></div><div class="l-vig"></div><div class="l-phos" id="lPhos"></div><div class="l-ticker" id="lTicker"><span class="ticker-inner" id="tickerTxt"></span></div><div class="fs-btn" id="fsBtn" title="Fullscreen">⛶</div><div class="vol-overlay" id="volOverlay"><div class="vol-overlay-label">VOLUME</div><div class="vol-overlay-bars" id="volOverlayBars"></div></div></div></div></div><div class="vhs-deck"><div class="vhs-cassette-housing"><div class="vhs-label-strip"><span class="vhs-show-name" id="vhsShowName">◈ NO TAPE LOADED ◈</span><span class="vhs-ep-name" id="vhsEpName"></span></div><div class="vhs-window"><div class="vhs-reel" id="reelL"></div><div class="vhs-tape-stretch"></div><div class="vhs-reel" id="reelR"></div><div class="vhs-time" id="vhsTime">--:--</div></div></div><div class="transport"><div class="tbtn" id="tRew" title="Rewind 15s"><span class="tbtn-icon">⏪</span><span class="tbtn-lbl">-15s</span></div><div class="tbtn" id="tPlay" title="Play / Pause"><span class="tbtn-icon" id="tPlayIcon">▶</span></div><div class="tbtn" id="tFF" title="Fast forward 15s"><span class="tbtn-icon">⏩</span><span class="tbtn-lbl">+15s</span></div></div></div><div class="controls-panel"><div class="knob-group"><div class="knob-unit"><div class="knob90 k-vol" id="kVol"></div><span class="kl90">VOL</span><div class="vol-ring"><div class="vol-ring-fill" id="volFill"></div></div></div><div class="knob-unit"><div class="knob90 k-static" id="kStatic"></div><span class="kl90">STATIC</span><div class="sbar"><div class="sbar-fill" id="sbarFill"></div></div></div><div class="knob-unit"><div class="knob90 k-bright" id="kBright"></div><span class="kl90">BRIGHT</span></div></div><div class="controls-right"><div class="spkr90"><div class="spkr-slot"></div><div class="spkr-slot"></div><div class="spkr-slot"></div><div class="spkr-slot"></div><div class="spkr-slot"></div><div class="spkr-slot"></div><div class="spkr-slot"></div><div class="spkr-slot"></div></div><div class="pwr-area"><div class="pwr90" id="pwrBtn"></div><span class="pwr-lbl">POWER</span></div></div></div></div><div class="tv-base"></div><div class="src-note">◈ STREAMING VIA INTERNET ARCHIVE ◈</div></div>
         <div><div class="guide-hdr"><span class="guide-title">📋 PROGRAMME GUIDE</span><span class="guide-date" id="gDate"></span></div><div id="whatsOnWidget"></div><div class="cat-tabs" id="catTabs"></div><div class="show-list" id="showList"></div><div class="np-bar" id="npBar"><span class="np-live">▶ ON AIR</span><span class="np-name" id="npName">—</span><span class="np-ch" id="npCh">CH —</span></div></div>
     </div>
+    <!-- HELP MODAL -->
+    <div class="help-modal-bg" id="helpModal">
+        <div class="help-modal">
+            <div class="help-modal-hdr">
+                <span class="help-modal-title">📖 HOW TO USE THE TUBE</span>
+                <button class="help-modal-close" id="helpModalClose">✕ CLOSE</button>
+            </div>
+            <div class="help-modal-body">
+                <div class="help-section">
+                    <div class="help-section-title">⌨️ Keyboard Shortcuts</div>
+                    <div class="help-row"><span class="help-key">F</span><span class="help-desc">Toggle <b>fullscreen</b> for the TV screen.</span></div>
+                </div>
+                <div class="help-section">
+                    <div class="help-section-title">📺 The TV</div>
+                    <div class="help-row"><span class="help-key">⏻ POWER</span><span class="help-desc">Turns the TV on or off. The set must be powered on before you can tune to a channel.</span></div>
+                    <div class="help-row"><span class="help-key">VOL</span><span class="help-desc">Adjust playback volume.</span></div>
+                    <div class="help-row"><span class="help-key">STATIC</span><span class="help-desc">Adjusts the intensity of the channel-change static effect.</span></div>
+                    <div class="help-row"><span class="help-key">BRIGHT</span><span class="help-desc">Adjusts the brightness of the screen.</span></div>
+                    <div class="help-row"><span class="help-key">⛶</span><span class="help-desc">Click the fullscreen icon on the screen (or press <b>F</b>) to expand the picture.</span></div>
+                </div>
+                <div class="help-section">
+                    <div class="help-section-title">📼 VHS Deck Controls</div>
+                    <div class="help-row"><span class="help-key">⏪ -15s</span><span class="help-desc">Rewind 15 seconds within the current episode.</span></div>
+                    <div class="help-row"><span class="help-key">▶ / ⏸</span><span class="help-desc">Play or pause the current episode.</span></div>
+                    <div class="help-row"><span class="help-key">⏩ +15s</span><span class="help-desc">Fast-forward 15 seconds within the current episode.</span></div>
+                </div>
+                <div class="help-section">
+                    <div class="help-section-title">🎛 Header Buttons</div>
+                    <div class="help-row"><span class="help-key">📤 SHARE</span><span class="help-desc">Copy a link to The Tube to share with friends.</span></div>
+                    <div class="help-row"><span class="help-key">☕ DONATE</span><span class="help-desc">Support the project via Buy Me a Coffee.</span></div>
+                    <div class="help-row"><span class="help-key">🎲 SURPRISE</span><span class="help-desc">Jumps to a random show and episode — perfect for discovering something new.</span></div>
+                    <div class="help-row"><span class="help-key">🔴 LIVE MODE</span><span class="help-desc">Turns The Tube into a real "live channel" — the schedule decides what's on, just like real TV.</span></div>
+                    <div class="help-row"><span class="help-key">📺 CATALOGUE</span><span class="help-desc">Browse every show in the archive, filter by category, and tune in directly.</span></div>
+                    <div class="help-row"><span class="help-key">🔍 SEARCH</span><span class="help-desc">Type to instantly filter the programme guide by show name.</span></div>
+                </div>
+                <div class="help-section">
+                    <div class="help-section-title">📋 Programme Guide &amp; Episodes</div>
+                    <div class="help-row"><span class="help-key">CH LIST</span><span class="help-desc">Click any channel in the guide to tune in — playback starts from that day's scheduled episode.</span></div>
+                    <div class="help-row"><span class="help-key">EP LIST</span><span class="help-desc">Use the episode sidebar to jump to any specific episode of the current show.</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- CATALOGUE MODAL -->
     <div class="cat-modal-bg" id="catModal">
         <div class="cat-modal">
@@ -2772,6 +2901,12 @@
         $('btnCatalogue').addEventListener('click', () => { sndClick(); catFilter = 'all'; buildCatModal(); catModalBg.classList.add('show'); });
         $('catModalClose').addEventListener('click', () => { sndClick(); catModalBg.classList.remove('show'); });
         catModalBg.addEventListener('click', e => { if (e.target === catModalBg) catModalBg.classList.remove('show'); });
+
+        // ── HELP MODAL ──
+        const helpModalBg = $('helpModal');
+        $('helpBtn').addEventListener('click', () => { sndClick(); helpModalBg.classList.add('show'); });
+        $('helpModalClose').addEventListener('click', () => { sndClick(); helpModalBg.classList.remove('show'); });
+        helpModalBg.addEventListener('click', e => { if (e.target === helpModalBg) helpModalBg.classList.remove('show'); });
         // ── END CATALOGUE MODAL ──
 
         buildCatTabs(); renderList(); screen('idle'); loadSettings(); updateWidget();
