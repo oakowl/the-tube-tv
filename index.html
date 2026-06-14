@@ -136,68 +136,147 @@
             z-index: 9000;
             transition: all .15s;
         }
-        .help-btn:hover { background: #2a1e00; box-shadow: 0 0 8px rgba(245,166,35,.25); }
-        .help-btn:active { transform: scale(.94); }
+
+            .help-btn:hover {
+                background: #2a1e00;
+                box-shadow: 0 0 8px rgba(245,166,35,.25);
+            }
+
+            .help-btn:active {
+                transform: scale(.94);
+            }
 
         .help-modal-bg {
-            position: fixed; inset: 0; background: rgba(0,0,0,.85);
-            z-index: 10001; display: none; align-items: center; justify-content: center;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.85);
+            z-index: 10001;
+            display: none;
+            align-items: center;
+            justify-content: center;
             padding: 20px;
         }
-        .help-modal-bg.show { display: flex; }
+
+            .help-modal-bg.show {
+                display: flex;
+            }
+
         .help-modal {
             background: linear-gradient(160deg,#0f0c04,#1a1408);
-            border: 1px solid #3a2800; border-radius: 6px;
-            width: 100%; max-width: 480px; max-height: 85vh;
-            display: flex; flex-direction: column; overflow: hidden;
+            border: 1px solid #3a2800;
+            border-radius: 6px;
+            width: 100%;
+            max-width: 480px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
+
         .help-modal-hdr {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 18px; border-bottom: 1px solid #2a1e00;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 18px;
+            border-bottom: 1px solid #2a1e00;
             background: #0d0a00;
         }
+
         .help-modal-title {
-            font-family: 'VT323',monospace; font-size: 1.3rem;
-            color: #f5a623; letter-spacing: .1em;
+            font-family: 'VT323',monospace;
+            font-size: 1.3rem;
+            color: #f5a623;
+            letter-spacing: .1em;
         }
+
         .help-modal-close {
-            font-family: 'VT323',monospace; font-size: .85rem;
-            color: #5a4020; background: transparent; border: none;
-            cursor: pointer; letter-spacing: .1em; padding: 2px 6px;
+            font-family: 'VT323',monospace;
+            font-size: .85rem;
+            color: #5a4020;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            letter-spacing: .1em;
+            padding: 2px 6px;
         }
-        .help-modal-close:hover { color: #f5a623; }
+
+            .help-modal-close:hover {
+                color: #f5a623;
+            }
+
         .help-modal-body {
-            overflow-y: auto; padding: 14px 18px 18px;
+            overflow-y: auto;
+            padding: 14px 18px 18px;
         }
-        .help-modal-body::-webkit-scrollbar { width: 8px; }
-        .help-modal-body::-webkit-scrollbar-track { background: #080700; }
-        .help-modal-body::-webkit-scrollbar-thumb { background: #3a2008; border-radius: 3px; }
+
+            .help-modal-body::-webkit-scrollbar {
+                width: 8px;
+            }
+
+            .help-modal-body::-webkit-scrollbar-track {
+                background: #080700;
+            }
+
+            .help-modal-body::-webkit-scrollbar-thumb {
+                background: #3a2008;
+                border-radius: 3px;
+            }
+
         .help-section {
             margin-bottom: 14px;
         }
+
         .help-section-title {
-            font-family: 'VT323',monospace; font-size: .85rem;
-            color: #f5a623; letter-spacing: .08em; margin-bottom: 6px;
-            border-bottom: 1px solid #1e1600; padding-bottom: 4px;
+            font-family: 'VT323',monospace;
+            font-size: .85rem;
+            color: #f5a623;
+            letter-spacing: .08em;
+            margin-bottom: 6px;
+            border-bottom: 1px solid #1e1600;
+            padding-bottom: 4px;
         }
+
         .help-row {
-            display: flex; align-items: flex-start; gap: 10px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
             padding: 4px 0;
         }
+
         .help-key {
-            font-family: 'VT323',monospace; font-size: .8rem;
-            color: #39ff14; background: #060d00; border: 1px solid #1a3a1a;
-            border-radius: 3px; padding: 2px 8px; min-width: 60px;
-            text-align: center; flex-shrink: 0; letter-spacing: .05em;
+            font-family: 'VT323',monospace;
+            font-size: .8rem;
+            color: #39ff14;
+            background: #060d00;
+            border: 1px solid #1a3a1a;
+            border-radius: 3px;
+            padding: 2px 8px;
+            min-width: 60px;
+            text-align: center;
+            flex-shrink: 0;
+            letter-spacing: .05em;
         }
+
         .help-desc {
-            font-family: 'Special Elite',cursive; font-size: .72rem;
-            color: #b8a070; line-height: 1.5; padding-top: 2px;
+            font-family: 'Special Elite',cursive;
+            font-size: .72rem;
+            color: #b8a070;
+            line-height: 1.5;
+            padding-top: 2px;
         }
-        .help-desc b { color: #f5a623; }
+
+            .help-desc b {
+                color: #f5a623;
+            }
 
         @media(max-width:580px) {
-            .help-btn { top: 10px; left: 10px; width: 30px; height: 30px; font-size: 1rem; }
+            .help-btn {
+                top: 10px;
+                left: 10px;
+                width: 30px;
+                height: 30px;
+                font-size: 1rem;
+            }
         }
 
         /* ── CATALOGUE MODAL ── */
@@ -2132,9 +2211,9 @@
             { id: 42, ch: '42', time: '3:30 AM', name: '90s MTV Block (Overnight)', emoji: '🎤', cat: 'mtv', year: '1990s', badges: ['OVERNIGHT', 'MTV'], desc: 'Late night MTV reruns.', tickers: ['Alternative Nation'], archiveId: '1-5-2025-mtv-block-part-2', playlist: true },
             { id: 43, ch: '43', time: '4:00 AM', name: 'Drawn Together', emoji: '🏠', cat: 'animation', year: '2004', badges: ['OVERNIGHT', 'ADULT'], desc: 'Animated reality TV parody.', tickers: ['The first animated reality show'], archiveId: 'DrawnTogetherComplete', playlist: true },
             { id: 44, ch: '44', time: '5:00 AM', name: 'Classic TV Vault', emoji: '🎞️', cat: 'classic', year: '1950s', badges: ['OVERNIGHT', 'ARCHIVE'], desc: 'Burns & Allen, Car 54 and more.', tickers: ['Burns and Allen: Kleebob'], archiveId: 'classic-tv-shows-vol.1', playlist: true },
-            { id: 45, ch: '45', time: '5:30 AM', name: 'Angry Beavers', emoji: '🦫', cat: 'animation', year: '1997', badges: ['PLAYLIST', 'NICK', '90S GOLD'], desc: 'Norbert and Daggett, two beavers living large in the woods of Wayouttatown.', tickers: ['A Dam Too Far', 'Norbert and Daggett'], archiveId: 'angrybeavers_complete_series_202606', playlist: true },
-            { id: 46, ch: '46', time: '11:30 PM', name: 'Pimp My Ride', emoji: '🚙', cat: 'mtv', year: '2004', badges: ['PLAYLIST', 'MTV', '2000S'], desc: 'West Coast Customs transforms beat-up rides into wild custom rides.', tickers: ["Nate's 1985 Ford Econoline", 'West Coast Customs'], archiveId: 'pimp-my-ride-s-3-eng', playlist: true },
-            { id: 47, ch: '47', time: '10:00 PM', name: 'MTV: Greatest Hits', emoji: '📀', cat: 'mtv', year: '1990s', badges: ['PLAYLIST', 'MTV', 'MUSIC'], desc: 'A music video compilation from the golden age of MTV.', tickers: ['MTV Greatest Hits', 'Ace of Base'], archiveId: 'g-ace-of-base-mtv-greatest-hits', playlist: true }
+            { id: 45, ch: '45', time: '5:30 AM', name: 'Angry Beavers', emoji: '🦫', cat: 'animation', year: '1997', badges: ['PLAYLIST', 'NICK', '90S GOLD'], desc: 'Norbert and Daggett, two beavers living large in the woods of Wayouttatown.', tickers: ['A Dam Too Far', 'Norbert and Daggett'], archiveId: 'angrybeavers_complete_series_202606', playlist: true, hidden: true },
+            { id: 46, ch: '46', time: '11:30 PM', name: 'Pimp My Ride', emoji: '🚙', cat: 'mtv', year: '2004', badges: ['PLAYLIST', 'MTV', '2000S'], desc: 'West Coast Customs transforms beat-up rides into wild custom rides.', tickers: ["Nate's 1985 Ford Econoline", 'West Coast Customs'], archiveId: 'pimp-my-ride-s-3-eng', playlist: true, hidden: true },
+            { id: 47, ch: '47', time: '10:00 PM', name: 'MTV: Greatest Hits', emoji: '📀', cat: 'mtv', year: '1990s', badges: ['PLAYLIST', 'MTV', 'MUSIC'], desc: 'A music video compilation from the golden age of MTV.', tickers: ['MTV Greatest Hits', 'Ace of Base'], archiveId: 'g-ace-of-base-mtv-greatest-hits', playlist: true, hidden: true }
         ];
 
         const cats = [{ key: 'all', label: 'All Channels' }, { key: 'mtv', label: '📺 MTV' }, { key: 'british', label: '🇬🇧 British' }, { key: 'horror', label: '👁 Horror' }, { key: 'scifi', label: '🚀 Sci-Fi' }, { key: 'classic', label: '🎞 Classic' }, { key: 'animation', label: '🎨 Animation' }, { key: 'drama', label: '🎭 Drama' }];
@@ -2775,7 +2854,7 @@
 
         async function checkAndSwitchLiveChannel() { const current = getCurrentShow(); if (!current || current.message) { if (currentLiveShowId !== null) { currentLiveShowId = null; showToast('◈ OFF AIR — WAITING FOR NEXT PROGRAM ◈'); } return; } if (currentLiveShowId !== current.id) { currentLiveShowId = current.id; setTimeout(() => { if (liveMode && tvOn) autoLiveNow(current.id, true, false); }, 500); } }
 
-        function renderList() { const el = $('showList'); if (!el) return; const searchTerm = ($('searchBox').value || "").toLowerCase(); let filtered = activeCat === 'all' ? shows : shows.filter(s => s.cat === activeCat); if (searchTerm) filtered = filtered.filter(s => s.name.toLowerCase().includes(searchTerm) || s.desc.toLowerCase().includes(searchTerm) || s.year.toString().includes(searchTerm)); el.innerHTML = ''; filtered.forEach(s => { const card = document.createElement('div'); card.className = 'show-card' + (active?.id === s.id ? ' active' : ''); const bhtml = s.badges.map(b => `<span class="badge">${b}</span>`).join(''); card.innerHTML = `<span class="s-time">${s.time}</span><span class="s-emoji">${s.emoji}</span><div class="s-info"><div class="s-name">${s.name} <span class="s-yr">(${s.year})</span></div><div class="s-desc">${s.desc}</div><div class="s-badges">${bhtml}</div></div><div class="play-dot"></div>`; card.addEventListener('click', () => { sndClick(); if (liveMode) stopLiveMode(); stopCommercial(); if (tvOn) autoLiveNow(s.id, true, false); else powerOn(() => autoLiveNow(s.id, true, false)); }); el.appendChild(card); }); }
+        function renderList() { const el = $('showList'); if (!el) return; const searchTerm = ($('searchBox').value || "").toLowerCase(); let filtered = activeCat === 'all' ? shows : shows.filter(s => s.cat === activeCat); filtered = filtered.filter(s => !s.hidden); if (searchTerm) filtered = filtered.filter(s => s.name.toLowerCase().includes(searchTerm) || s.desc.toLowerCase().includes(searchTerm) || s.year.toString().includes(searchTerm)); el.innerHTML = ''; filtered.forEach(s => { const card = document.createElement('div'); card.className = 'show-card' + (active?.id === s.id ? ' active' : ''); const bhtml = s.badges.map(b => `<span class="badge">${b}</span>`).join(''); card.innerHTML = `<span class="s-time">${s.time}</span><span class="s-emoji">${s.emoji}</span><div class="s-info"><div class="s-name">${s.name} <span class="s-yr">(${s.year})</span></div><div class="s-desc">${s.desc}</div><div class="s-badges">${bhtml}</div></div><div class="play-dot"></div>`; card.addEventListener('click', () => { sndClick(); if (liveMode) stopLiveMode(); stopCommercial(); if (tvOn) autoLiveNow(s.id, true, false); else powerOn(() => autoLiveNow(s.id, true, false)); }); el.appendChild(card); }); }
 
         function buildCatTabs() { const el = $('catTabs'); cats.forEach(c => { const b = document.createElement('button'); b.className = 'cat-btn' + (c.key === 'all' ? ' active' : ''); b.textContent = c.label; b.addEventListener('click', () => { sndClick(); document.querySelectorAll('.cat-btn').forEach(x => x.classList.remove('active')); b.classList.add('active'); activeCat = c.key; renderList(); }); el.appendChild(b); }); }
 
