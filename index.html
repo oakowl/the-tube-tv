@@ -116,7 +116,6 @@
                 box-shadow: 0 0 8px rgba(120,120,255,.2);
             }
 
-        /* ── HELP BUTTON ── */
         .help-btn {
             position: fixed;
             top: 14px;
@@ -136,150 +135,70 @@
             z-index: 9000;
             transition: all .15s;
         }
-
-            .help-btn:hover {
-                background: #2a1e00;
-                box-shadow: 0 0 8px rgba(245,166,35,.25);
-            }
-
-            .help-btn:active {
-                transform: scale(.94);
-            }
+        .help-btn:hover { background: #2a1e00; box-shadow: 0 0 8px rgba(245,166,35,.25); }
+        .help-btn:active { transform: scale(.94); }
 
         .help-modal-bg {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,.85);
-            z-index: 10001;
-            display: none;
-            align-items: center;
-            justify-content: center;
+            position: fixed; inset: 0; background: rgba(0,0,0,.85);
+            z-index: 10001; display: none; align-items: center; justify-content: center;
             padding: 20px;
         }
-
-            .help-modal-bg.show {
-                display: flex;
-            }
-
+        .help-modal-bg.show { display: flex; }
         .help-modal {
             background: linear-gradient(160deg,#0f0c04,#1a1408);
-            border: 1px solid #3a2800;
-            border-radius: 6px;
-            width: 100%;
-            max-width: 480px;
-            max-height: 85vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+            border: 1px solid #3a2800; border-radius: 6px;
+            width: 100%; max-width: 480px; max-height: 85vh;
+            display: flex; flex-direction: column; overflow: hidden;
         }
-
         .help-modal-hdr {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 18px;
-            border-bottom: 1px solid #2a1e00;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 18px; border-bottom: 1px solid #2a1e00;
             background: #0d0a00;
         }
-
         .help-modal-title {
-            font-family: 'VT323',monospace;
-            font-size: 1.3rem;
-            color: #f5a623;
-            letter-spacing: .1em;
+            font-family: 'VT323',monospace; font-size: 1.3rem;
+            color: #f5a623; letter-spacing: .1em;
         }
-
         .help-modal-close {
-            font-family: 'VT323',monospace;
-            font-size: .85rem;
-            color: #5a4020;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            letter-spacing: .1em;
-            padding: 2px 6px;
+            font-family: 'VT323',monospace; font-size: .85rem;
+            color: #5a4020; background: transparent; border: none;
+            cursor: pointer; letter-spacing: .1em; padding: 2px 6px;
         }
-
-            .help-modal-close:hover {
-                color: #f5a623;
-            }
-
+        .help-modal-close:hover { color: #f5a623; }
         .help-modal-body {
-            overflow-y: auto;
-            padding: 14px 18px 18px;
+            overflow-y: auto; padding: 14px 18px 18px;
         }
-
-            .help-modal-body::-webkit-scrollbar {
-                width: 8px;
-            }
-
-            .help-modal-body::-webkit-scrollbar-track {
-                background: #080700;
-            }
-
-            .help-modal-body::-webkit-scrollbar-thumb {
-                background: #3a2008;
-                border-radius: 3px;
-            }
-
+        .help-modal-body::-webkit-scrollbar { width: 8px; }
+        .help-modal-body::-webkit-scrollbar-track { background: #080700; }
+        .help-modal-body::-webkit-scrollbar-thumb { background: #3a2008; border-radius: 3px; }
         .help-section {
             margin-bottom: 14px;
         }
-
         .help-section-title {
-            font-family: 'VT323',monospace;
-            font-size: .85rem;
-            color: #f5a623;
-            letter-spacing: .08em;
-            margin-bottom: 6px;
-            border-bottom: 1px solid #1e1600;
-            padding-bottom: 4px;
+            font-family: 'VT323',monospace; font-size: .85rem;
+            color: #f5a623; letter-spacing: .08em; margin-bottom: 6px;
+            border-bottom: 1px solid #1e1600; padding-bottom: 4px;
         }
-
         .help-row {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
+            display: flex; align-items: flex-start; gap: 10px;
             padding: 4px 0;
         }
-
         .help-key {
-            font-family: 'VT323',monospace;
-            font-size: .8rem;
-            color: #39ff14;
-            background: #060d00;
-            border: 1px solid #1a3a1a;
-            border-radius: 3px;
-            padding: 2px 8px;
-            min-width: 60px;
-            text-align: center;
-            flex-shrink: 0;
-            letter-spacing: .05em;
+            font-family: 'VT323',monospace; font-size: .8rem;
+            color: #39ff14; background: #060d00; border: 1px solid #1a3a1a;
+            border-radius: 3px; padding: 2px 8px; min-width: 60px;
+            text-align: center; flex-shrink: 0; letter-spacing: .05em;
         }
-
         .help-desc {
-            font-family: 'Special Elite',cursive;
-            font-size: .72rem;
-            color: #b8a070;
-            line-height: 1.5;
-            padding-top: 2px;
+            font-family: 'Special Elite',cursive; font-size: .72rem;
+            color: #b8a070; line-height: 1.5; padding-top: 2px;
         }
-
-            .help-desc b {
-                color: #f5a623;
-            }
+        .help-desc b { color: #f5a623; }
 
         @media(max-width:580px) {
-            .help-btn {
-                top: 10px;
-                left: 10px;
-                width: 30px;
-                height: 30px;
-                font-size: 1rem;
-            }
+            .help-btn { top: 10px; left: 10px; width: 30px; height: 30px; font-size: 1rem; }
         }
 
-        /* ── CATALOGUE MODAL ── */
         .cat-modal-bg {
             position: fixed;
             inset: 0;
@@ -2164,8 +2083,8 @@
         }
         fetchCommercials();
 
-        // ===== MASTER SHOW LIST (UPDATED: Fawlty Towers archive ID, duplicates removed) =====
-        const shows = [
+        // ===== MASTER SHOW LIST (Complete catalogue with all shows) =====
+        const allShows = [
             { id: 1, ch: '01', time: '6:00 AM', name: 'Reading Rainbow', emoji: '🌈', cat: 'classic', year: '1983', badges: ['PLAYLIST', 'PBS'], desc: 'LeVar Burton takes you on a magical reading journey.', tickers: ['Take a look, it’s in a book'], archiveId: 'ReadingRainbowTVSeries', playlist: true },
             { id: 2, ch: '02', time: '6:30 AM', name: 'Popeye Collection', emoji: '💪', cat: 'animation', year: '1930s', badges: ['PLAYLIST', 'CLASSIC'], desc: "I yam what I yam! Classic Popeye cartoons.", tickers: ["I eats me spinach!"], archiveId: 'popeye-collection', playlist: true },
             { id: 3, ch: '03', time: '7:00 AM', name: 'Arthur — Season 1', emoji: '🐻', cat: 'animation', year: '1996', badges: ['PLAYLIST', 'PBS'], desc: 'The beloved aardvark and his friends.', tickers: ['Having fun isn’t hard'], archiveId: 'arthurs01iso', playlist: true },
@@ -2190,7 +2109,6 @@
             { id: 22, ch: '22', time: '4:30 PM', name: 'Robot Wars', emoji: '🤖', cat: 'scifi', year: '1998', badges: ['PLAYLIST', 'BBC', 'CLASSIC'], desc: 'Metal mayhem with house robots!', tickers: ['3…2…1… Activate!'], archiveId: 'robot-wars-1998-2018', playlist: true },
             { id: 23, ch: '23', time: '5:00 PM', name: 'Goosebumps', emoji: '👻', cat: 'horror', year: '1995', badges: ['PLAYLIST', 'RL STINE'], desc: 'Scary stories for kids.', tickers: ['Reader beware… you’re in for a scare'], archiveId: 'goosebumps-s01', playlist: true },
             { id: 24, ch: '24', time: '5:30 PM', name: 'Benny Hill Show', emoji: '🏃', cat: 'classic', year: '1969', badges: ['PLAYLIST', 'COMEDY'], desc: 'Chase sequences, double entendres and Yakety Sax.', tickers: ['Yakety Sax'], archiveId: 'benny-hill-series', playlist: true },
-            // OLD: { archiveId: 'alfred-hitchcock-presents-s-7e-1-colorized-sd' } — moved to backlog
             { id: 25, ch: '25', time: '6:00 PM', name: 'Knight Rider', emoji: '🚗', cat: 'classic', year: '1982', badges: ['PLAYLIST', '80S GOLD', 'ACTION'], desc: 'Michael Knight and the intelligent supercar KITT fight crime across America.', tickers: ['A man that does not exist', 'KITT: I am not a car, Michael', 'Turbo Boost!', 'Knight Industries Two Thousand'], archiveId: 'knight-rider-s-04-e-01-e-02-knight-of-the-juggernaut_202605', playlist: true },
             { id: 26, ch: '26', time: '6:30 PM', name: 'Scooby Doo', emoji: '🐕', cat: 'animation', year: '1969', badges: ['PLAYLIST', 'CLASSIC'], desc: 'Those meddling kids and their talking dog.', tickers: ['Scooby-Dooby-Doo!'], archiveId: '20240727_20240727_0523', playlist: true },
             { id: 27, ch: '27', time: '7:00 PM', name: 'Buffy', emoji: '🧛', cat: 'horror', year: '1997', badges: ['PLAYLIST', 'CULT'], desc: 'The Slayer against vampires, demons and high school.', tickers: ['The Hellmouth'], archiveId: 'VampireStories', playlist: true },
@@ -2211,10 +2129,15 @@
             { id: 42, ch: '42', time: '3:30 AM', name: '90s MTV Block (Overnight)', emoji: '🎤', cat: 'mtv', year: '1990s', badges: ['OVERNIGHT', 'MTV'], desc: 'Late night MTV reruns.', tickers: ['Alternative Nation'], archiveId: '1-5-2025-mtv-block-part-2', playlist: true },
             { id: 43, ch: '43', time: '4:00 AM', name: 'Drawn Together', emoji: '🏠', cat: 'animation', year: '2004', badges: ['OVERNIGHT', 'ADULT'], desc: 'Animated reality TV parody.', tickers: ['The first animated reality show'], archiveId: 'DrawnTogetherComplete', playlist: true },
             { id: 44, ch: '44', time: '5:00 AM', name: 'Classic TV Vault', emoji: '🎞️', cat: 'classic', year: '1950s', badges: ['OVERNIGHT', 'ARCHIVE'], desc: 'Burns & Allen, Car 54 and more.', tickers: ['Burns and Allen: Kleebob'], archiveId: 'classic-tv-shows-vol.1', playlist: true },
-            { id: 45, ch: '45', time: '5:30 AM', name: 'Angry Beavers', emoji: '🦫', cat: 'animation', year: '1997', badges: ['PLAYLIST', 'NICK', '90S GOLD'], desc: 'Norbert and Daggett, two beavers living large in the woods of Wayouttatown.', tickers: ['A Dam Too Far', 'Norbert and Daggett'], archiveId: 'angrybeavers_complete_series_202606', playlist: true, hidden: true },
-            { id: 46, ch: '46', time: '11:30 PM', name: 'Pimp My Ride', emoji: '🚙', cat: 'mtv', year: '2004', badges: ['PLAYLIST', 'MTV', '2000S'], desc: 'West Coast Customs transforms beat-up rides into wild custom rides.', tickers: ["Nate's 1985 Ford Econoline", 'West Coast Customs'], archiveId: 'pimp-my-ride-s-3-eng', playlist: true, hidden: true },
-            { id: 47, ch: '47', time: '10:00 PM', name: 'MTV: Greatest Hits', emoji: '📀', cat: 'mtv', year: '1990s', badges: ['PLAYLIST', 'MTV', 'MUSIC'], desc: 'A music video compilation from the golden age of MTV.', tickers: ['MTV Greatest Hits', 'Ace of Base'], archiveId: 'g-ace-of-base-mtv-greatest-hits', playlist: true, hidden: true }
+            { id: 45, ch: '45', time: '5:30 AM', name: 'Angry Beavers', emoji: '🦫', cat: 'animation', year: '1997', badges: ['PLAYLIST', 'NICK', '90S GOLD'], desc: 'Norbert and Daggett, two beavers living large in the woods of Wayouttatown.', tickers: ['A Dam Too Far', 'Norbert and Daggett'], archiveId: 'angrybeavers_complete_series_202606', playlist: true },
+            { id: 46, ch: '46', time: '11:30 PM', name: 'Pimp My Ride', emoji: '🚙', cat: 'mtv', year: '2004', badges: ['PLAYLIST', 'MTV', '2000S'], desc: 'West Coast Customs transforms beat-up rides into wild custom rides.', tickers: ["Nate's 1985 Ford Econoline", 'West Coast Customs'], archiveId: 'pimp-my-ride-s-3-eng', playlist: true },
+            { id: 47, ch: '47', time: '10:00 PM', name: 'MTV: Greatest Hits', emoji: '📀', cat: 'mtv', year: '1990s', badges: ['PLAYLIST', 'MTV', 'MUSIC'], desc: 'A music video compilation from the golden age of MTV.', tickers: ['MTV Greatest Hits', 'Ace of Base'], archiveId: 'g-ace-of-base-mtv-greatest-hits', playlist: true },
+            { id: 48, ch: '48', time: '11:00 AM', name: 'M.A.S.H', emoji: '⛑️', cat: 'classic', year: '1972', badges: ['PLAYLIST', 'SITCOM', 'CLASSIC'], desc: 'The 4077th Mobile Army Surgical Hospital serves up laughter and heart in the Korean War.', tickers: ['Suicide is painless', 'Hawkeye', 'Radar'], archiveId: 'mash-complete-series_202511', playlist: true }
         ];
+
+        // Programme guide hides shows with id >= 45 (Angry Beavers, Pimp My Ride, MTV Greatest Hits, M.A.S.H is id 48 so hidden too)
+        // Actually the user wants Angry Beavers onwards hidden from guide. That means id >= 45. M.A.S.H is id 48 so it will be hidden from guide but visible in catalogue.
+        const shows = allShows.filter(s => s.id < 45);
 
         const cats = [{ key: 'all', label: 'All Channels' }, { key: 'mtv', label: '📺 MTV' }, { key: 'british', label: '🇬🇧 British' }, { key: 'horror', label: '👁 Horror' }, { key: 'scifi', label: '🚀 Sci-Fi' }, { key: 'classic', label: '🎞 Classic' }, { key: 'animation', label: '🎨 Animation' }, { key: 'drama', label: '🎭 Drama' }];
 
@@ -2451,8 +2374,6 @@
         }
 
         function getDailyEpisodeIndex(showId, totalEpisodes) {
-            // Per-show anchors: showId → { date: ISO string, episode: 0-based start ep }
-            // Knight Rider (id 25) starts from Episode 1 (index 0) on 2026-06-08
             const SHOW_ANCHORS = {
                 25: { anchorDate: '2026-06-08T00:00:00Z', startEpisode: 0 }
             };
@@ -2483,7 +2404,6 @@
         const sndSeek = (ff) => { makeTone(ff ? 700 : 350, ff ? 180 : 90, 0.1, 'sine', 0.07); makeNoise(0.1, ff ? 2500 : 800, null, 1.5, 0.05); };
         const sndVHS = (ff) => { try { const c = getAC(), bl = Math.floor(c.sampleRate * 1.0), b = c.createBuffer(1, bl, c.sampleRate), d = b.getChannelData(0); for (let i = 0; i < bl; i++) d[i] = (Math.random() * 2 - 1) * 0.9; const s = c.createBufferSource(); s.buffer = b; s.playbackRate.value = ff ? 2.1 : 0.45; const flt = c.createBiquadFilter(); flt.type = 'bandpass'; flt.frequency.value = ff ? 2800 : 700; flt.Q.value = 1.4; const g = c.createGain(); g.gain.setValueAtTime(0.22, c.currentTime); g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 1.0); s.connect(flt); flt.connect(g); g.connect(c.destination); s.start(); s.stop(c.currentTime + 1.0); makeTone(ff ? 140 : 50, ff ? 50 : 18, 0.9, 'sawtooth', 0.035); } catch (e) { } };
 
-        // --- Schedule and widget functions with forced update on every change ---
         function getCurrentShow() {
             const now = new Date();
             const currentMinutes = (now.getHours() * 60) + now.getMinutes();
@@ -2501,7 +2421,7 @@
             if (c.message) {
                 w.innerHTML = '<div style="background:#060800;border:1px solid #f5a623;border-radius:6px;padding:10px;margin-bottom:15px;"><div style="font-family:VT323;font-size:.7rem;color:#4a3015;">🔴 NOW PLAYING</div><div style="display:flex;align-items:center;gap:10px;"><div style="font-size:2rem;">📺</div><div><div style="font-family:Oswald;color:#f5a623;">Off Air</div><div style="font-family:VT323;font-size:.7rem;">Select a show from the guide</div></div></div></div>';
             } else {
-                const showObj = shows.find(s => s.id === c.id);
+                const showObj = allShows.find(s => s.id === c.id);
                 const chNum = showObj ? showObj.ch : '--';
                 w.innerHTML = '<div style="background:#060800;border:1px solid #39ff14;border-radius:6px;padding:10px;margin-bottom:15px;cursor:pointer;" onclick="window.watchLiveNow(' + c.id + ')"><div style="display:flex;justify-content:space-between;"><div style="font-family:VT323;font-size:.65rem;color:#39ff14;">🔴 LIVE NOW</div><div style="font-family:VT323;font-size:.6rem;color:#4a3015;">CH ' + chNum + '</div></div><div style="display:flex;align-items:center;gap:10px;margin-top:5px;"><div style="font-size:2rem;">' + c.emoji + '</div><div><div style="font-family:Oswald;font-size:1rem;font-weight:600;color:#d4b483;">' + c.name + '</div><div style="font-family:VT323;font-size:.65rem;color:#7a5a28;">▶ Click to watch</div></div></div></div>';
             }
@@ -2518,9 +2438,8 @@
         function buildSidebar(files, curIdx, show) { const list = $('epList'); list.innerHTML = ''; if (!files.length) { list.innerHTML = '<div class="ep-empty">No streamable files</div>'; return; } files.forEach((f, i) => { const el = document.createElement('div'); el.className = 'ep-item' + (i === curIdx ? ' ep-active' : ''); el.setAttribute('data-index', i); el.innerHTML = `<span class="ep-num">${String(i + 1).padStart(2, '0')}.</span><span>${f.name}</span>`; el.addEventListener('click', () => { if (!tvOn) return; sndClick(); stopCommercial(); vid.pause(); stopReels(); showVHSAnim(i > curIdx, () => { activeEp = i; playFile(show, files, i, 0, true, null); }); }); list.appendChild(el); }); }
         function showResumeBadge(timestamp) { const badge = $('resumeBadge'); const minutes = Math.floor(timestamp / 60); const seconds = Math.floor(timestamp % 60); badge.textContent = `⏯ RESUMING AT ${minutes}:${seconds.toString().padStart(2, '0')}`; badge.classList.remove('show'); void badge.offsetWidth; badge.classList.add('show'); setTimeout(() => { badge.classList.remove('show'); }, 3500); }
 
-        // ===== NEW: playShowFromCatalogue function for proper resume support =====
         async function playShowFromCatalogue(showId) {
-            const show = shows.find(s => s.id === showId);
+            const show = allShows.find(s => s.id === showId);
             if (!show) return;
 
             const files = await fetchFiles(show.archiveId);
@@ -2529,7 +2448,6 @@
                 return;
             }
 
-            // Check for saved resume position
             const resumeData = getResumePosition(showId);
             let episodeIndex = 0;
             let resumeTimestamp = 0;
@@ -2539,7 +2457,6 @@
                 resumeTimestamp = resumeData.timestamp || 0;
                 showToast(`📺 RESUMING ${show.name} — Episode ${episodeIndex + 1}`);
             } else {
-                // Default to first episode if no saved progress
                 episodeIndex = 0;
                 showToast(`📺 PLAYING ${show.name} — Episode 1`);
             }
@@ -2547,7 +2464,6 @@
             active = show;
             activeEp = episodeIndex;
 
-            // Update UI elements
             $('vhsShowName').textContent = show.name.toUpperCase();
             $('chDisp').textContent = `CH ${show.ch}`;
             $('npName').textContent = show.name;
@@ -2555,21 +2471,18 @@
             $('npBar').classList.add('show');
             $('epShowName').textContent = show.name.toUpperCase();
 
-            // Set ticker text
             const tk = $('tickerTxt');
             tk.textContent = `◈  ${show.tickers.join('   ◈   ')}  ◈  ${show.tickers.join('   ◈   ')}  ◈`;
             tk.style.animation = 'none';
             void tk.offsetHeight;
             tk.style.animation = '';
 
-            // Build episode sidebar
             buildSidebar(files, episodeIndex, show);
 
-            // Show tuning animation then play
             showStaticAnim('TUNING...', async () => {
                 screen('splash');
                 $('lTicker').classList.add('show');
-                renderList(); // Refresh guide to show active state
+                renderList();
                 playFile(show, files, episodeIndex, resumeTimestamp, true, null);
                 $('lSplash').classList.remove('show');
                 screen('video');
@@ -2623,7 +2536,6 @@
                 stopReels();
                 if (window._saveInterval) clearInterval(window._saveInterval);
                 vid.removeEventListener('pause', onPause);
-                // Only clear resume position if we're NOT in live mode (manual catalogue viewing)
                 if (!liveMode) {
                     clearResumePosition(show.id);
                 }
@@ -2707,7 +2619,7 @@
         async function autoLiveNow(showId, autoPlay = true, randomEpisode = false) {
             if (!tvOn) return;
             if (liveMode) currentLiveShowId = showId;
-            const s = shows.find(x => x.id === showId); if (!s) return; const files = await fetchFiles(s.archiveId); if (!files || files.length === 0) return;
+            const s = allShows.find(x => x.id === showId); if (!s) return; const files = await fetchFiles(s.archiveId); if (!files || files.length === 0) return;
             let episodeIndex = 0, resumeTimestamp = 0, liveSeekTime = null;
             let isLateJoin = false;
             let remainingSlotSeconds = 0;
@@ -2854,7 +2766,7 @@
 
         async function checkAndSwitchLiveChannel() { const current = getCurrentShow(); if (!current || current.message) { if (currentLiveShowId !== null) { currentLiveShowId = null; showToast('◈ OFF AIR — WAITING FOR NEXT PROGRAM ◈'); } return; } if (currentLiveShowId !== current.id) { currentLiveShowId = current.id; setTimeout(() => { if (liveMode && tvOn) autoLiveNow(current.id, true, false); }, 500); } }
 
-        function renderList() { const el = $('showList'); if (!el) return; const searchTerm = ($('searchBox').value || "").toLowerCase(); let filtered = activeCat === 'all' ? shows : shows.filter(s => s.cat === activeCat); filtered = filtered.filter(s => !s.hidden); if (searchTerm) filtered = filtered.filter(s => s.name.toLowerCase().includes(searchTerm) || s.desc.toLowerCase().includes(searchTerm) || s.year.toString().includes(searchTerm)); el.innerHTML = ''; filtered.forEach(s => { const card = document.createElement('div'); card.className = 'show-card' + (active?.id === s.id ? ' active' : ''); const bhtml = s.badges.map(b => `<span class="badge">${b}</span>`).join(''); card.innerHTML = `<span class="s-time">${s.time}</span><span class="s-emoji">${s.emoji}</span><div class="s-info"><div class="s-name">${s.name} <span class="s-yr">(${s.year})</span></div><div class="s-desc">${s.desc}</div><div class="s-badges">${bhtml}</div></div><div class="play-dot"></div>`; card.addEventListener('click', () => { sndClick(); if (liveMode) stopLiveMode(); stopCommercial(); if (tvOn) autoLiveNow(s.id, true, false); else powerOn(() => autoLiveNow(s.id, true, false)); }); el.appendChild(card); }); }
+        function renderList() { const el = $('showList'); if (!el) return; const searchTerm = ($('searchBox').value || "").toLowerCase(); let filtered = activeCat === 'all' ? shows : shows.filter(s => s.cat === activeCat); if (searchTerm) filtered = filtered.filter(s => s.name.toLowerCase().includes(searchTerm) || s.desc.toLowerCase().includes(searchTerm) || s.year.toString().includes(searchTerm)); el.innerHTML = ''; filtered.forEach(s => { const card = document.createElement('div'); card.className = 'show-card' + (active?.id === s.id ? ' active' : ''); const bhtml = s.badges.map(b => `<span class="badge">${b}</span>`).join(''); card.innerHTML = `<span class="s-time">${s.time}</span><span class="s-emoji">${s.emoji}</span><div class="s-info"><div class="s-name">${s.name} <span class="s-yr">(${s.year})</span></div><div class="s-desc">${s.desc}</div><div class="s-badges">${bhtml}</div></div><div class="play-dot"></div>`; card.addEventListener('click', () => { sndClick(); if (liveMode) stopLiveMode(); stopCommercial(); if (tvOn) autoLiveNow(s.id, true, false); else powerOn(() => autoLiveNow(s.id, true, false)); }); el.appendChild(card); }); }
 
         function buildCatTabs() { const el = $('catTabs'); cats.forEach(c => { const b = document.createElement('button'); b.className = 'cat-btn' + (c.key === 'all' ? ' active' : ''); b.textContent = c.label; b.addEventListener('click', () => { sndClick(); document.querySelectorAll('.cat-btn').forEach(x => x.classList.remove('active')); b.classList.add('active'); activeCat = c.key; renderList(); }); el.appendChild(b); }); }
 
@@ -2864,7 +2776,6 @@
 
         function showToast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2400); }
 
-        // --- Event Listeners ---
         $('pwrBtn').addEventListener('click', () => { sndClick(); tvOn ? powerOff() : powerOn(); });
         $('btnLiveMode').addEventListener('click', () => {
             sndClick();
@@ -2937,7 +2848,6 @@
         const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'], months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
         $('gDate').textContent = `${days[new Date().getDay()]} ${new Date().getDate()} ${months[new Date().getMonth()]}`;
 
-        // ── CATALOGUE MODAL with fixed resume support ──
         const catModalBg = $('catModal');
         const catGridEl = $('catGrid');
         const catModalCount = $('catModalCount');
@@ -2955,14 +2865,13 @@
             renderCatGrid();
         }
         function renderCatGrid() {
-            const filtered = catFilter === 'all' ? shows : shows.filter(s => s.cat === catFilter);
+            const filtered = catFilter === 'all' ? allShows : allShows.filter(s => s.cat === catFilter);
             catModalCount.textContent = `${filtered.length} SHOWS`;
             catGridEl.innerHTML = '';
             filtered.forEach(s => {
                 const card = document.createElement('div'); card.className = 'cat-card';
                 const bhtml = (s.badges || []).map(b => `<span class="cat-badge">${b}</span>`).join('');
                 card.innerHTML = `<div class="cat-card-top"><span class="cat-card-emoji">${s.emoji}</span><span class="cat-card-name">${s.name}</span></div><div class="cat-card-meta"><span class="cat-card-ch">CH ${s.ch}</span><span>${s.time}</span><span>${s.year}</span></div><div class="cat-card-desc">${s.desc}</div><div class="cat-card-badges">${bhtml}</div>`;
-                // FIXED: Use playShowFromCatalogue instead of autoLiveNow
                 card.addEventListener('click', () => {
                     sndClick();
                     catModalBg.classList.remove('show');
@@ -2981,12 +2890,10 @@
         $('catModalClose').addEventListener('click', () => { sndClick(); catModalBg.classList.remove('show'); });
         catModalBg.addEventListener('click', e => { if (e.target === catModalBg) catModalBg.classList.remove('show'); });
 
-        // ── HELP MODAL ──
         const helpModalBg = $('helpModal');
         $('helpBtn').addEventListener('click', () => { sndClick(); helpModalBg.classList.add('show'); });
         $('helpModalClose').addEventListener('click', () => { sndClick(); helpModalBg.classList.remove('show'); });
         helpModalBg.addEventListener('click', e => { if (e.target === helpModalBg) helpModalBg.classList.remove('show'); });
-        // ── END CATALOGUE MODAL ──
 
         buildCatTabs(); renderList(); screen('idle'); loadSettings(); updateWidget();
         setInterval(updateWidget, 1000);
